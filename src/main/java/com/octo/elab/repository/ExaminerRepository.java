@@ -10,19 +10,16 @@ import com.octo.elab.pojo.db.Examiner;
 
 public interface ExaminerRepository extends JpaRepository<Examiner, Integer> {
 
-	@Query(value = "select e.* from elab.Examiner e where (e.pk_Examiner = :ExaminerID)", nativeQuery = true)
+	@Query(value = "select e.* from elab.Examiner e where (e.id = :ExaminerID)", nativeQuery = true)
 	public Examiner getExaminerByID(@Param("ExaminerID") Integer ExaminerID);
 
-	@Query(value = "select e.* from elab.Examiner e order by e.pk_Examiner", nativeQuery = true)
+	@Query(value = "select e.* from elab.Examiner e order by e.id", nativeQuery = true)
 	public List<Examiner> getExaminers();
-
-	@Query(value = "select e.pk_Examiner from elab.Examiner e where e.legacy_Examiners like :ExaminerName", nativeQuery = true)
-	public Integer getExaminerIDByName(@Param("ExaminerName") String ExaminerName);
-
-	@Query(value = "select e.pk_Examiner from elab.Examiner e order by e.pk_Examiner", nativeQuery = true)
+	
+	@Query(value = "select e.id from elab.Examiner e order by e.id", nativeQuery = true)
 	public Integer[] getAllExaminerIDs();
 
-	@Query(value = "select max(pk_Examiner) from elab.Examiner", nativeQuery = true)
+	@Query(value = "select max(id) from elab.Examiner", nativeQuery = true)
 	public Integer getMaxExaminerID();
 
 }

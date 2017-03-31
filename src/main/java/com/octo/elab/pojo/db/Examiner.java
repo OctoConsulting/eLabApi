@@ -20,15 +20,12 @@ import com.octo.elab.utilities.CustomDateParser;
 public class Examiner extends ResourceSupport {
 
 	@Id
-	@Column(name = "pk_examiner")
+	@Column(name = "id")
 	@JsonProperty("id")
 	private Integer examinerId;
 
 	@Column(name = "examiner_name")
 	private String examinerName;
-
-	@Column(name = "legacy_examiners")
-	private String legacyExaminers;
 
 	@Column(name = "is_active")
 	private Boolean isActive;
@@ -63,14 +60,6 @@ public class Examiner extends ResourceSupport {
 
 	public void setExaminerName(String examinerName) {
 		this.examinerName = examinerName;
-	}
-
-	public String getLegacyExaminers() {
-		return legacyExaminers;
-	}
-
-	public void setLegacyExaminers(String legacyExaminers) {
-		this.legacyExaminers = legacyExaminers;
 	}
 
 	public Boolean getIsActive() {

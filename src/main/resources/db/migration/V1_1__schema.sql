@@ -66,9 +66,9 @@ CREATE TABLE elab.case (
   id INTEGER NOT NULL DEFAULT nextval('elab.case_id_seq'),
   case_data json NOT NULL,
   is_active BOOLEAN DEFAULT true NOT NULL,
-  created_by VARCHAR(100) DEFAULT 'RMS' NOT NULL,
+  created_by VARCHAR(100) DEFAULT 'ELAB' NOT NULL,
   created_date TIMESTAMP WITHOUT TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  updated_by VARCHAR(100) DEFAULT 'RMS' NOT NULL,
+  updated_by VARCHAR(100) DEFAULT 'ELAB' NOT NULL,
   updated_date TIMESTAMP WITHOUT TIME ZONE DEFAULT clock_timestamp() NOT NULL,
   CONSTRAINT case_PK PRIMARY KEY (id)
 );
@@ -83,9 +83,9 @@ CREATE TABLE elab.evidence (
   evidence_type INTEGER references elab.evidence_type(id) NOT NULL,
   is_forAnalysis BOOLEAN DEFAULT true NOT NULL,
   is_verified BOOLEAN DEFAULT true NOT NULL,
-  created_by VARCHAR(100) DEFAULT 'RMS' NOT NULL,
+  created_by VARCHAR(100) DEFAULT 'ELAB' NOT NULL,
   created_date TIMESTAMP WITHOUT TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  updated_by VARCHAR(100) DEFAULT 'RMS' NOT NULL,
+  updated_by VARCHAR(100) DEFAULT 'ELAB' NOT NULL,
   updated_date TIMESTAMP WITHOUT TIME ZONE DEFAULT clock_timestamp() NOT NULL,
   CONSTRAINT evidence_PK PRIMARY KEY (id)
 );
@@ -102,9 +102,9 @@ CREATE TABLE elab.exam (
   assigned_date TIMESTAMP WITHOUT TIME ZONE DEFAULT clock_timestamp() NOT NULL,
   start_date TIMESTAMP WITHOUT TIME ZONE DEFAULT clock_timestamp() NOT NULL,
   end_date TIMESTAMP WITHOUT TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  created_by VARCHAR(100) DEFAULT 'RMS' NOT NULL,
+  created_by VARCHAR(100) DEFAULT 'ELAB' NOT NULL,
   created_date TIMESTAMP WITHOUT TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  updated_by VARCHAR(100) DEFAULT 'RMS' NOT NULL,
+  updated_by VARCHAR(100) DEFAULT 'ELAB' NOT NULL,
   updated_date TIMESTAMP WITHOUT TIME ZONE DEFAULT clock_timestamp() NOT NULL,
   CONSTRAINT exam_PK PRIMARY KEY (id)
 );
@@ -117,9 +117,9 @@ CREATE TABLE elab.note (
   exam_sub_type VARCHAR(80) NOT NULL,
   note_type INTEGER references elab.note_type(id) NOT NULL,
   note_data json NOT NULL,
-  created_by VARCHAR(100) DEFAULT 'RMS' NOT NULL,
+  created_by VARCHAR(100) DEFAULT 'ELAB' NOT NULL,
   created_date TIMESTAMP WITHOUT TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  updated_by VARCHAR(100) DEFAULT 'RMS' NOT NULL,
+  updated_by VARCHAR(100) DEFAULT 'ELAB' NOT NULL,
   updated_date TIMESTAMP WITHOUT TIME ZONE DEFAULT clock_timestamp() NOT NULL,
   CONSTRAINT note_PK PRIMARY KEY (id)
 );
@@ -131,9 +131,9 @@ CREATE TABLE elab.note_detail (
   note_id INTEGER NOT NULL references elab.note(id),
   note_detail_type INTEGER references elab.note_detail_type(id) NOT NULL,
   note_detail_data json NOT NULL,
-  created_by VARCHAR(100) DEFAULT 'RMS' NOT NULL,
+  created_by VARCHAR(100) DEFAULT 'ELAB' NOT NULL,
   created_date TIMESTAMP WITHOUT TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  updated_by VARCHAR(100) DEFAULT 'RMS' NOT NULL,
+  updated_by VARCHAR(100) DEFAULT 'ELAB' NOT NULL,
   updated_date TIMESTAMP WITHOUT TIME ZONE DEFAULT clock_timestamp() NOT NULL,
   CONSTRAINT note_detail_PK PRIMARY KEY (id)
 );
@@ -144,9 +144,9 @@ CREATE TABLE elab.note_evidence (
   id INTEGER NOT NULL DEFAULT nextval('elab.note_evidence_id_seq'),
   note_id INTEGER references elab.note(id) NOT NULL,
   evidence_id INTEGER references elab.evidence(id) NOT NULL,
-  created_by VARCHAR(100) DEFAULT 'RMS' NOT NULL,
+  created_by VARCHAR(100) DEFAULT 'ELAB' NOT NULL,
   created_date TIMESTAMP WITHOUT TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  updated_by VARCHAR(100) DEFAULT 'RMS' NOT NULL,
+  updated_by VARCHAR(100) DEFAULT 'ELAB' NOT NULL,
   updated_date TIMESTAMP WITHOUT TIME ZONE DEFAULT clock_timestamp() NOT NULL,
   CONSTRAINT note_evidence_PK PRIMARY KEY (id)
 );
@@ -157,9 +157,9 @@ CREATE TABLE elab.image (
   id INTEGER NOT NULL DEFAULT nextval('elab.image_id_seq'),
   note_id INTEGER references elab.note(id) NOT NULL,
   image bytea,
-  created_by VARCHAR(100) DEFAULT 'RMS' NOT NULL,
+  created_by VARCHAR(100) DEFAULT 'ELAB' NOT NULL,
   created_date TIMESTAMP WITHOUT TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  updated_by VARCHAR(100) DEFAULT 'RMS' NOT NULL,
+  updated_by VARCHAR(100) DEFAULT 'ELAB' NOT NULL,
   updated_date TIMESTAMP WITHOUT TIME ZONE DEFAULT clock_timestamp() NOT NULL,
   CONSTRAINT image_PK PRIMARY KEY (id)
 );
