@@ -168,26 +168,31 @@ ALTER SEQUENCE elab.image_id_seq OWNED BY elab.image._id;
 
 -- Index Creation
 Create unique index IX_case on elab.case (_id);
-Create unique index IX_evidence on elab.case (_id);
-Create unique index IX_exam on elab.case (_id);
-Create unique index IX_note on elab.case (_id);
-Create unique index IX_note_detail on elab.case (_id);
-Create unique index IX_note_detail_evidence on elab.note_detail_evidence (_id);
+Create unique index IX_evidence on elab.evidence (_id);
+Create unique index IX_evidence_type on elab.evidence_type (_id);
+Create unique index IX_exam on elab.exam (_id);
+Create unique index IX_exam_type on elab.exam_type (_id);
+Create unique index IX_examiner on elab.examiner (_id);
 Create unique index IX_image on elab.image (_id);
+Create unique index IX_note on elab.note (_id);
+Create unique index IX_note_detail on elab.note_detail (_id);
+Create unique index IX_note_detail_evidence on elab.note_detail_evidence (_id);
+Create unique index IX_note_detail_type on elab.note_detail_type (_id);
+Create unique index IX_note_type on elab.note_type (_id);
 
 -- Owner assignment for tables
-ALTER TABLE elab.evidence_type OWNER to elab;
-ALTER TABLE elab.exam_type OWNER to elab;
-ALTER TABLE elab.examiner OWNER to elab;
-ALTER TABLE elab.note_type OWNER to elab;
-ALTER TABLE elab.note_detail_type OWNER to elab;
 ALTER TABLE elab.case OWNER to elab;
 ALTER TABLE elab.evidence OWNER to elab;
+ALTER TABLE elab.evidence_type OWNER to elab;
 ALTER TABLE elab.exam OWNER to elab;
+ALTER TABLE elab.exam_type OWNER to elab;
+ALTER TABLE elab.examiner OWNER to elab;
+ALTER TABLE elab.image OWNER to elab;
 ALTER TABLE elab.note OWNER to elab;
 ALTER TABLE elab.note_detail OWNER to elab;
 ALTER TABLE elab.note_detail_evidence OWNER to elab;
-ALTER TABLE elab.image OWNER to elab;
+ALTER TABLE elab.note_detail_type OWNER to elab;
+ALTER TABLE elab.note_type OWNER to elab;
 
 -- Insert data into reference tables
 insert into elab.evidence_type(_id,description) values(1,'Container');
@@ -211,7 +216,6 @@ insert into elab.note_type(_id,description) values(4,'Initial Assessment');
 insert into elab.note_type(_id,description) values(5,'Make/Model Determination');
 insert into elab.note_type(_id,description) values(6,'Processing');
 insert into elab.note_type(_id,description) values(7,'Test Impression');
-
 
 insert into elab.note_detail_type(_id,description) values(1,'K Item Detail');
 insert into elab.note_detail_type(_id,description) values(2,'Q Item Detail');
