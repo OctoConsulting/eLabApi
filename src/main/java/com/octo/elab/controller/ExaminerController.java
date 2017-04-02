@@ -1,8 +1,5 @@
 package com.octo.elab.controller;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -11,13 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,20 +39,14 @@ public class ExaminerController {
 	/**
 	 * This method is used to fetch all examiners from database
 	 *
-	 * @return Resources<Examiner>
+	 * @return ResponseEntity<List<Examiner>>
 	 */
 	@RequestMapping(value = "/examiners", method = RequestMethod.GET)
 	@ApiOperation(value = "Fetch all Examiners")
-	public Resources<Examiner> getExaminers() throws Exception {
+	public ResponseEntity<List<Examiner>> getExaminers() throws Exception {
 		log.info("GET /examiners API to fetch all examiners");
-		List<Examiner> examiners = examinerRepo.getExaminers();
-		for (Examiner examiner : examiners) {
-			examiner.add(
-					linkTo(methodOn(ExaminerController.class).getExaminers()).withSelfRel());
-		}
-		Link link = linkTo(ExaminerController.class).slash("/rms").slash("/v1").slash("/examiners").withSelfRel();
-		Resources<Examiner> resources = new Resources<Examiner>(examiners, link);
-		return resources;
+		List<Examiner> examiners = examinerRepo.getAllExaminers();
+		return new ResponseEntity<List<Examiner>>(examiners, HttpStatus.OK);
 	}
 
 	/**
@@ -67,36 +55,14 @@ public class ExaminerController {
 	 *
 	 * @param examinerID
 	 *            The id of the examiner to be retrieved
-	 * @return Examiner
+	 * @return ResponseEntity<Examiner>
 	 */
 	@RequestMapping(value = "/examiners/{examinerID}/", method = RequestMethod.GET)
 	@ApiOperation(value = "Fetch a examiner by ID")
-	public Examiner getExaminerByID(
+	public ResponseEntity<Examiner> getExaminerByID(
 			@ApiParam(value = "examinerID value", required = true) @PathVariable Integer examinerID) throws Exception {
 		log.info("GET /examiners/" + examinerID);
 		Examiner examiner = examinerRepo.getExaminerByID(examinerID);
-		examiner.add(linkTo(methodOn(ExaminerController.class).getExaminerByID(examinerID)).withSelfRel());
-		return examiner;
-	}
-
-	/**
-	 * End-point for adding a new examiner. It inserts record into Examiner
-	 * table
-	 * 
-	 * @param Examiner
-	 * 
-	 * @return ResponseEntity<Examiner>
-	 */
-
-	@RequestMapping(value = "/examiners/", method = RequestMethod.POST)
-	@ApiOperation(value = "Add new examiner")
-	public ResponseEntity<Examiner> addNewExaminer(@RequestBody Examiner examiner) throws Exception {
-		log.info("POST /examiners/");
-
-		if (examiner == null)
-			return new ResponseEntity<Examiner>(HttpStatus.BAD_REQUEST);
-		// else
-		// return examinerDefinitionService.addExaminer(examiner);
-		return null;
+		return new ResponseEntity<Examiner>(examiner, HttpStatus.OK);
 	}
 }

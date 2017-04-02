@@ -14,7 +14,7 @@ public interface ExaminerRepository extends JpaRepository<Examiner, Integer> {
 	public Examiner getExaminerByID(@Param("ExaminerID") Integer ExaminerID);
 
 	@Query(value = "select e.* from elab.Examiner e order by e.id", nativeQuery = true)
-	public List<Examiner> getExaminers();
+	public List<Examiner> getAllExaminers();
 
 	@Query(value = "select e.id from elab.Examiner e order by e.id", nativeQuery = true)
 	public Integer[] getAllExaminerIDs();

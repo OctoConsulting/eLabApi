@@ -22,9 +22,9 @@ import org.springframework.hateoas.ResourceSupport;
  */
 @Entity
 @Table(name = "examiner", uniqueConstraints = @UniqueConstraint(columnNames = "examiner_name"))
-public class Examiner extends ResourceSupport implements java.io.Serializable {
+public class Examiner implements java.io.Serializable {
 
-	private int ID;
+	private int id;
 	private String examinerName;
 	private boolean isActive;
 	private String createdBy;
@@ -38,7 +38,7 @@ public class Examiner extends ResourceSupport implements java.io.Serializable {
 
 	public Examiner(int id, String examinerName, boolean isActive, String createdBy, Date createdDate, String updatedBy,
 			Date updatedDate) {
-		this.ID = id;
+		this.id = id;
 		this.examinerName = examinerName;
 		this.isActive = isActive;
 		this.createdBy = createdBy;
@@ -49,7 +49,7 @@ public class Examiner extends ResourceSupport implements java.io.Serializable {
 
 	public Examiner(int id, String examinerName, boolean isActive, String createdBy, Date createdDate, String updatedBy,
 			Date updatedDate, Set<Exam> exams) {
-		this.ID = id;
+		this.id = id;
 		this.examinerName = examinerName;
 		this.isActive = isActive;
 		this.createdBy = createdBy;
@@ -62,12 +62,12 @@ public class Examiner extends ResourceSupport implements java.io.Serializable {
 	@Id
 
 	@Column(name = "_id", unique = true, nullable = false)
-	public int getID() {
-		return this.ID;
+	public int getId() {
+		return this.id;
 	}
 
-	public void setID(int id) {
-		this.ID = id;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	@Column(name = "examiner_name", unique = true, nullable = false, length = 500)
