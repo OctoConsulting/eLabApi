@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.octo.elab.pojo.db.Examiner;
-import com.octo.elab.repository.ExaminerRepository;
+import com.octo.elab.pojo.db.NoteType;
+import com.octo.elab.repository.NoteTypeRepository;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping(value = ElabController.BasePath + "/v1", produces = MediaType.APPLICATION_JSON_VALUE)
-@Api(tags = "Examiner", description = "Endpoint pertaining to Examiners")
+@Api(tags = "NoteType", description = "Endpoint pertaining to NoteTypes")
 public class NoteTypeController {
 
 	private static final Logger log = LoggerFactory.getLogger(NoteTypeController.class);
@@ -34,35 +34,35 @@ public class NoteTypeController {
 	Environment environment;
 
 	@Autowired
-	private ExaminerRepository examinerRepo;
+	private NoteTypeRepository noteTypeRepo;
 
 	/**
-	 * This method is used to fetch all examiners from database
+	 * This method is used to fetch all noteTypes from database
 	 *
-	 * @return ResponseEntity<List<Examiner>>
+	 * @return ResponseEntity<List<NoteType>>
 	 */
-	@RequestMapping(value = "/examiners", method = RequestMethod.GET)
-	@ApiOperation(value = "Fetch all Examiners")
-	public ResponseEntity<List<Examiner>> getExaminers() throws Exception {
-		log.info("GET /examiners API to fetch all examiners");
-		List<Examiner> examiners = examinerRepo.getAllExaminers();
-		return new ResponseEntity<List<Examiner>>(examiners, HttpStatus.OK);
+	@RequestMapping(value = "/noteTypes", method = RequestMethod.GET)
+	@ApiOperation(value = "Fetch all NoteTypes")
+	public ResponseEntity<List<NoteType>> getNoteTypes() throws Exception {
+		log.info("GET /noteTypes API to fetch all noteTypes");
+		List<NoteType> noteTypes = noteTypeRepo.getAllNoteTypes();
+		return new ResponseEntity<List<NoteType>>(noteTypes, HttpStatus.OK);
 	}
 
 	/**
 	 * This method is used to supply an endpoint that returns a specified
-	 * examiner information
+	 * noteType information
 	 *
-	 * @param examinerID
-	 *            The id of the examiner to be retrieved
-	 * @return ResponseEntity<Examiner>
+	 * @param noteTypeID
+	 *            The id of the noteType to be retrieved
+	 * @return ResponseEntity<NoteType>
 	 */
-	@RequestMapping(value = "/examiners/{examinerID}/", method = RequestMethod.GET)
-	@ApiOperation(value = "Fetch a examiner by ID")
-	public ResponseEntity<Examiner> getExaminerByID(
-			@ApiParam(value = "examinerID value", required = true) @PathVariable Integer examinerID) throws Exception {
-		log.info("GET /examiners/" + examinerID);
-		Examiner examiner = examinerRepo.getExaminerByID(examinerID);
-		return new ResponseEntity<Examiner>(examiner, HttpStatus.OK);
+	@RequestMapping(value = "/noteTypes/{noteTypeID}/", method = RequestMethod.GET)
+	@ApiOperation(value = "Fetch a noteType by ID")
+	public ResponseEntity<NoteType> getNoteTypeByID(
+			@ApiParam(value = "noteTypeID value", required = true) @PathVariable Integer noteTypeID) throws Exception {
+		log.info("GET /noteTypes/" + noteTypeID);
+		NoteType noteType = noteTypeRepo.getNoteTypeByID(noteTypeID);
+		return new ResponseEntity<NoteType>(noteType, HttpStatus.OK);
 	}
 }

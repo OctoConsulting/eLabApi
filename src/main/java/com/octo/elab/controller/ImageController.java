@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.octo.elab.pojo.db.Examiner;
-import com.octo.elab.repository.ExaminerRepository;
+import com.octo.elab.pojo.db.Image;
+import com.octo.elab.repository.ImageRepository;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping(value = ElabController.BasePath + "/v1", produces = MediaType.APPLICATION_JSON_VALUE)
-@Api(tags = "Examiner", description = "Endpoint pertaining to Examiners")
+@Api(tags = "Image", description = "Endpoint pertaining to Images")
 public class ImageController {
 
 	private static final Logger log = LoggerFactory.getLogger(ImageController.class);
@@ -34,35 +34,35 @@ public class ImageController {
 	Environment environment;
 
 	@Autowired
-	private ExaminerRepository examinerRepo;
+	private ImageRepository imageRepo;
 
 	/**
-	 * This method is used to fetch all examiners from database
+	 * This method is used to fetch all images from database
 	 *
-	 * @return ResponseEntity<List<Examiner>>
+	 * @return ResponseEntity<List<Image>>
 	 */
-	@RequestMapping(value = "/examiners", method = RequestMethod.GET)
-	@ApiOperation(value = "Fetch all Examiners")
-	public ResponseEntity<List<Examiner>> getExaminers() throws Exception {
-		log.info("GET /examiners API to fetch all examiners");
-		List<Examiner> examiners = examinerRepo.getAllExaminers();
-		return new ResponseEntity<List<Examiner>>(examiners, HttpStatus.OK);
+	@RequestMapping(value = "/images", method = RequestMethod.GET)
+	@ApiOperation(value = "Fetch all Images")
+	public ResponseEntity<List<Image>> getImages() throws Exception {
+		log.info("GET /images API to fetch all images");
+		List<Image> images = imageRepo.getAllImages();
+		return new ResponseEntity<List<Image>>(images, HttpStatus.OK);
 	}
 
 	/**
 	 * This method is used to supply an endpoint that returns a specified
-	 * examiner information
+	 * image information
 	 *
-	 * @param examinerID
-	 *            The id of the examiner to be retrieved
-	 * @return ResponseEntity<Examiner>
+	 * @param imageID
+	 *            The id of the image to be retrieved
+	 * @return ResponseEntity<Image>
 	 */
-	@RequestMapping(value = "/examiners/{examinerID}/", method = RequestMethod.GET)
-	@ApiOperation(value = "Fetch a examiner by ID")
-	public ResponseEntity<Examiner> getExaminerByID(
-			@ApiParam(value = "examinerID value", required = true) @PathVariable Integer examinerID) throws Exception {
-		log.info("GET /examiners/" + examinerID);
-		Examiner examiner = examinerRepo.getExaminerByID(examinerID);
-		return new ResponseEntity<Examiner>(examiner, HttpStatus.OK);
+	@RequestMapping(value = "/images/{imageID}/", method = RequestMethod.GET)
+	@ApiOperation(value = "Fetch a image by ID")
+	public ResponseEntity<Image> getImageByID(
+			@ApiParam(value = "imageID value", required = true) @PathVariable Integer imageID) throws Exception {
+		log.info("GET /images/" + imageID);
+		Image image = imageRepo.getImageByID(imageID);
+		return new ResponseEntity<Image>(image, HttpStatus.OK);
 	}
 }
