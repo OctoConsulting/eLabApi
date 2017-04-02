@@ -24,6 +24,10 @@ import javax.persistence.TemporalType;
 @Table(name = "evidence")
 public class Evidence implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private Case newCase;
 	private EvidenceType evidenceType;
