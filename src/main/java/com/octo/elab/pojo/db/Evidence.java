@@ -24,7 +24,8 @@ import javax.persistence.TemporalType;
 @Table(name = "evidence")
 public class Evidence implements java.io.Serializable {
 
-	private int id;private Case case;
+	private int id;
+	private Case newCase;
 	private EvidenceType evidenceType;
 	private String evidenceName;
 	private int evidenceNumber;
@@ -39,9 +40,9 @@ public class Evidence implements java.io.Serializable {
 	public Evidence() {
 	}
 
-	public Evidence(int id, Case case, EvidenceType evidenceType, String evidenceName, int evidenceNumber, String createdBy, Date createdDate, String updatedBy, Date updatedDate) {
+	public Evidence(int id, Case newCase, EvidenceType evidenceType, String evidenceName, int evidenceNumber, String createdBy, Date createdDate, String updatedBy, Date updatedDate) {
         this.id = id;
-        this.case = case;
+        this.newCase = newCase;
         this.evidenceType = evidenceType;
         this.evidenceName = evidenceName;
         this.evidenceNumber = evidenceNumber;
@@ -51,9 +52,9 @@ public class Evidence implements java.io.Serializable {
         this.updatedDate = updatedDate;
     }
 
-	public Evidence(int id, Case case, EvidenceType evidenceType, String evidenceName, int evidenceNumber, Boolean isForanalysis, Integer parentId, String createdBy, Date createdDate, String updatedBy, Date updatedDate, Set<NoteDetailEvidence> noteDetailEvidences) {
+	public Evidence(int id, Case newCase, EvidenceType evidenceType, String evidenceName, int evidenceNumber, Boolean isForanalysis, Integer parentId, String createdBy, Date createdDate, String updatedBy, Date updatedDate, Set<NoteDetailEvidence> noteDetailEvidences) {
        this.id = id;
-       this.case = case;
+       this.newCase = newCase;
        this.evidenceType = evidenceType;
        this.evidenceName = evidenceName;
        this.evidenceNumber = evidenceNumber;
@@ -80,11 +81,11 @@ public class Evidence implements java.io.Serializable {
 @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="case_id", nullable=false)
     public Case getCase() {
-        return this.case;
+        return this.newCase;
     }
 
-	public void setCase(Case case) {
-        this.case = case;
+	public void setCase(Case newCase) {
+        this.newCase = newCase;
     }
 
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -54,7 +54,7 @@ public class ExaminerController {
 		List<Examiner> examiners = examinerRepo.getExaminers();
 		for (Examiner examiner : examiners) {
 			examiner.add(
-					linkTo(methodOn(ExaminerController.class).getExaminerByID(examiner.getId())).withSelfRel());
+					linkTo(methodOn(ExaminerController.class).getExaminers()).withSelfRel());
 		}
 		Link link = linkTo(ExaminerController.class).slash("/rms").slash("/v1").slash("/examiners").withSelfRel();
 		Resources<Examiner> resources = new Resources<Examiner>(examiners, link);

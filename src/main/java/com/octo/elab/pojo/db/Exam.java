@@ -25,7 +25,7 @@ import javax.persistence.TemporalType;
 @Table(name = "exam")
 public class Exam implements java.io.Serializable {
 
-	private int id;private Case case;
+	private int id;private Case newCase;
 	private ExamType examType;
 	private Examiner examiner;
 	private String examName;
@@ -41,9 +41,9 @@ public class Exam implements java.io.Serializable {
 	public Exam() {
 	}
 
-	public Exam(int id, Case case, ExamType examType, String createdBy, Date createdDate, String updatedBy, Date updatedDate) {
+	public Exam(int id, Case newCase, ExamType examType, String createdBy, Date createdDate, String updatedBy, Date updatedDate) {
         this.id = id;
-        this.case = case;
+        this.newCase = newCase;
         this.examType = examType;
         this.createdBy = createdBy;
         this.createdDate = createdDate;
@@ -51,9 +51,9 @@ public class Exam implements java.io.Serializable {
         this.updatedDate = updatedDate;
     }
 
-	public Exam(int id, Case case, ExamType examType, Examiner examiner, String examName, Date assignedDate, Date startDate, Date endDate, String createdBy, Date createdDate, String updatedBy, Date updatedDate, Set<Note> notes) {
+	public Exam(int id, Case newCase, ExamType examType, Examiner examiner, String examName, Date assignedDate, Date startDate, Date endDate, String createdBy, Date createdDate, String updatedBy, Date updatedDate, Set<Note> notes) {
        this.id = id;
-       this.case = case;
+       this.newCase = newCase;
        this.examType = examType;
        this.examiner = examiner;
        this.examName = examName;
@@ -81,11 +81,11 @@ public class Exam implements java.io.Serializable {
 @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="case_id", nullable=false)
     public Case getCase() {
-        return this.case;
+        return this.newCase;
     }
 
-	public void setCase(Case case) {
-        this.case = case;
+	public void setCase(Case newCase) {
+        this.newCase = newCase;
     }
 
 	@ManyToOne(fetch = FetchType.LAZY)
