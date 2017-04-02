@@ -53,7 +53,8 @@ public class ExaminerController {
 		log.info("GET /examiners API to fetch all examiners");
 		List<Examiner> examiners = examinerRepo.getExaminers();
 		for (Examiner examiner : examiners) {
-			examiner.add(linkTo(methodOn(ExaminerController.class).getExaminerByID(examiner.getExaminerId())).withSelfRel());
+			examiner.add(
+					linkTo(methodOn(ExaminerController.class).getExaminerByID(examiner.getId())).withSelfRel());
 		}
 		Link link = linkTo(ExaminerController.class).slash("/rms").slash("/v1").slash("/examiners").withSelfRel();
 		Resources<Examiner> resources = new Resources<Examiner>(examiners, link);
@@ -61,8 +62,8 @@ public class ExaminerController {
 	}
 
 	/**
-	 * This method is used to supply an endpoint that returns a specified examiner
-	 * information
+	 * This method is used to supply an endpoint that returns a specified
+	 * examiner information
 	 *
 	 * @param examinerID
 	 *            The id of the examiner to be retrieved
@@ -70,8 +71,8 @@ public class ExaminerController {
 	 */
 	@RequestMapping(value = "/examiners/{examinerID}/", method = RequestMethod.GET)
 	@ApiOperation(value = "Fetch a examiner by ID")
-	public Examiner getExaminerByID(@ApiParam(value = "examinerID value", required = true) @PathVariable Integer examinerID)
-			throws Exception {
+	public Examiner getExaminerByID(
+			@ApiParam(value = "examinerID value", required = true) @PathVariable Integer examinerID) throws Exception {
 		log.info("GET /examiners/" + examinerID);
 		Examiner examiner = examinerRepo.getExaminerByID(examinerID);
 		examiner.add(linkTo(methodOn(ExaminerController.class).getExaminerByID(examinerID)).withSelfRel());
@@ -79,7 +80,8 @@ public class ExaminerController {
 	}
 
 	/**
-	 * End-point for adding a new examiner. It inserts record into Examiner table
+	 * End-point for adding a new examiner. It inserts record into Examiner
+	 * table
 	 * 
 	 * @param Examiner
 	 * 
@@ -93,8 +95,8 @@ public class ExaminerController {
 
 		if (examiner == null)
 			return new ResponseEntity<Examiner>(HttpStatus.BAD_REQUEST);
-		//else
-			//return examinerDefinitionService.addExaminer(examiner);
+		// else
+		// return examinerDefinitionService.addExaminer(examiner);
 		return null;
 	}
 }
