@@ -4,6 +4,7 @@ package com.octo.elab.pojo.db;
 // Generated Apr 1, 2017 10:50:57 PM by Hibernate Tools 4.0.0
 
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

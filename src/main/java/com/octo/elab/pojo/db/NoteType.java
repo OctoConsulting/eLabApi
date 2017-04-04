@@ -4,13 +4,10 @@ package com.octo.elab.pojo.db;
 // Generated Apr 1, 2017 10:50:57 PM by Hibernate Tools 4.0.0
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -30,7 +27,6 @@ public class NoteType implements java.io.Serializable {
 	private Date createdDate;
 	private String updatedBy;
 	private Date updatedDate;
-	private Set<Note> notes = new HashSet<Note>(0);
 
 	public NoteType() {
 	}
@@ -46,20 +42,7 @@ public class NoteType implements java.io.Serializable {
 		this.updatedDate = updatedDate;
 	}
 
-	public NoteType(int id, String description, boolean isActive, String createdBy, Date createdDate, String updatedBy,
-			Date updatedDate, Set<Note> notes) {
-		this.id = id;
-		this.description = description;
-		this.isActive = isActive;
-		this.createdBy = createdBy;
-		this.createdDate = createdDate;
-		this.updatedBy = updatedBy;
-		this.updatedDate = updatedDate;
-		this.notes = notes;
-	}
-
 	@Id
-
 	@Column(name = "_id", unique = true, nullable = false)
 	public int getId() {
 		return this.id;
@@ -123,15 +106,6 @@ public class NoteType implements java.io.Serializable {
 
 	public void setUpdatedDate(Date updatedDate) {
 		this.updatedDate = updatedDate;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "noteType")
-	public Set<Note> getNotes() {
-		return this.notes;
-	}
-
-	public void setNotes(Set<Note> notes) {
-		this.notes = notes;
 	}
 
 }

@@ -5,15 +5,13 @@ package com.octo.elab.pojo.db;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,8 +32,6 @@ public class Note implements java.io.Serializable {
 	private Date createdDate;
 	private String updatedBy;
 	private Date updatedDate;
-	private Set<NoteDetail> noteDetails = new HashSet<NoteDetail>(0);
-	private Set<Image> images = new HashSet<Image>(0);
 
 	public Note() {
 	}
@@ -52,23 +48,7 @@ public class Note implements java.io.Serializable {
 		this.updatedDate = updatedDate;
 	}
 
-	public Note(int id, Exam exam, NoteType noteType, String examSubType, Serializable noteData, String createdBy,
-			Date createdDate, String updatedBy, Date updatedDate, Set<NoteDetail> noteDetails, Set<Image> images) {
-		this.id = id;
-		this.exam = exam;
-		this.noteType = noteType;
-		this.examSubType = examSubType;
-		this.noteData = noteData;
-		this.createdBy = createdBy;
-		this.createdDate = createdDate;
-		this.updatedBy = updatedBy;
-		this.updatedDate = updatedDate;
-		this.noteDetails = noteDetails;
-		this.images = images;
-	}
-
 	@Id
-
 	@Column(name = "_id", unique = true, nullable = false)
 	public int getId() {
 		return this.id;
@@ -152,24 +132,6 @@ public class Note implements java.io.Serializable {
 
 	public void setUpdatedDate(Date updatedDate) {
 		this.updatedDate = updatedDate;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "note")
-	public Set<NoteDetail> getNoteDetails() {
-		return this.noteDetails;
-	}
-
-	public void setNoteDetails(Set<NoteDetail> noteDetails) {
-		this.noteDetails = noteDetails;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "note")
-	public Set<Image> getImages() {
-		return this.images;
-	}
-
-	public void setImages(Set<Image> images) {
-		this.images = images;
 	}
 
 }

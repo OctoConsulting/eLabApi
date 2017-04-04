@@ -5,15 +5,13 @@ package com.octo.elab.pojo.db;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -33,7 +31,6 @@ public class NoteDetail implements java.io.Serializable {
 	private Date createdDate;
 	private String updatedBy;
 	private Date updatedDate;
-	private Set<NoteDetailEvidence> noteDetailEvidences = new HashSet<NoteDetailEvidence>(0);
 
 	public NoteDetail() {
 	}
@@ -50,21 +47,7 @@ public class NoteDetail implements java.io.Serializable {
 		this.updatedDate = updatedDate;
 	}
 
-	public NoteDetail(int id, Note note, NoteDetailType noteDetailType, Serializable noteDetailData, String createdBy,
-			Date createdDate, String updatedBy, Date updatedDate, Set<NoteDetailEvidence> noteDetailEvidences) {
-		this.id = id;
-		this.note = note;
-		this.noteDetailType = noteDetailType;
-		this.noteDetailData = noteDetailData;
-		this.createdBy = createdBy;
-		this.createdDate = createdDate;
-		this.updatedBy = updatedBy;
-		this.updatedDate = updatedDate;
-		this.noteDetailEvidences = noteDetailEvidences;
-	}
-
 	@Id
-
 	@Column(name = "_id", unique = true, nullable = false)
 	public int getId() {
 		return this.id;
@@ -139,15 +122,6 @@ public class NoteDetail implements java.io.Serializable {
 
 	public void setUpdatedDate(Date updatedDate) {
 		this.updatedDate = updatedDate;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "noteDetail")
-	public Set<NoteDetailEvidence> getNoteDetailEvidences() {
-		return this.noteDetailEvidences;
-	}
-
-	public void setNoteDetailEvidences(Set<NoteDetailEvidence> noteDetailEvidences) {
-		this.noteDetailEvidences = noteDetailEvidences;
 	}
 
 }

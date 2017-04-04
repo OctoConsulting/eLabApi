@@ -5,13 +5,10 @@ package com.octo.elab.pojo.db;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -21,7 +18,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "case")
-public class Case implements java.io.Serializable {
+public class Case  {
 
 	private int id;
 	private Serializable caseData;
@@ -30,8 +27,6 @@ public class Case implements java.io.Serializable {
 	private Date createdDate;
 	private String updatedBy;
 	private Date updatedDate;
-	private Set<Exam> exams = new HashSet<Exam>(0);
-	private Set<Evidence> evidences = new HashSet<Evidence>(0);
 
 	public Case() {
 	}
@@ -47,21 +42,7 @@ public class Case implements java.io.Serializable {
 		this.updatedDate = updatedDate;
 	}
 
-	public Case(int id, Serializable caseData, boolean isActive, String createdBy, Date createdDate, String updatedBy,
-			Date updatedDate, Set<Exam> exams, Set<Evidence> evidences) {
-		this.id = id;
-		this.caseData = caseData;
-		this.isActive = isActive;
-		this.createdBy = createdBy;
-		this.createdDate = createdDate;
-		this.updatedBy = updatedBy;
-		this.updatedDate = updatedDate;
-		this.exams = exams;
-		this.evidences = evidences;
-	}
-
 	@Id
-
 	@Column(name = "_id", unique = true, nullable = false)
 	public int getId() {
 		return this.id;
@@ -125,24 +106,6 @@ public class Case implements java.io.Serializable {
 
 	public void setUpdatedDate(Date updatedDate) {
 		this.updatedDate = updatedDate;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "case")
-	public Set<Exam> getExams() {
-		return this.exams;
-	}
-
-	public void setExams(Set<Exam> exams) {
-		this.exams = exams;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "case")
-	public Set<Evidence> getEvidences() {
-		return this.evidences;
-	}
-
-	public void setEvidences(Set<Evidence> evidences) {
-		this.evidences = evidences;
 	}
 
 }
