@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class Package {
 
 	private String packageName;
-	private Integer packageType;
+	private Integer evidenceType;
 	private List<Evidence> items;
 
 	public String getPackageName() {
@@ -19,12 +19,12 @@ public class Package {
 		this.packageName = packageName;
 	}
 
-	public Integer getPackageType() {
-		return packageType;
+	public Integer getEvidenceType() {
+		return evidenceType;
 	}
 
-	public void setPackageType(Integer packageType) {
-		this.packageType = packageType;
+	public void setEvidenceType(Integer evidenceType) {
+		this.evidenceType = evidenceType;
 	}
 
 	public List<Evidence> getItems() {

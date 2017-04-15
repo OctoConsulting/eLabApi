@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Container {
 	private String containerName;
-	private Integer containerType;
+	private Integer evidenceType;
 	private List<Package> packages;
 
 	public String getContainerName() {
@@ -18,12 +18,12 @@ public class Container {
 		this.containerName = containerName;
 	}
 
-	public Integer getContainerType() {
-		return containerType;
+	public Integer getEvidenceType() {
+		return evidenceType;
 	}
 
-	public void setContainerType(Integer containerType) {
-		this.containerType = containerType;
+	public void setEvidenceType(Integer evidenceType) {
+		this.evidenceType = evidenceType;
 	}
 
 	public List<Package> getPackages() {
