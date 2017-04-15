@@ -7,24 +7,24 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Package {
 
-	private String evidenceName;
-	private Integer evidenceType;
+	private String packageName;
+	private Integer packageType;
 	private List<Evidence> items;
 
-	public String getEvidenceName() {
-		return evidenceName;
+	public String getPackageName() {
+		return packageName;
 	}
 
-	public void setEvidenceName(String evidenceName) {
-		this.evidenceName = evidenceName;
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
 	}
 
-	public Integer getEvidenceType() {
-		return evidenceType;
+	public Integer getPackageType() {
+		return packageType;
 	}
 
-	public void setEvidenceType(Integer evidenceType) {
-		this.evidenceType = evidenceType;
+	public void setPackageType(Integer packageType) {
+		this.packageType = packageType;
 	}
 
 	public List<Evidence> getItems() {
