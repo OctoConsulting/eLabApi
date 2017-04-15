@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.octo.elab.pojo.db.Evidence;
@@ -50,8 +52,8 @@ public class EvidenceController {
 	}
 
 	/**
-	 * This method is used to supply an endpoint that returns a specified Evidence
-	 * information
+	 * This method is used to supply an endpoint that returns a specified
+	 * Evidence information
 	 *
 	 * @param evidenceID
 	 *            The id of the Evidence to be retrieved
@@ -63,6 +65,36 @@ public class EvidenceController {
 			@ApiParam(value = "evidenceID value", required = true) @PathVariable Integer evidenceID) throws Exception {
 		log.info("GET /evidences/" + evidenceID);
 		Evidence evidence = evidenceRepo.getEvidenceByID(evidenceID);
+		return new ResponseEntity<Evidence>(evidence, HttpStatus.OK);
+	}
+
+	/**
+	 * This method is used to update evidence item type and identifier
+	 * 
+	 * @return ResponseEntity<Evidence>
+	 */
+	@RequestMapping(value = "/evidences/{evidenceID}/", method = RequestMethod.PUT)
+	@ApiOperation(value = "Update a Evidence by ID")
+	public ResponseEntity<Evidence> updateEvidenceByID(
+			@ApiParam(value = "evidenceID value", required = true) @PathVariable Integer evidenceID,
+			@RequestParam(value = "itemType", required = false) String itemType,
+			@RequestParam(value = "identifier", required = false) String identifier) throws Exception {
+		log.info("PUT /evidences/" + evidenceID);
+		Boolean update = false;
+		Evidence evidence = evidenceRepo.getEvidenceByID(evidenceID);
+		if (StringUtils.isNotBlank(itemType)
+				&& ("shoe".equalsIgnoreCase(itemType) || ("tire".equalsIgnoreCase(itemType)))) {
+			evidence.setItemType(StringUtils.upperCase(itemType));
+			update = true;
+		}
+		if (StringUtils.isNotBlank(identifier) && ("K".equalsIgnoreCase(identifier) || ("Q".equalsIgnoreCase(identifier)))) {
+			evidence.setIdentifier(StringUtils.upperCase(identifier));
+			update = true;
+		}
+		if (update) {
+			evidenceRepo.saveAndFlush(evidence);
+		}
+
 		return new ResponseEntity<Evidence>(evidence, HttpStatus.OK);
 	}
 }
