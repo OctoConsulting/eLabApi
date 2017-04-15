@@ -86,7 +86,10 @@ public class EvidenceController {
 		log.info("PUT /evidences/?id=" + id + "&itemType=" + itemType + "&identifier=" + identifier);
 		List<Evidence> evidences = new ArrayList<Evidence>();
 		for (Integer evidenceID : NumberUtils.convertToIntegerArray(id, Constants.DEFAULT_DELIMITER)) {
-			evidences.add(updateEvidenceByID(evidenceID, itemType, identifier).getBody());
+			ResponseEntity<Evidence> updatedEvidence = updateEvidenceByID(evidenceID, itemType, identifier);
+			if (updatedEvidence.getStatusCode().is2xxSuccessful() && updatedEvidence.hasBody()) {
+				evidences.add(updatedEvidence.getBody());
+			}
 		}
 		return new ResponseEntity<List<Evidence>>(evidences, HttpStatus.OK);
 	}
@@ -105,23 +108,26 @@ public class EvidenceController {
 		log.info("PUT /evidences/" + evidenceID + "?itemType=" + itemType + "&identifier=" + identifier);
 		Boolean update = false;
 		Evidence evidence = evidenceRepo.getEvidenceByID(evidenceID);
-		if (StringUtils.isNotBlank(itemType)
-				&& ("shoe".equalsIgnoreCase(itemType) || ("tire".equalsIgnoreCase(itemType)))) {
-			evidence.setItemType(StringUtils.upperCase(itemType));
-			update = true;
+		if (evidence.getEvidenceType() != Constants.ITEM_ID) {
+			return new ResponseEntity<Evidence>(evidence, HttpStatus.BAD_REQUEST);
+		} else {
+			if (StringUtils.isNotBlank(itemType)
+					&& ("shoe".equalsIgnoreCase(itemType) || ("tire".equalsIgnoreCase(itemType)))) {
+				evidence.setItemType(StringUtils.upperCase(itemType));
+				update = true;
+			}
+			if (StringUtils.isNotBlank(identifier)
+					&& ("K".equalsIgnoreCase(identifier) || ("Q".equalsIgnoreCase(identifier)))) {
+				evidence.setIdentifier(StringUtils.upperCase(identifier));
+				update = true;
+			}
+			if (update) {
+				Date date = new Date();
+				Timestamp timeStamp = new Timestamp(date.getTime());
+				evidence.setUpdatedDate(timeStamp);
+				evidenceRepo.saveAndFlush(evidence);
+			}
 		}
-		if (StringUtils.isNotBlank(identifier)
-				&& ("K".equalsIgnoreCase(identifier) || ("Q".equalsIgnoreCase(identifier)))) {
-			evidence.setIdentifier(StringUtils.upperCase(identifier));
-			update = true;
-		}
-		if (update) {
-			Date date = new Date();
-			Timestamp timeStamp = new Timestamp(date.getTime());
-			evidence.setUpdatedDate(timeStamp);
-			evidenceRepo.saveAndFlush(evidence);
-		}
-
 		return new ResponseEntity<Evidence>(evidence, HttpStatus.OK);
 	}
 }
