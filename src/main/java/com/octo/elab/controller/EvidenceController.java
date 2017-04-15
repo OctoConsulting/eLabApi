@@ -1,6 +1,7 @@
 package com.octo.elab.controller;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.octo.elab.pojo.db.Evidence;
 import com.octo.elab.repository.EvidenceRepository;
+import com.octo.elab.utilities.Constants;
+import com.octo.elab.utilities.NumberUtils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -75,13 +78,31 @@ public class EvidenceController {
 	 * 
 	 * @return ResponseEntity<Evidence>
 	 */
+	@RequestMapping(value = "/evidences/", method = RequestMethod.PUT)
+	@ApiOperation(value = "Update a Evidences by IDs")
+	public ResponseEntity<List<Evidence>> updateEvidencesByIDs(@RequestParam(value = "id", required = false) String id,
+			@RequestParam(value = "itemType", required = false) String itemType,
+			@RequestParam(value = "identifier", required = false) String identifier) throws Exception {
+		log.info("PUT /evidences/?id=" + id + "&itemType=" + itemType + "&identifier=" + identifier);
+		List<Evidence> evidences = new ArrayList<Evidence>();
+		for (Integer evidenceID : NumberUtils.convertToIntegerArray(id, Constants.DEFAULT_DELIMITER)) {
+			evidences.add(updateEvidenceByID(evidenceID, itemType, identifier).getBody());
+		}
+		return new ResponseEntity<List<Evidence>>(evidences, HttpStatus.OK);
+	}
+
+	/**
+	 * This method is used to update evidence item type and identifier
+	 * 
+	 * @return ResponseEntity<Evidence>
+	 */
 	@RequestMapping(value = "/evidences/{evidenceID}/", method = RequestMethod.PUT)
 	@ApiOperation(value = "Update a Evidence by ID")
 	public ResponseEntity<Evidence> updateEvidenceByID(
 			@ApiParam(value = "evidenceID value", required = true) @PathVariable Integer evidenceID,
 			@RequestParam(value = "itemType", required = false) String itemType,
 			@RequestParam(value = "identifier", required = false) String identifier) throws Exception {
-		log.info("PUT /evidences/" + evidenceID);
+		log.info("PUT /evidences/" + evidenceID + "?itemType=" + itemType + "&identifier=" + identifier);
 		Boolean update = false;
 		Evidence evidence = evidenceRepo.getEvidenceByID(evidenceID);
 		if (StringUtils.isNotBlank(itemType)
@@ -89,7 +110,8 @@ public class EvidenceController {
 			evidence.setItemType(StringUtils.upperCase(itemType));
 			update = true;
 		}
-		if (StringUtils.isNotBlank(identifier) && ("K".equalsIgnoreCase(identifier) || ("Q".equalsIgnoreCase(identifier)))) {
+		if (StringUtils.isNotBlank(identifier)
+				&& ("K".equalsIgnoreCase(identifier) || ("Q".equalsIgnoreCase(identifier)))) {
 			evidence.setIdentifier(StringUtils.upperCase(identifier));
 			update = true;
 		}
