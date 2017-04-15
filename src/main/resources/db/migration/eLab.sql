@@ -134,14 +134,11 @@ CREATE TABLE  elab.evidence (
   id INTEGER NOT NULL DEFAULT nextval('elab.evidence_id_seq'),
   case_id INTEGER references  elab.case(id) NOT NULL,
   evidence_name VARCHAR(80) NOT NULL,
-  evidence_desc VARCHAR(4000) NOT NULL,
   evidence_type INTEGER references  elab.evidence_type(id) NOT NULL,
   is_forAnalysis BOOLEAN DEFAULT true NOT NULL,
-  is_verified BOOLEAN DEFAULT true NOT NULL,
+  parent_id INTEGER,
   item_type character varying(20) ,
   identifier character varying(20) ,
-  container_id INTEGER,
-  package_id INTEGER,
   created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
   created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
   updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
@@ -401,41 +398,50 @@ INSERT INTO elab.examiner(
     INSERT INTO elab.initial_assessment_note_type(
   id, name)
   VALUES (3, 'Footwear size determination');
-    INSERT INTO elab.initial_assessment_note_type(
+  
+  INSERT INTO elab.initial_assessment_note_type(
   id, name)
   VALUES (4, 'Other');
 
-          INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_desc, evidence_type, is_verified, item_type, identifier)
-  VALUES (1, 1, 'Box', 'evidence container desc Box', 1, true, '', '');
-INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_desc, evidence_type, is_verified, item_type, identifier,container_id)
-  VALUES (2, 1, 'Paper Bag', 'evidence package desc Paper Bag', 2, true, '', '',1);
-    INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_desc, evidence_type, is_foranalysis, is_verified, item_type, identifier,container_id,package_id)
-  VALUES (3, 1, 'Piece of Rubber', 'evidence item desc Piece of Rubber', 3, true, true, 'Q', 'Tire',1,2);
-    INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_desc, evidence_type, is_foranalysis, is_verified, item_type, identifier,container_id,package_id)
-  VALUES (4, 1, 'Shoe Laces', 'evidence item desc I2', 3, true, true, '', 'Shoe',1,2);
-      INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_desc, evidence_type, is_foranalysis, is_verified, item_type, identifier,container_id,package_id)
-  VALUES (5, 1, 'Left Nike Sneaker', 'evidence item desc I3', 3, true, true, 'K', 'Shoe',1,2);
-      INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_desc, evidence_type, is_foranalysis, is_verified, item_type, identifier,container_id,package_id)
-  VALUES (6, 1, 'Tire Impression', 'evidence item desc I4', 3, true, true, '', 'Tire',1,2);
-    INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_desc, evidence_type, is_foranalysis, is_verified, item_type, identifier,container_id,package_id)
-  VALUES (7, 1, 'Shoe Imprint', 'evidence item desc I4', 3, true, true, '', 'Shoe',1,2);
+  INSERT INTO elab.evidence(
+  id, case_id, evidence_name, evidence_type)
+  VALUES (1, 1, 'Box 1', 1);
+  
+  INSERT INTO elab.evidence(
+  id, case_id, evidence_name, evidence_type, parent_id)
+  VALUES (2, 1, 'Paper Bag 1', 2, 1);
 
-  INSERT INTO elab.exam(
-  id, case_id, evidence_id, exam_name, exam_type, examiner_id)
-  VALUES (1, 1, 5, 'Impressions/Imprints', 1, 4);
-    INSERT INTO elab.exam(
-  id, case_id, evidence_id, exam_name, exam_type, examiner_id)
-  VALUES (2, 1, 3, 'Impressions/Imprints', 1, 4);
+  INSERT INTO elab.evidence(
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id)
+  VALUES (3, 1, 'Piece of Rubber', 3, true, 2);
+  
+  INSERT INTO elab.evidence(
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id)
+  VALUES (4, 1, 'Shoe Laces', 3, true, 2);
+  
+  INSERT INTO elab.evidence(
+  id, case_id, evidence_name, evidence_type)
+  VALUES (5, 1, 'Box 2', 1);
+  
+  INSERT INTO elab.evidence(
+  id, case_id, evidence_name, evidence_type, parent_id)
+  VALUES (6, 1, 'Paper Bag 2', 2, 5);
 
-
-
+  INSERT INTO elab.evidence(
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id)
+  VALUES (7, 1, 'Left Nike Sneaker', 3, true, 6);
+  
+  INSERT INTO elab.evidence(
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id)
+  VALUES (8, 1, 'Shoe Imprint', 3, true, 6);
+  
+  INSERT INTO elab.evidence(
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id)
+  VALUES (9, 1, 'Tire Impression', 3, true, 6);
+  
+  INSERT INTO elab.evidence(
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id)
+  VALUES (10, 1, 'Tire Impression 2', 3, true, 6);
 
 -- Owner assignment for tables
 ALTER TABLE  elab.case OWNER to  elab;   

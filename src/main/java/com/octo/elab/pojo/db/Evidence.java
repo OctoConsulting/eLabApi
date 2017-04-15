@@ -1,6 +1,5 @@
 package com.octo.elab.pojo.db;
 
-
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
@@ -9,26 +8,25 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.octo.elab.utilities.CustomDateTimeDeserializer;
+import com.octo.elab.utilities.CustomDateTimeSerializer;
 
 @Entity
 @Table(name = "evidence")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Evidence {
-	
+
 	@Id
-	@Column(name = "_id")
-	@JsonProperty("id")
-	private Integer ID;
+	@Column(name = "id")
+	private Integer id;
 
 	@Column(name = "case_id")
 	private Integer caseId;
 
 	@Column(name = "evidence_name")
 	private String evidenceName;
-
-	@Column(name = "evidence_number")
-	private Integer evidenceNumber;
 
 	@Column(name = "evidence_type")
 	private Integer evidenceType;
@@ -38,26 +36,35 @@ public class Evidence {
 
 	@Column(name = "parent_id")
 	private Integer parentId;
+	
+	@Column(name = "item_type")
+	private String itemType;
+	
+	@Column(name = "identifier")
+	private String identifier;
 
 	@Column(name = "created_by")
 	private String createdBy;
 
 	@Column(name = "created_date")
+	@JsonSerialize(using = CustomDateTimeSerializer.class)
+	@JsonDeserialize(using = CustomDateTimeDeserializer.class)
 	private Timestamp createdDate;
 
 	@Column(name = "updated_by")
 	private String updatedBy;
 
 	@Column(name = "updated_date")
+	@JsonSerialize(using = CustomDateTimeSerializer.class)
+	@JsonDeserialize(using = CustomDateTimeDeserializer.class)
 	private Timestamp updatedDate;
 
-
-	public Integer getID() {
-		return ID;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setID(Integer iD) {
-		ID = iD;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public Integer getCaseId() {
@@ -74,14 +81,6 @@ public class Evidence {
 
 	public void setEvidenceName(String evidenceName) {
 		this.evidenceName = evidenceName;
-	}
-
-	public Integer getEvidenceNumber() {
-		return evidenceNumber;
-	}
-
-	public void setEvidenceNumber(Integer evidenceNumber) {
-		this.evidenceNumber = evidenceNumber;
 	}
 
 	public Integer getEvidenceType() {
@@ -106,6 +105,22 @@ public class Evidence {
 
 	public void setParentId(Integer parentId) {
 		this.parentId = parentId;
+	}
+	
+	public String getItemType() {
+		return itemType;
+	}
+
+	public void setItemType(String itemType) {
+		this.itemType = itemType;
+	}
+
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
 	}
 
 	public String getCreatedBy() {
@@ -140,4 +155,4 @@ public class Evidence {
 		this.updatedDate = updatedDate;
 	}
 
-	}
+}

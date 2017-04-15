@@ -10,19 +10,19 @@ import com.octo.elab.pojo.db.Evidence;
 
 public interface EvidenceRepository extends JpaRepository<Evidence, Integer> {
 
-	@Query(value = "select e.* from elab.Evidence e where (e._id = :EvidenceID)", nativeQuery = true)
-	public Evidence getEvidenceByID(@Param("EvidenceID") Integer EvidenceID);
+	@Query(value = "select e.* from elab.evidence e where (e.id = :evidenceID)", nativeQuery = true)
+	public Evidence getEvidenceByID(@Param("evidenceID") Integer evidenceID);
 
-	@Query(value = "select e.* from elab.Evidence e order by e._id", nativeQuery = true)
+	@Query(value = "select e.* from elab.evidence e order by e.id", nativeQuery = true)
 	public List<Evidence> getAllEvidences();
-
-	@Query(value = "select e._id from elab.Evidence e order by e._id", nativeQuery = true)
-	public Integer[] getAllEvidenceIDs();
-
-	@Query(value = "select max(_id) from elab.Evidence", nativeQuery = true)
-	public Integer getMaxEvidenceID();
 	
-	@Query(value = "select e.* from elab.Evidence e where (e.case_id = :CaseID)", nativeQuery = true)
-	public Evidence getEvidenceByCaseID(@Param("CaseID") Integer CaseID);
+	@Query(value = "select e.* from elab.evidence e where (e.parent_id = :parentID)", nativeQuery = true)
+	public List<Evidence> getEvidencesByParentID(@Param("parentID") Integer parentID);
+	
+	@Query(value = "select e.* from elab.evidence e where (e.case_id = :caseID)", nativeQuery = true)
+	public List<Evidence> getEvidencesByCaseID(@Param("caseID") Integer caseID);
+	
+	@Query(value = "select e.* from elab.evidence e where (e.case_id = :caseID) and e.evidence_type = 1", nativeQuery = true)
+	public List<Evidence> getContainersByCaseID(@Param("caseID") Integer caseID);
 
 }

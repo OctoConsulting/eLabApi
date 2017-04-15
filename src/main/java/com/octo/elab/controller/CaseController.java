@@ -1,5 +1,6 @@
 package com.octo.elab.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -17,7 +18,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.octo.elab.pojo.db.Case;
+import com.octo.elab.pojo.db.Container;
+import com.octo.elab.pojo.db.Evidence;
+import com.octo.elab.pojo.db.Package;
 import com.octo.elab.repository.CaseRepository;
+import com.octo.elab.repository.EvidenceRepository;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,6 +40,9 @@ public class CaseController {
 
 	@Autowired
 	private CaseRepository caseRepo;
+
+	@Autowired
+	private EvidenceRepository evidenceRepo;
 
 	/**
 	 * This method is used to fetch all cases from database
@@ -63,6 +71,34 @@ public class CaseController {
 			@ApiParam(value = "caseID value", required = true) @PathVariable Integer caseID) throws Exception {
 		log.info("GET /cases/" + caseID);
 		Case cases = caseRepo.getCaseByID(caseID);
+
+		List<Evidence> db_containers = evidenceRepo.getContainersByCaseID(cases.getId());
+		List<Evidence> db_packages = new ArrayList<Evidence>();
+
+		List<Container> containers = new ArrayList<Container>();
+
+		List<Evidence> items = new ArrayList<Evidence>();
+
+		for (Evidence db_container : db_containers) {
+			List<Package> packages = new ArrayList<Package>();
+			Container container = new Container();
+			container.setEvidenceName(db_container.getEvidenceName());
+			container.setEvidenceType(db_container.getEvidenceType());
+			db_packages = evidenceRepo.getEvidencesByParentID(db_container.getId());
+			for (Evidence db_package : db_packages) {
+				items = evidenceRepo.getEvidencesByParentID(db_package.getId());
+				Package packag = new Package();
+				packag.setEvidenceName(db_package.getEvidenceName());
+				packag.setEvidenceType(db_package.getEvidenceType());
+				packag.setItems(items);
+				packages.add(packag);
+			}
+			container.setPackages(packages);
+			containers.add(container);
+		}
+
+		cases.setContainers(containers);
+
 		return new ResponseEntity<Case>(cases, HttpStatus.OK);
 	}
 }

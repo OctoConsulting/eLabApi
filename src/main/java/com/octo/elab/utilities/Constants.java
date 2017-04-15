@@ -10,6 +10,10 @@ public class Constants {
 
 	// UI Form Constants
 	public static final String UI = "UI";
+	
+	public static final Integer CONTAINER_ID = 1;
+	public static final Integer PACKAGE_ID = 2;
+	public static final Integer ITEM_ID = 3;
 
 	// TextUtils Constants
 	public static final String COMMA = ",";
