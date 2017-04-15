@@ -41,7 +41,7 @@ public class EvidenceTypeController {
 	 *
 	 * @return ResponseEntity<List<EvidenceType>>
 	 */
-	@RequestMapping(value = "/evidenceTypes", method = RequestMethod.GET)
+	@RequestMapping(value = "/evidencetypes", method = RequestMethod.GET)
 	@ApiOperation(value = "Fetch all EvidenceTypes")
 	public ResponseEntity<List<EvidenceType>> getEvidenceTypes() throws Exception {
 		log.info("GET /evidenceTypes API to fetch all evidenceTypes");
@@ -57,7 +57,7 @@ public class EvidenceTypeController {
 	 *            The id of the EvidenceType to be retrieved
 	 * @return ResponseEntity<EvidenceType>
 	 */
-	@RequestMapping(value = "/evidenceTypes/{evidenceTypeID}/", method = RequestMethod.GET)
+	@RequestMapping(value = "/evidencetypes/{evidenceTypeID}/", method = RequestMethod.GET)
 	@ApiOperation(value = "Fetch a EvidenceType by ID")
 	public ResponseEntity<EvidenceType> getEvidenceTypeByID(
 			@ApiParam(value = "evidenceTypeID value", required = true) @PathVariable Integer evidenceTypeID)
