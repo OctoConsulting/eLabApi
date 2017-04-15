@@ -1,5 +1,7 @@
 package com.octo.elab.controller;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -92,6 +94,9 @@ public class EvidenceController {
 			update = true;
 		}
 		if (update) {
+			Date date = new Date();
+			Timestamp timeStamp = new Timestamp(date.getTime());
+			evidence.setUpdatedDate(timeStamp);
 			evidenceRepo.saveAndFlush(evidence);
 		}
 
