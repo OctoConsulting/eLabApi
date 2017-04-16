@@ -8,7 +8,17 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class Container {
 	private String containerName;
 	private Integer evidenceType;
+	private Integer id;
 	private List<Package> packages;
+
+	
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public String getContainerName() {
 		return containerName;

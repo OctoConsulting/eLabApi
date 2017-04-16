@@ -84,12 +84,14 @@ public class CaseController {
 			Container container = new Container();
 			container.setContainerName(db_container.getEvidenceName());
 			container.setEvidenceType(db_container.getEvidenceType());
+			container.setId(db_container.getId());
 			db_packages = evidenceRepo.getEvidencesByParentID(db_container.getId());
 			for (Evidence db_package : db_packages) {
 				items = evidenceRepo.getEvidencesByParentID(db_package.getId());
 				Package packag = new Package();
 				packag.setPackageName(db_package.getEvidenceName());
 				packag.setEvidenceType(db_package.getEvidenceType());
+				packag.setId(db_package.getId());
 				packag.setItems(items);
 				packages.add(packag);
 			}

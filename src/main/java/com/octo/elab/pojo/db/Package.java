@@ -10,6 +10,17 @@ public class Package {
 	private String packageName;
 	private Integer evidenceType;
 	private List<Evidence> items;
+	private Integer id;
+	
+	
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public String getPackageName() {
 		return packageName;
