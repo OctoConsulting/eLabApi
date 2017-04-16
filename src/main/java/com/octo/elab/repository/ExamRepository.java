@@ -6,24 +6,28 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.octo.elab.pojo.db.Evidence;
 import com.octo.elab.pojo.db.Exam;
 
 public interface ExamRepository extends JpaRepository<Exam, Integer> {
 
-	@Query(value = "select e.* from elab.Exam e where (e._id = :ExamID)", nativeQuery = true)
+	@Query(value = "select e.* from elab.Exam e where (e.id = :ExamID)", nativeQuery = true)
 	public Exam getExamByID(@Param("ExamID") Integer ExamID);
 
-	@Query(value = "select e.* from elab.Exam e order by e._id", nativeQuery = true)
+	@Query(value = "select e.* from elab.Exam e order by e.id", nativeQuery = true)
 	public List<Exam> getAllExams();
 
-	@Query(value = "select e._id from elab.Exam e order by e._id", nativeQuery = true)
+	@Query(value = "select e.id from elab.Exam e order by e.id", nativeQuery = true)
 	public Integer[] getAllExamIDs();
 
-	@Query(value = "select max(_id) from elab.Exam", nativeQuery = true)
+	@Query(value = "select max(id) from elab.Exam", nativeQuery = true)
 	public Integer getMaxExamID();
 
 	@Query(value = "select e.* from elab.Exam e where (e.case_id = :CaseID)", nativeQuery = true)
-	public Exam getExamByCaseID(@Param("CaseID") Integer CaseID);
+	public List<Exam> getExamsByCaseID(@Param("CaseID") Integer CaseID);
+	
+	@Query(value = "select e.evidence_id from elab.Exam e where (e.case_id = :CaseID)", nativeQuery = true)
+	public Integer[] getAllEvidencesByCaseID(@Param("CaseID") Integer CaseID);
 
 	@Query(value = "select e.* from elab.Exam e where (e.examiner_id = :ExaminerID)", nativeQuery = true)
 	public Exam getExamByExaminerID(@Param("ExaminerID") Integer ExaminerID);

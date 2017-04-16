@@ -1,14 +1,20 @@
 package com.octo.elab.pojo.db;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.octo.elab.utilities.CustomDateTimeDeserializer;
+import com.octo.elab.utilities.CustomDateTimeSerializer;
 
 @Entity
 @Table(name = "exam")
@@ -16,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Exam {
 
 	@Id
-	@Column(name = "_id")
+	@Column(name = "id")
 	@JsonProperty("id")
 	private Integer ID;
 
@@ -33,28 +39,49 @@ public class Exam {
 	private Integer examinerId;
 
 	@Column(name = "assigned_date")
+	@JsonSerialize(using = CustomDateTimeSerializer.class)
+	@JsonDeserialize(using = CustomDateTimeDeserializer.class)
 	private Timestamp assignedDate;
 
 	@Column(name = "start_date")
+	@JsonSerialize(using = CustomDateTimeSerializer.class)
+	@JsonDeserialize(using = CustomDateTimeDeserializer.class)
 	private Timestamp startDate;
 
 	@Column(name = "end_date")
+	@JsonSerialize(using = CustomDateTimeSerializer.class)
+	@JsonDeserialize(using = CustomDateTimeDeserializer.class)
 	private Timestamp endDate;
 
 	@Column(name = "created_by")
 	private String createdBy;
 
 	@Column(name = "created_date")
+	@JsonSerialize(using = CustomDateTimeSerializer.class)
+	@JsonDeserialize(using = CustomDateTimeDeserializer.class)
 	private Timestamp createdDate;
 
 	@Column(name = "updated_by")
 	private String updatedBy;
 
 	@Column(name = "updated_date")
+	@JsonSerialize(using = CustomDateTimeSerializer.class)
+	@JsonDeserialize(using = CustomDateTimeDeserializer.class)
 	private Timestamp updatedDate;
+	
+	@Transient
+	private List<Evidence> items;
 
 	public Integer getID() {
 		return ID;
+	}
+
+	public List<Evidence> getItems() {
+		return items;
+	}
+
+	public void setItems(List<Evidence> items) {
+		this.items = items;
 	}
 
 	public void setID(Integer iD) {

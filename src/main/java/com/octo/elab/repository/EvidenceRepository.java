@@ -20,7 +20,10 @@ public interface EvidenceRepository extends JpaRepository<Evidence, Integer> {
 	public List<Evidence> getEvidencesByParentID(@Param("parentID") Integer parentID);
 	
 	@Query(value = "select e.* from elab.evidence e where (e.case_id = :caseID)", nativeQuery = true)
-	public List<Evidence> getEvidencesByCaseID(@Param("caseID") Integer caseID);
+	public List<Evidence> getEvidenceByCaseID(@Param("caseID") Integer caseID);
+	
+	@Query(value = "select e.* from elab.evidence e where (e.id in :evidenceIDs)", nativeQuery = true)
+	public List<Evidence> getEvidencesByID(@Param("evidenceIDs") Integer[] evidenceIDs);
 	
 	@Query(value = "select e.* from elab.evidence e where (e.case_id = :caseID) and e.evidence_type = 1", nativeQuery = true)
 	public List<Evidence> getContainersByCaseID(@Param("caseID") Integer caseID);

@@ -1,9 +1,11 @@
 package com.octo.elab.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +16,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.octo.elab.pojo.db.Evidence;
 import com.octo.elab.pojo.db.Exam;
+import com.octo.elab.repository.EvidenceRepository;
 import com.octo.elab.repository.ExamRepository;
 
 import io.swagger.annotations.Api;
@@ -35,6 +40,9 @@ public class ExamController {
 
 	@Autowired
 	private ExamRepository examRepo;
+	
+	@Autowired
+	private EvidenceRepository evidenceRepo;
 
 	/**
 	 * This method is used to fetch all exams from database
@@ -43,9 +51,24 @@ public class ExamController {
 	 */
 	@RequestMapping(value = "/exams", method = RequestMethod.GET)
 	@ApiOperation(value = "Fetch all Exams")
-	public ResponseEntity<List<Exam>> getExams() throws Exception {
+	public ResponseEntity<List<Exam>> getExams(
+			@RequestParam(value = "caseID", required = false) Integer caseID) throws Exception {
 		log.info("GET /exams API to fetch all exams");
-		List<Exam> exams = examRepo.getAllExams();
+		List<Exam> exams = new ArrayList<Exam>();
+		if(caseID == null)
+		{
+				exams = examRepo.getAllExams();
+				return new ResponseEntity<List<Exam>>(exams, HttpStatus.OK);
+		}
+		else{
+			List<Exam> examList = examRepo.getExamsByCaseID(caseID);
+			Exam exam = examList.get(0);
+			Integer[] evidenceIDs = examRepo.getAllEvidencesByCaseID(caseID);
+			List<Evidence> evidences = evidenceRepo.getEvidencesByID(evidenceIDs);
+			exam.setItems(evidences);
+			exams.add(exam);
+			
+		}
 		return new ResponseEntity<List<Exam>>(exams, HttpStatus.OK);
 	}
 
