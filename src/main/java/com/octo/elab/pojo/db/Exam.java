@@ -71,10 +71,35 @@ public class Exam {
 	
 	@Transient
 	private List<Evidence> items;
+	
+	@Column(name = "description")
+	private String examTypeName;
+	
+	@Column(name = "examiner_name")
+	private String examinerName;
+	
+	
+	public String getExamTypeName() {
+		return examTypeName;
+	}
 
+	public void setExamTypeName(String examTypeName) {
+		this.examTypeName = examTypeName;
+	}
+
+	
 	public Integer getID() {
 		return ID;
 	}
+
+	public String getExaminerName() {
+		return examinerName;
+	}
+
+	public void setExaminerName(String examinerName) {
+		this.examinerName = examinerName;
+	}
+
 
 	public List<Evidence> getItems() {
 		return items;
