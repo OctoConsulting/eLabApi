@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -20,6 +21,7 @@ public class Evidence {
 
 	@Id
 	@Column(name = "id")
+	@JsonIgnore
 	private Integer id;
 
 	@Column(name = "case_id")
@@ -42,6 +44,10 @@ public class Evidence {
 	
 	@Column(name = "identifier")
 	private String identifier;
+	
+	@Column(name = "sequenceNumber")
+	@JsonProperty("id")
+	private String sequenceNumber;
 
 	@Column(name = "created_by")
 	private String createdBy;

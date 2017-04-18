@@ -76,30 +76,20 @@ CREATE TABLE  elab.note_detail_tire_type (
 );
 ALTER SEQUENCE  elab.note_detail_tire_type_id_seq OWNED BY  elab.note_detail_tire_type.id;
 
-CREATE SEQUENCE  elab.note_detail_q_item_type_id_seq;
-CREATE TABLE  elab.note_detail_q_item_type (
-  id INTEGER NOT NULL DEFAULT nextval('elab.note_detail_q_item_type_id_seq'),
+
+
+CREATE SEQUENCE  elab.note_detail_item_type_id_seq;
+CREATE TABLE  elab.note_detail_item_type (
+  id INTEGER NOT NULL DEFAULT nextval('elab.note_detail_item_type_id_seq'),
   name VARCHAR(100) NOT NULL,
+  type VARCHAR(100) NOT NULL,
   created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
   created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
   updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
   updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  CONSTRAINT note_detail_q_item_type_PK PRIMARY KEY (id)
+  CONSTRAINT note_detail_item_type_PK PRIMARY KEY (id)
 );
-ALTER SEQUENCE  elab.note_detail_q_item_type_id_seq OWNED BY  elab.note_detail_q_item_type.id;
-
-
-CREATE SEQUENCE  elab.note_detail_k_item_type_id_seq;
-CREATE TABLE  elab.note_detail_k_item_type (
-  id INTEGER NOT NULL DEFAULT nextval('elab.note_detail_k_item_type_id_seq'),
-  name VARCHAR(100) NOT NULL,
-  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  CONSTRAINT note_detail_k_item_type_PK PRIMARY KEY (id)
-);
-ALTER SEQUENCE  elab.note_detail_k_item_type_id_seq OWNED BY  elab.note_detail_k_item_type.id;
+ALTER SEQUENCE  elab.note_detail_item_type_id_seq OWNED BY  elab.note_detail_item_type.id;
 
 CREATE SEQUENCE  elab.case_id_seq;
 CREATE TABLE  elab.case (
@@ -139,6 +129,7 @@ CREATE TABLE  elab.evidence (
   parent_id INTEGER,
   item_type character varying(20) ,
   identifier character varying(20) ,
+  sequenceNumber INTEGER ,
   created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
   created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
   updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
@@ -205,6 +196,7 @@ CREATE TABLE elab.note (
   id INTEGER NOT NULL DEFAULT nextval('elab.note_id_seq'),
   exam_id INTEGER references elab.exam(id) NOT NULL,
   exam_sub_type VARCHAR(80) NOT NULL,
+  marked_complete boolean DEFAULT false NOT NULL,
   note_type INTEGER references elab.note_type(id) NOT NULL,
   note_category VARCHAR(80) NOT NULL,
   initial_assessment_note_type_id INTEGER references elab.initial_assessment_note_type(id) NOT NULL,
@@ -237,8 +229,7 @@ CREATE TABLE elab.note_detail (
   id INTEGER NOT NULL DEFAULT nextval('elab.note_detail_id_seq'),
  note_id INTEGER NOT NULL references elab.note(id),
   note_detail_type INTEGER references elab.note_detail_type(id) NOT NULL,
-  note_detail_k_item_type_id INTEGER references elab.note_detail_k_item_type(id) NOT NULL,
-  note_detail_q_item_type_id INTEGER references elab.note_detail_q_item_type(id) NOT NULL,
+  note_detail_item_type_id INTEGER references elab.note_detail_item_type(id) NOT NULL,
   note_detail_item_style_id INTEGER references elab.note_detail_item_style(id) NOT NULL,
   brand_name VARCHAR(100) NOT NULL,
   note_detail_size VARCHAR(100) NOT NULL,
@@ -311,27 +302,27 @@ INSERT INTO elab.examiner(
   id, description, is_active)
   VALUES (2, 'Q Item Detail', true);
 
-  INSERT INTO elab.note_detail_k_item_type(
-  id, name)
-  VALUES (1, 'Original Footwear');
+  INSERT INTO elab.note_detail_item_type(
+  id, name,type)
+  VALUES (1, 'Original Footwear','K');
       
-    INSERT INTO elab.note_detail_k_item_type(
-  id, name)
-  VALUES (2, 'Footwear test impression');
+    INSERT INTO elab.note_detail_item_type(
+  id, name,type)
+  VALUES (2, 'Footwear test impression','K');
       
-    INSERT INTO elab.note_detail_k_item_type(
-  id, name)
-  VALUES (3, 'Photo/Printouts');
+    INSERT INTO elab.note_detail_item_type(
+  id, name,type)
+  VALUES (3, 'Photo/Printouts','K');
       
-    INSERT INTO elab.note_detail_k_item_type(
-  id, name)
-  VALUES (4, 'Disc');
-    INSERT INTO elab.note_detail_k_item_type(
-  id, name)
-  VALUES (5, 'Digital Image');
-    INSERT INTO elab.note_detail_k_item_type(
-  id, name)
-  VALUES (6, 'Other');
+    INSERT INTO elab.note_detail_item_type(
+  id, name,type)
+  VALUES (4, 'Disc','K');
+    INSERT INTO elab.note_detail_item_type(
+  id, name,type)
+  VALUES (5, 'Digital Image','K');
+    INSERT INTO elab.note_detail_item_type(
+  id, name,type)
+  VALUES (6, 'Other','K');
     
     INSERT INTO elab.note_detail_item_style(
   id, name)
@@ -364,30 +355,9 @@ INSERT INTO elab.examiner(
 
   
 
-    INSERT INTO elab.note_detail_q_item_type(
-  id, name)
-  VALUES (1, 'Gel Lift');
-      INSERT INTO elab.note_detail_q_item_type(
-  id, name)
-  VALUES (2, 'Original');
-      INSERT INTO elab.note_detail_q_item_type(
-  id, name)
-  VALUES (3, 'Static Lift');
-      INSERT INTO elab.note_detail_q_item_type(
-  id, name)
-  VALUES (4, 'Adhesive Lift');
-      INSERT INTO elab.note_detail_q_item_type(
-  id, name)
-  VALUES (5, 'Case');
-      INSERT INTO elab.note_detail_q_item_type(
-  id, name)
-  VALUES (6, 'Photo/printout');
-       INSERT INTO elab.note_detail_q_item_type(
-  id, name)
-  VALUES (7, 'Disc');
-       INSERT INTO elab.note_detail_q_item_type(
-  id, name)
-  VALUES (8, 'Digital Image');
+    INSERT INTO elab.note_detail_item_type(
+  id, name,type)
+  VALUES (7, 'Gel Lift','Q'),(8, 'Original','Q'), (9, 'Static Lift','Q'), (10, 'Adhesive Lift','Q'), (11, 'Case','Q'), (12, 'Photo/printout','Q'), (13, 'Disc','Q'), (14, 'Digital Image','Q');
 
   INSERT INTO elab.initial_assessment_note_type(
   id, name)
@@ -404,44 +374,44 @@ INSERT INTO elab.examiner(
   VALUES (4, 'Other');
 
   INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_type)
-  VALUES (1, 1, 'Box 1', 1);
+  id, case_id, evidence_name, evidence_type,sequenceNumber)
+  VALUES (1, 1, 'Box 1', 1,1);
   
   INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_type, parent_id)
-  VALUES (2, 1, 'Paper Bag 1', 2, 1);
+  id, case_id, evidence_name, evidence_type, parent_id,sequenceNumber)
+  VALUES (2, 1, 'Paper Bag 1', 2, 1,1);
 
   INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id)
-  VALUES (3, 1, 'Piece of Rubber', 3, true, 2);
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,,sequenceNumber)
+  VALUES (3, 1, 'Piece of Rubber', 3, true, 2,1);
   
   INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id)
-  VALUES (4, 1, 'Shoe Laces', 3, true, 2);
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,,sequenceNumber)
+  VALUES (4, 1, 'Shoe Laces', 3, true, 2,2);
   
   INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_type)
-  VALUES (5, 1, 'Box 2', 1);
+  id, case_id, evidence_name, evidence_type,sequenceNumber,sequenceNumber)
+  VALUES (5, 1, 'Box 2', 1,2);
   
   INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_type, parent_id)
-  VALUES (6, 1, 'Paper Bag 2', 2, 5);
+  id, case_id, evidence_name, evidence_type, parent_id,sequenceNumber)
+  VALUES (6, 1, 'Paper Bag 2', 2, 5,1);
 
   INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id)
-  VALUES (7, 1, 'Left Nike Sneaker', 3, true, 6);
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,sequenceNumber)
+  VALUES (7, 1, 'Left Nike Sneaker', 3, true, 6,1);
   
   INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id)
-  VALUES (8, 1, 'Shoe Imprint', 3, true, 6);
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,sequenceNumber)
+  VALUES (8, 1, 'Shoe Imprint', 3, true, 6,2);
   
   INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id)
-  VALUES (9, 1, 'Tire Impression', 3, true, 6);
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,sequenceNumber)
+  VALUES (9, 1, 'Tire Impression', 3, true, 6,3);
   
   INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id)
-  VALUES (10, 1, 'Tire Impression 2', 3, true, 6);
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,sequenceNumber)
+  VALUES (10, 1, 'Tire Impression 2', 3, true, 6,4);
 
       INSERT INTO elab.exam(
   id, case_id, evidence_id, exam_name, exam_type, examiner_id)
@@ -464,8 +434,7 @@ ALTER TABLE  elab.initial_assessment_note_type OWNER to   elab;
 ALTER TABLE  elab.note OWNER to   elab;
 ALTER TABLE  elab.note_detail OWNER to   elab;
 ALTER TABLE  elab.note_detail_item_style OWNER to   elab;
-ALTER TABLE  elab.note_detail_k_item_type OWNER to   elab;
-ALTER TABLE  elab.note_detail_q_item_type OWNER to   elab;
+ALTER TABLE  elab.note_detail_item_type OWNER to   elab;
 ALTER TABLE  elab.note_detail_tire_type OWNER to   elab;
 ALTER TABLE  elab.note_detail_type OWNER to   elab;
 ALTER TABLE  elab.note_detail_vehicle_position OWNER to   elab;
