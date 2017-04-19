@@ -252,55 +252,54 @@ ALTER TABLE elab.note
 
 
 
-INSERT INTO elab."case"(
-  id, lab_no, status, opened_datetime, violation, violation_datetime, is_active)
-  VALUES (1,1, 'In Progress', '2017-04-15', 'Violation', '2017-04-15', true);
+INSERT INTO elab.case(
+  id, lab_no, status, opened_datetime, violation, violation_datetime)
+  VALUES (1,1, 'In Progress', '2017-04-15', 'Violation', '2017-04-15');
 
   INSERT INTO elab.evidence_type(
-  id, description, is_active)
-  VALUES (1, 'Container', true);
+  id, description)
+  VALUES (1, 'Container');
 INSERT INTO elab.evidence_type(
-  id, description, is_active)
-  VALUES (2, 'Package', true);
+  id, description)
+  VALUES (2, 'Package');
 INSERT INTO elab.evidence_type(
-  id, description, is_active)
-  VALUES (3, 'Item', true);
-
+  id, description)
+  VALUES (3, 'Item');
 
   INSERT INTO elab.exam_type(
-  id, description, is_active)
-  VALUES (1, 'Shoe Prints/Tire Thread',true);
+  id, description)
+  VALUES (1, 'Shoe Prints/Tire Thread');
 
   INSERT INTO elab.examiner(
-  id, examiner_name, is_active)
-  VALUES (1, 'Nithin', true);
+  id, examiner_name)
+  VALUES (1, 'Nithin');
 INSERT INTO elab.examiner(
-  id, examiner_name, is_active)
-  VALUES (2, 'Akanksha', true);
+  id, examiner_name)
+  VALUES (2, 'Akanksha');
 INSERT INTO elab.examiner(
-  id, examiner_name, is_active)
-  VALUES (3, 'Sumit', true);
+  id, examiner_name)
+  VALUES (3, 'Sumit');
     INSERT INTO elab.examiner(
-  id, examiner_name, is_active)
-  VALUES (4, 'Juliette Fitzsimmons', true);
+  id, examiner_name)
+  VALUES (4, 'Juliette Fitzsimmons');
       INSERT INTO elab.examiner(
-  id, examiner_name, is_active)
-  VALUES (5, 'Erik', true);
+  id, examiner_name)
+  VALUES (5, 'Erik');
    INSERT INTO elab.examiner(
-  id, examiner_name, is_active)
-  VALUES (6, 'Marcus Stanton', true);
+  id, examiner_name)
+  VALUES (6, 'Marcus Stanton');
 
   INSERT INTO elab.note_type(
-  id, description, is_active)
-  VALUES (1, 'Initial Assessment', true);
+  id, description)
+  VALUES (1, 'Initial Assessment');
 
   INSERT INTO elab.note_detail_type(
-  id, description, is_active)
-  VALUES (1, 'K Item Detail', true);
+  id, description)
+  VALUES (1, 'K Item Detail');
     
     INSERT INTO elab.note_detail_type(
-  id, description, is_active)
-  VALUES (2, 'Q Item Detail', true);
+  id, description)
+  VALUES (2, 'Q Item Detail');
 
   INSERT INTO elab.note_detail_item_type(
   id, name,type)
