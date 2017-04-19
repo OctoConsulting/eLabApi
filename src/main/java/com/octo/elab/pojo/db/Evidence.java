@@ -9,7 +9,6 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.octo.elab.utilities.CustomDateTimeDeserializer;
@@ -39,16 +38,15 @@ public class Evidence {
 
 	@Column(name = "parent_id")
 	private Integer parentId;
-	
+
 	@Column(name = "item_type")
 	private String itemType;
-	
+
 	@Column(name = "identifier")
 	private String identifier;
-	
-	@Column(name = "sequenceNumber")
-	@JsonProperty("id")
-	private String sequenceNumber;
+
+	@Column(name = "_id")
+	private Integer _id;
 
 	@Column(name = "created_by")
 	private String createdBy;
@@ -113,7 +111,7 @@ public class Evidence {
 	public void setParentId(Integer parentId) {
 		this.parentId = parentId;
 	}
-	
+
 	public String getItemType() {
 		return itemType;
 	}
@@ -162,4 +160,11 @@ public class Evidence {
 		this.updatedDate = updatedDate;
 	}
 
+	public Integer get_id() {
+		return _id;
+	}
+
+	public void set_id(Integer _id) {
+		this._id = _id;
+	}
 }

@@ -129,7 +129,7 @@ CREATE TABLE  elab.evidence (
   parent_id INTEGER,
   item_type character varying(20) ,
   identifier character varying(20) ,
-  sequenceNumber INTEGER ,
+  _id INTEGER ,
   created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
   created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
   updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
@@ -374,43 +374,43 @@ INSERT INTO elab.examiner(
   VALUES (4, 'Other');
 
   INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_type,sequenceNumber)
+  id, case_id, evidence_name, evidence_type,_id)
   VALUES (1, 1, 'Box 1', 1,1);
   
   INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_type, parent_id,sequenceNumber)
+  id, case_id, evidence_name, evidence_type, parent_id,_id)
   VALUES (2, 1, 'Paper Bag 1', 2, 1,1);
 
   INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,,sequenceNumber)
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,_id)
   VALUES (3, 1, 'Piece of Rubber', 3, true, 2,1);
   
   INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,,sequenceNumber)
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,_id)
   VALUES (4, 1, 'Shoe Laces', 3, true, 2,2);
   
   INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_type,sequenceNumber,sequenceNumber)
+  id, case_id, evidence_name, evidence_type,_id)
   VALUES (5, 1, 'Box 2', 1,2);
   
   INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_type, parent_id,sequenceNumber)
+  id, case_id, evidence_name, evidence_type, parent_id,_id)
   VALUES (6, 1, 'Paper Bag 2', 2, 5,1);
 
   INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,sequenceNumber)
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,_id)
   VALUES (7, 1, 'Left Nike Sneaker', 3, true, 6,1);
   
   INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,sequenceNumber)
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,_id)
   VALUES (8, 1, 'Shoe Imprint', 3, true, 6,2);
   
   INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,sequenceNumber)
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,_id)
   VALUES (9, 1, 'Tire Impression', 3, true, 6,3);
   
   INSERT INTO elab.evidence(
-  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,sequenceNumber)
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,_id)
   VALUES (10, 1, 'Tire Impression 2', 3, true, 6,4);
 
       INSERT INTO elab.exam(
