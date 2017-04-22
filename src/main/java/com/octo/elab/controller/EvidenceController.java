@@ -74,19 +74,26 @@ public class EvidenceController {
 	}
 
 	/**
-	 * This method is used to update evidence item type and identifier
+	 * This method is used to update evidence isForAnalysis, item type and
+	 * identifier values
 	 * 
-	 * @return ResponseEntity<Evidence>
+	 * @return ResponseEntity<List<Evidence>>
 	 */
 	@RequestMapping(value = "/evidences/", method = RequestMethod.PUT)
 	@ApiOperation(value = "Update a Evidences by IDs")
 	public ResponseEntity<List<Evidence>> updateEvidencesByIDs(@RequestParam(value = "id", required = false) String id,
+			@RequestParam(value = "isForAnalysis", required = false) String isForAnalysis,
 			@RequestParam(value = "itemType", required = false) String itemType,
 			@RequestParam(value = "identifier", required = false) String identifier) throws Exception {
-		log.info("PUT /evidences/?id=" + id + "&itemType=" + itemType + "&identifier=" + identifier);
+		log.info("PUT /evidences/?id=" + id + "&isForAnalysis=" + isForAnalysis + "&itemType=" + itemType
+				+ "&identifier=" + identifier);
+		if (StringUtils.isBlank(id)) {
+			return new ResponseEntity<List<Evidence>>(HttpStatus.BAD_REQUEST);
+		}
 		List<Evidence> evidences = new ArrayList<Evidence>();
 		for (Integer evidenceID : NumberUtils.convertToIntegerArray(id, Constants.DEFAULT_DELIMITER)) {
-			ResponseEntity<Evidence> updatedEvidence = updateEvidenceByID(evidenceID, itemType, identifier);
+			ResponseEntity<Evidence> updatedEvidence = updateEvidenceByID(evidenceID, isForAnalysis, itemType,
+					identifier);
 			if (updatedEvidence.getStatusCode().is2xxSuccessful() && updatedEvidence.hasBody()) {
 				evidences.add(updatedEvidence.getBody());
 			}
@@ -95,7 +102,8 @@ public class EvidenceController {
 	}
 
 	/**
-	 * This method is used to update evidence item type and identifier
+	 * This method is used to update evidence isForAnalysis, item type and
+	 * identifier values
 	 * 
 	 * @return ResponseEntity<Evidence>
 	 */
@@ -103,14 +111,24 @@ public class EvidenceController {
 	@ApiOperation(value = "Update a Evidence by ID")
 	public ResponseEntity<Evidence> updateEvidenceByID(
 			@ApiParam(value = "evidenceID value", required = true) @PathVariable Integer evidenceID,
+			@RequestParam(value = "isForAnalysis", required = false) String isForAnalysis,
 			@RequestParam(value = "itemType", required = false) String itemType,
 			@RequestParam(value = "identifier", required = false) String identifier) throws Exception {
-		log.info("PUT /evidences/" + evidenceID + "?itemType=" + itemType + "&identifier=" + identifier);
+		log.info("PUT /evidences/" + evidenceID + "?isForAnalysis=" + isForAnalysis + "&itemType=" + itemType
+				+ "&identifier=" + identifier);
 		Boolean update = false;
 		Evidence evidence = evidenceRepo.getEvidenceByID(evidenceID);
 		if (evidence.getEvidenceType() != Constants.ITEM_ID) {
 			return new ResponseEntity<Evidence>(evidence, HttpStatus.BAD_REQUEST);
 		} else {
+			if (StringUtils.isNotBlank(isForAnalysis)) {
+				if ("true".equalsIgnoreCase(isForAnalysis)) {
+					evidence.setIsForAnalysis(true);
+				} else if ("false".equalsIgnoreCase(isForAnalysis)) {
+					evidence.setIsForAnalysis(false);
+				}
+				update = true;
+			}
 			if (StringUtils.isNotBlank(itemType)
 					&& ("shoe".equalsIgnoreCase(itemType) || ("tire".equalsIgnoreCase(itemType)))) {
 				evidence.setItemType(StringUtils.upperCase(itemType));
