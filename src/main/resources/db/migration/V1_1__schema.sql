@@ -269,6 +269,15 @@ INSERT INTO elab.evidence_type(
   INSERT INTO elab.exam_type(
   id, description)
   VALUES (1, 'Shoe Prints/Tire Thread');
+  INSERT INTO elab.exam_type(
+  id, description)
+  VALUES (2, 'Chemistry - Toxicology');
+  INSERT INTO elab.exam_type(
+  id, description)
+  VALUES (3, 'Firearms');
+  INSERT INTO elab.exam_type(
+  id, description)
+  VALUES (4, 'Question Documents');
 
   INSERT INTO elab.examiner(
   id, examiner_name)
