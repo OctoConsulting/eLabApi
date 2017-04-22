@@ -9,6 +9,10 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.octo.elab.utilities.CustomDateTimeDeserializer;
+import com.octo.elab.utilities.CustomDateTimeSerializer;
 
 @Entity
 @Table(name = "exam_type")
@@ -16,9 +20,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ExamType {
 
 	@Id
-	@Column(name = "_id")
-	@JsonProperty("id")
-	private Integer ID;
+	@Column(name = "id")
+	private Integer id;
 
 	@Column(name = "description")
 	private String description;
@@ -29,12 +32,25 @@ public class ExamType {
 	@Column(name = "created_by")
 	private String createdBy;
 
-	public Integer getID() {
-		return ID;
+	@Column(name = "created_date")
+	@JsonSerialize(using = CustomDateTimeSerializer.class)
+	@JsonDeserialize(using = CustomDateTimeDeserializer.class)
+	private Timestamp createdDate;
+
+	@Column(name = "updated_by")
+	private String updatedBy;
+
+	@Column(name = "updated_date")
+	@JsonSerialize(using = CustomDateTimeSerializer.class)
+	@JsonDeserialize(using = CustomDateTimeDeserializer.class)
+	private Timestamp updatedDate;
+
+	public Integer getId() {
+		return id;
 	}
 
-	public void setID(Integer iD) {
-		ID = iD;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getDescription() {
@@ -84,14 +100,5 @@ public class ExamType {
 	public void setUpdatedDate(Timestamp updatedDate) {
 		this.updatedDate = updatedDate;
 	}
-
-	@Column(name = "created_date")
-	private Timestamp createdDate;
-
-	@Column(name = "updated_by")
-	private String updatedBy;
-
-	@Column(name = "updated_date")
-	private Timestamp updatedDate;
 
 }

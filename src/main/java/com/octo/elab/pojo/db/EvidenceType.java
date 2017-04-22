@@ -99,5 +99,5 @@ public class EvidenceType {
 	public void setUpdatedDate(Timestamp updatedDate) {
 		this.updatedDate = updatedDate;
 	}
-	
+
 }

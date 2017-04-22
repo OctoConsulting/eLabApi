@@ -10,16 +10,16 @@ import com.octo.elab.pojo.db.NoteType;
 
 public interface NoteTypeRepository extends JpaRepository<NoteType, Integer> {
 
-	@Query(value = "select nd.* from elab.note_type nd where (nd._id = :id)", nativeQuery = true)
+	@Query(value = "select nd.* from elab.note_type nd where (nd.id = :id)", nativeQuery = true)
 	public NoteType getNoteTypeByID(@Param("id") Integer id);
 
-	@Query(value = "select nd.* from elab.note_type nd order by nd._id", nativeQuery = true)
+	@Query(value = "select nd.* from elab.note_type nd order by nd.id", nativeQuery = true)
 	public List<NoteType> getAllNoteTypes();
 
-	@Query(value = "select nd._id from elab.note_type nd order by nd.id", nativeQuery = true)
+	@Query(value = "select nd.id from elab.note_type nd order by nd.id", nativeQuery = true)
 	public Integer[] getAllNoteTypeIDs();
 
-	@Query(value = "select max(nd._id) from elab.note_type nd", nativeQuery = true)
+	@Query(value = "select max(nd.id) from elab.note_type nd", nativeQuery = true)
 	public Integer getMaxNoteTypeID();
 
 }

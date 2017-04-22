@@ -11,7 +11,6 @@ public class Container {
 	private Integer id;
 	private List<Package> packages;
 
-	
 	public Integer getId() {
 		return id;
 	}

@@ -11,8 +11,6 @@ public class Package {
 	private Integer evidenceType;
 	private List<Evidence> items;
 	private Integer id;
-	
-	
 
 	public Integer getId() {
 		return id;

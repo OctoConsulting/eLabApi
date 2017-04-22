@@ -10,13 +10,13 @@ import com.octo.elab.pojo.db.ExamType;
 
 public interface ExamTypeRepository extends JpaRepository<ExamType, Integer> {
 
-	@Query(value = "select e.* from elab.exam_type e where (e._id = :ExamTypeID)", nativeQuery = true)
+	@Query(value = "select e.* from elab.exam_type e where (e.id = :ExamTypeID)", nativeQuery = true)
 	public ExamType getExamTypeByID(@Param("ExamTypeID") Integer ExamTypeID);
 
-	@Query(value = "select e.* from elab.exam_type e order by e._id", nativeQuery = true)
+	@Query(value = "select e.* from elab.exam_type e order by e.id", nativeQuery = true)
 	public List<ExamType> getAllExamTypes();
 
-	@Query(value = "select e._id from elab.exam_type e order by e._id", nativeQuery = true)
+	@Query(value = "select e.id from elab.exam_type e order by e.id", nativeQuery = true)
 	public Integer[] getAllExamTypeIDs();
 
 	@Query(value = "select max(_id) from elab.exam_type", nativeQuery = true)

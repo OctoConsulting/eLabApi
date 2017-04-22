@@ -68,17 +68,16 @@ public class Exam {
 	@JsonSerialize(using = CustomDateTimeSerializer.class)
 	@JsonDeserialize(using = CustomDateTimeDeserializer.class)
 	private Timestamp updatedDate;
-	
+
 	@Transient
 	private List<Evidence> items;
-	
+
 	@Column(name = "description")
 	private String examTypeName;
-	
+
 	@Column(name = "examiner_name")
 	private String examinerName;
-	
-	
+
 	public String getExamTypeName() {
 		return examTypeName;
 	}
@@ -87,7 +86,6 @@ public class Exam {
 		this.examTypeName = examTypeName;
 	}
 
-	
 	public Integer getID() {
 		return ID;
 	}
@@ -99,7 +97,6 @@ public class Exam {
 	public void setExaminerName(String examinerName) {
 		this.examinerName = examinerName;
 	}
-
 
 	public List<Evidence> getItems() {
 		return items;

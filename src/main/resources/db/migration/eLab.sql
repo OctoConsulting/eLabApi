@@ -411,6 +411,8 @@ INSERT INTO elab.examiner(
   INSERT INTO elab.evidence(
   id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,_id)
   VALUES (10, 1, 'Tire Impression 2', 3, true, 6,4);
+  
+  UPDATE elab.evidence set is_foranalysis = false where evidence.evidence_type < 3;
 
       INSERT INTO elab.exam(
   id, case_id, evidence_id, exam_name, exam_type, examiner_id)
