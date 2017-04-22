@@ -1,222 +1,445 @@
 
 -- Schema creation
-CREATE schema elab authorization elab;
+CREATE schema  elab authorization  elab;
 
---Lookup Tables Start--
-CREATE TABLE elab.evidence_type (
-  _id INTEGER NOT NULL UNIQUE,
+CREATE SEQUENCE  elab.initial_assessment_note_type_id_seq;
+CREATE TABLE  elab.initial_assessment_note_type (
+  id INTEGER NOT NULL DEFAULT nextval('elab.initial_assessment_note_type_id_seq'),
+  name VARCHAR(100) NOT NULL,
+  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  CONSTRAINT initial_assessment_note_type_PK PRIMARY KEY (id)
+);
+ALTER SEQUENCE  elab.initial_assessment_note_type_id_seq OWNED BY  elab.initial_assessment_note_type.id;
+
+CREATE SEQUENCE  elab.note_request_type_id_seq;
+CREATE TABLE  elab.note_request_type (
+  id INTEGER NOT NULL DEFAULT nextval('elab.note_request_type_id_seq'),
+  name VARCHAR(100) NOT NULL,
+  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  CONSTRAINT note_request_type_PK PRIMARY KEY (id)
+);
+ALTER SEQUENCE  elab.note_request_type_id_seq OWNED BY  elab.note_request_type.id;
+
+CREATE SEQUENCE  elab.note_method_id_seq;
+CREATE TABLE  elab.note_method (
+  id INTEGER NOT NULL DEFAULT nextval('elab.note_method_id_seq'),
+  name VARCHAR(100) NOT NULL,
+  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  CONSTRAINT note_method_PK PRIMARY KEY (id)
+);
+ALTER SEQUENCE  elab.note_method_id_seq OWNED BY  elab.note_method.id;
+
+
+
+CREATE SEQUENCE  elab.note_detail_item_style_id_seq;
+CREATE TABLE  elab.note_detail_item_style (
+  id INTEGER NOT NULL DEFAULT nextval('elab.note_detail_item_style_id_seq'),
+  name VARCHAR(100) NOT NULL,
+  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  CONSTRAINT note_detail_item_style_PK PRIMARY KEY (id)
+);
+ALTER SEQUENCE  elab.note_detail_item_style_id_seq OWNED BY  elab.note_detail_item_style.id;
+
+CREATE SEQUENCE  elab.note_detail_vehicle_position_id_seq;
+CREATE TABLE  elab.note_detail_vehicle_position (
+  id INTEGER NOT NULL DEFAULT nextval('elab.note_detail_vehicle_position_id_seq'),
+  name VARCHAR(100) NOT NULL,
+  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  CONSTRAINT note_detail_vehicle_position_PK PRIMARY KEY (id)
+);
+ALTER SEQUENCE  elab.note_detail_vehicle_position_id_seq OWNED BY  elab.note_detail_vehicle_position.id;
+
+CREATE SEQUENCE  elab.note_detail_tire_type_id_seq;
+CREATE TABLE  elab.note_detail_tire_type (
+  id INTEGER NOT NULL DEFAULT nextval('elab.note_detail_tire_type_id_seq'),
+  name VARCHAR(100) NOT NULL,
+  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  CONSTRAINT note_detail_tire_type_PK PRIMARY KEY (id)
+);
+ALTER SEQUENCE  elab.note_detail_tire_type_id_seq OWNED BY  elab.note_detail_tire_type.id;
+
+
+
+CREATE SEQUENCE  elab.note_detail_item_type_id_seq;
+CREATE TABLE  elab.note_detail_item_type (
+  id INTEGER NOT NULL DEFAULT nextval('elab.note_detail_item_type_id_seq'),
+  name VARCHAR(100) NOT NULL,
+  type VARCHAR(100) NOT NULL,
+  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  CONSTRAINT note_detail_item_type_PK PRIMARY KEY (id)
+);
+ALTER SEQUENCE  elab.note_detail_item_type_id_seq OWNED BY  elab.note_detail_item_type.id;
+
+CREATE SEQUENCE  elab.case_id_seq;
+CREATE TABLE  elab.case (
+  id INTEGER NOT NULL DEFAULT nextval('elab.case_id_seq'),
+  lab_no INTEGER NOT NULL,
+  status VARCHAR(100) NOT NULL,
+  opened_datetime TIMESTAMP WITH TIME ZONE,
+  violation VARCHAR(100) NOT NULL,
+  violation_datetime TIMESTAMP WITH TIME ZONE,
+  is_active BOOLEAN DEFAULT true NOT NULL,
+  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  CONSTRAINT case_PK PRIMARY KEY (id)
+);
+ALTER SEQUENCE  elab.case_id_seq OWNED BY  elab.case.id;
+
+CREATE TABLE  elab.evidence_type (
+  id INTEGER NOT NULL UNIQUE,
   description VARCHAR(80) UNIQUE NOT NULL,
   is_active BOOLEAN DEFAULT true NOT NULL,
   created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
   created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
   updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
   updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  CONSTRAINT evidence_type_PK PRIMARY KEY (_id)
+  CONSTRAINT evidence_type_PK PRIMARY KEY (id)
 );
 
-CREATE TABLE elab.exam_type (
-  _id INTEGER NOT NULL UNIQUE,
+CREATE SEQUENCE  elab.evidence_id_seq;
+CREATE TABLE  elab.evidence (
+  id INTEGER NOT NULL DEFAULT nextval('elab.evidence_id_seq'),
+  case_id INTEGER references  elab.case(id) NOT NULL,
+  evidence_name VARCHAR(80) NOT NULL,
+  evidence_type INTEGER references  elab.evidence_type(id) NOT NULL,
+  is_forAnalysis BOOLEAN DEFAULT true NOT NULL,
+  parent_id INTEGER,
+  item_type character varying(20) ,
+  identifier character varying(20) ,
+  _id INTEGER ,
+  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  CONSTRAINT evidence_PK PRIMARY KEY (id)
+);
+ALTER SEQUENCE  elab.evidence_id_seq OWNED BY  elab.evidence.id;
+
+CREATE TABLE  elab.exam_type (
+  id INTEGER NOT NULL UNIQUE,
   description VARCHAR(80) UNIQUE NOT NULL,
   is_active BOOLEAN DEFAULT true NOT NULL,
   created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
   created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
   updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
   updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  CONSTRAINT exam_type_PK PRIMARY KEY (_id)
+  CONSTRAINT exam_type_PK PRIMARY KEY (id)
 );
 
-CREATE TABLE elab.examiner (
-  _id INTEGER NOT NULL UNIQUE,
+CREATE TABLE  elab.examiner (
+  id INTEGER NOT NULL UNIQUE,
   examiner_name VARCHAR(500) UNIQUE NOT NULL,
   is_active BOOLEAN DEFAULT true NOT NULL,
   created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
   created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
   updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
   updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  CONSTRAINT examiner_PK PRIMARY KEY (_id)
+  CONSTRAINT examiner_PK PRIMARY KEY (id)
 );
 
-CREATE TABLE elab.note_type (
-  _id INTEGER NOT NULL UNIQUE,
+CREATE SEQUENCE  elab.exam_id_seq;
+CREATE TABLE  elab.exam (
+  id INTEGER NOT NULL DEFAULT nextval('elab.exam_id_seq'),
+  case_id INTEGER references  elab.case(id) NOT NULL,
+  evidence_id INTEGER references  elab.evidence(id) NOT NULL,
+  exam_name VARCHAR(80) NOT NULL,
+  exam_type INTEGER references  elab.exam_type(id) NOT NULL,
+  examiner_id INTEGER references  elab.examiner(id) NOT NULL,
+  assigned_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  start_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  end_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  CONSTRAINT exam_PK PRIMARY KEY (id)
+);
+ALTER SEQUENCE  elab.exam_id_seq OWNED BY  elab.exam.id;
+
+CREATE TABLE  elab.note_type (
+  id INTEGER NOT NULL UNIQUE,
   description VARCHAR(80) UNIQUE NOT NULL,
   is_active BOOLEAN DEFAULT true NOT NULL,
   created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
   created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
   updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
   updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  CONSTRAINT note_type_PK PRIMARY KEY (_id)
+  CONSTRAINT note_type_PK PRIMARY KEY (id)
 );
 
-CREATE TABLE elab.note_detail_type (
-  _id INTEGER NOT NULL UNIQUE,
-  description VARCHAR(80) UNIQUE NOT NULL,
-  is_active BOOLEAN DEFAULT true NOT NULL,
-  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  CONSTRAINT note_detail_type_PK PRIMARY KEY (_id)
-);
---Lookup Tables End--
-
---Transactional Tables Start--
-
-CREATE SEQUENCE elab.case_id_seq;
-CREATE TABLE elab.case (
-  _id INTEGER NOT NULL DEFAULT nextval('elab.case_id_seq'),
-  case_data json NOT NULL,
-  is_active BOOLEAN DEFAULT true NOT NULL,
-  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  CONSTRAINT case_PK PRIMARY KEY (_id)
-);
-ALTER SEQUENCE elab.case_id_seq OWNED BY elab.case._id;
-
-CREATE SEQUENCE elab.evidence_id_seq;
-CREATE TABLE elab.evidence (
-  _id INTEGER NOT NULL DEFAULT nextval('elab.evidence_id_seq'),
-  case_id INTEGER references elab.case(_id) NOT NULL,
-  evidence_name VARCHAR(4000) NOT NULL,
-  evidence_number INTEGER NOT NULL,
-  evidence_type INTEGER references elab.evidence_type(_id) NOT NULL,
-  is_forAnalysis BOOLEAN,
-  parent_id INTEGER, 
-  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  CONSTRAINT evidence_PK PRIMARY KEY (_id)
-);
-ALTER SEQUENCE elab.evidence_id_seq OWNED BY elab.evidence._id;
-
-CREATE SEQUENCE elab.exam_id_seq;
-CREATE TABLE elab.exam (
-  _id INTEGER NOT NULL DEFAULT nextval('elab.exam_id_seq'),
-  case_id INTEGER references elab.case(_id) NOT NULL,
-  exam_name VARCHAR(80),
-  exam_type INTEGER references elab.exam_type(_id) NOT NULL,
-  examiner_id INTEGER references elab.examiner(_id),
-  assigned_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp(),
-  start_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp(),
-  end_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp(),
-  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  CONSTRAINT exam_PK PRIMARY KEY (_id)
-);
-ALTER SEQUENCE elab.exam_id_seq OWNED BY elab.exam._id;
 
 CREATE SEQUENCE elab.note_id_seq;
 CREATE TABLE elab.note (
-  _id INTEGER NOT NULL DEFAULT nextval('elab.note_id_seq'),
-  exam_id INTEGER references elab.exam(_id) NOT NULL,
-  exam_sub_type VARCHAR(80),
-  note_type INTEGER references elab.note_type(_id) NOT NULL,
-  note_data json NOT NULL,
+  id INTEGER NOT NULL DEFAULT nextval('elab.note_id_seq'),
+  exam_id INTEGER references elab.exam(id) NOT NULL,
+  exam_sub_type VARCHAR(80) NOT NULL,
+  marked_complete boolean DEFAULT false NOT NULL,
+  note_type INTEGER references elab.note_type(id) NOT NULL,
+  note_category VARCHAR(80) NOT NULL,
+  initial_assessment_note_type_id INTEGER references elab.initial_assessment_note_type(id) NOT NULL,
+  conducted_by VARCHAR(80) NOT NULL,
+  request_type INTEGER references elab.note_request_type(id) NOT NULL,
+  note_method  INTEGER references elab.note_method(id) NOT NULL,
+  note_data VARCHAR(4000) NOT NULL,
   created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
   created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
   updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
   updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  CONSTRAINT note_PK PRIMARY KEY (_id)
+  CONSTRAINT note_PK PRIMARY KEY (id)
 );
-ALTER SEQUENCE elab.note_id_seq OWNED BY elab.note._id;
+ALTER SEQUENCE elab.note_id_seq OWNED BY elab.note.id;
+
+
+CREATE TABLE elab.note_detail_type (
+  id INTEGER NOT NULL UNIQUE,
+  description VARCHAR(80) UNIQUE NOT NULL,
+  is_active BOOLEAN DEFAULT true NOT NULL,
+  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
+  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
+  CONSTRAINT note_detail_type_PK PRIMARY KEY (id)
+);
 
 CREATE SEQUENCE elab.note_detail_id_seq;
 CREATE TABLE elab.note_detail (
-  _id INTEGER NOT NULL DEFAULT nextval('elab.note_detail_id_seq'),
-  note_id INTEGER NOT NULL references elab.note(_id),
-  note_detail_type INTEGER references elab.note_detail_type(_id) NOT NULL,
-  note_detail_data json NOT NULL,
+  id INTEGER NOT NULL DEFAULT nextval('elab.note_detail_id_seq'),
+ note_id INTEGER NOT NULL references elab.note(id),
+  note_detail_type INTEGER references elab.note_detail_type(id) NOT NULL,
+  note_detail_item_type_id INTEGER references elab.note_detail_item_type(id) NOT NULL,
+  note_detail_item_style_id INTEGER references elab.note_detail_item_style(id) NOT NULL,
+  brand_name VARCHAR(100) NOT NULL,
+  note_detail_size VARCHAR(100) NOT NULL,
+  model VARCHAR(100) NOT NULL,
+  dot_number VARCHAR(100) NOT NULL,
+  note_detail_vehicle_position_id INTEGER references elab.note_detail_vehicle_position(id) NOT NULL,
+  note_detail_tire_type_id INTEGER references elab.note_detail_tire_type(id) NOT NULL,
+  note_detail_data VARCHAR(4000) NOT NULL,
+  note_detail_lable_info VARCHAR(2000) NOT NULL,
   created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
   created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
   updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
   updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  CONSTRAINT note_detail_PK PRIMARY KEY (_id)
+  CONSTRAINT note_detail_PK PRIMARY KEY (id)
 );
-ALTER SEQUENCE elab.note_detail_id_seq OWNED BY elab.note_detail._id;
+ALTER SEQUENCE elab.note_detail_id_seq OWNED BY elab.note_detail.id;
 
-CREATE SEQUENCE elab.note_detail_evidence_id_seq;
-CREATE TABLE elab.note_detail_evidence (
-  _id INTEGER NOT NULL DEFAULT nextval('elab.note_detail_evidence_id_seq'),
-  note_detail_id INTEGER references elab.note_detail(_id) NOT NULL,
-  evidence_id INTEGER references elab.evidence(_id) NOT NULL,
-  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  CONSTRAINT note_detail_evidence_PK PRIMARY KEY (_id)
-);
-ALTER SEQUENCE elab.note_detail_evidence_id_seq OWNED BY elab.note_detail_evidence._id;
+ALTER TABLE elab.note
+    OWNER to elab;
 
-CREATE SEQUENCE elab.image_id_seq;
-CREATE TABLE elab.image (
-  _id INTEGER NOT NULL DEFAULT nextval('elab.image_id_seq'),
-  note_id INTEGER references elab.note(_id) NOT NULL,
-  image bytea,
-  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  CONSTRAINT image_PK PRIMARY KEY (_id)
-);
-ALTER SEQUENCE elab.image_id_seq OWNED BY elab.image._id;
 
---Transactional Tables End--
 
--- Index Creation
-Create unique index IX_case on elab.case (_id);
-Create unique index IX_evidence on elab.evidence (_id);
-Create unique index IX_evidence_type on elab.evidence_type (_id);
-Create unique index IX_exam on elab.exam (_id);
-Create unique index IX_exam_type on elab.exam_type (_id);
-Create unique index IX_examiner on elab.examiner (_id);
-Create unique index IX_image on elab.image (_id);
-Create unique index IX_note on elab.note (_id);
-Create unique index IX_note_detail on elab.note_detail (_id);
-Create unique index IX_note_detail_evidence on elab.note_detail_evidence (_id);
-Create unique index IX_note_detail_type on elab.note_detail_type (_id);
-Create unique index IX_note_type on elab.note_type (_id);
+INSERT INTO elab.case(
+  id, lab_no, status, opened_datetime, violation, violation_datetime)
+  VALUES (1,1, 'In Progress', '2017-04-15', 'Violation', '2017-04-15');
+
+  INSERT INTO elab.evidence_type(
+  id, description)
+  VALUES (1, 'Container');
+INSERT INTO elab.evidence_type(
+  id, description)
+  VALUES (2, 'Package');
+INSERT INTO elab.evidence_type(
+  id, description)
+  VALUES (3, 'Item');
+
+  INSERT INTO elab.exam_type(
+  id, description)
+  VALUES (1, 'Shoe Prints/Tire Thread');
+
+  INSERT INTO elab.examiner(
+  id, examiner_name)
+  VALUES (1, 'Nithin');
+INSERT INTO elab.examiner(
+  id, examiner_name)
+  VALUES (2, 'Akanksha');
+INSERT INTO elab.examiner(
+  id, examiner_name)
+  VALUES (3, 'Sumit');
+    INSERT INTO elab.examiner(
+  id, examiner_name)
+  VALUES (4, 'Juliette Fitzsimmons');
+      INSERT INTO elab.examiner(
+  id, examiner_name)
+  VALUES (5, 'Erik');
+   INSERT INTO elab.examiner(
+  id, examiner_name)
+  VALUES (6, 'Marcus Stanton');
+
+  INSERT INTO elab.note_type(
+  id, description)
+  VALUES (1, 'Initial Assessment');
+
+  INSERT INTO elab.note_detail_type(
+  id, description)
+  VALUES (1, 'K Item Detail');
+    
+    INSERT INTO elab.note_detail_type(
+  id, description)
+  VALUES (2, 'Q Item Detail');
+
+  INSERT INTO elab.note_detail_item_type(
+  id, name,type)
+  VALUES (1, 'Original Footwear','K');
+      
+    INSERT INTO elab.note_detail_item_type(
+  id, name,type)
+  VALUES (2, 'Footwear test impression','K');
+      
+    INSERT INTO elab.note_detail_item_type(
+  id, name,type)
+  VALUES (3, 'Photo/Printouts','K');
+      
+    INSERT INTO elab.note_detail_item_type(
+  id, name,type)
+  VALUES (4, 'Disc','K');
+    INSERT INTO elab.note_detail_item_type(
+  id, name,type)
+  VALUES (5, 'Digital Image','K');
+    INSERT INTO elab.note_detail_item_type(
+  id, name,type)
+  VALUES (6, 'Other','K');
+    
+    INSERT INTO elab.note_detail_item_style(
+  id, name)
+  VALUES (1, 'Shoe');
+    INSERT INTO elab.note_detail_item_style(
+  id, name)
+  VALUES (2, 'Sandal');
+     INSERT INTO elab.note_detail_item_style(
+  id, name)
+  VALUES (3, 'Boot');
+
+    INSERT INTO elab.note_detail_vehicle_position(
+  id, name)
+  VALUES (1, 'Driver Front');
+    INSERT INTO elab.note_detail_vehicle_position(
+  id, name)
+  VALUES (2, 'Passenger Front');
+      INSERT INTO elab.note_detail_vehicle_position(
+  id, name)
+  VALUES (3, 'Driver Rear');
+    INSERT INTO elab.note_detail_vehicle_position(
+  id, name)
+  VALUES (4, 'Passenger Rear');
+     INSERT INTO elab.note_detail_vehicle_position(
+  id, name)
+  VALUES (5, 'Spare');
+     INSERT INTO elab.note_detail_vehicle_position(
+  id, name)
+  VALUES (6, 'Unknown');
+
+  
+
+    INSERT INTO elab.note_detail_item_type(
+  id, name,type)
+  VALUES (7, 'Gel Lift','Q'),(8, 'Original','Q'), (9, 'Static Lift','Q'), (10, 'Adhesive Lift','Q'), (11, 'Case','Q'), (12, 'Photo/printout','Q'), (13, 'Disc','Q'), (14, 'Digital Image','Q');
+
+  INSERT INTO elab.initial_assessment_note_type(
+  id, name)
+  VALUES (1, 'Footwear Comparison');
+    INSERT INTO elab.initial_assessment_note_type(
+  id, name)
+  VALUES (2, 'Footwear make/model determination');
+    INSERT INTO elab.initial_assessment_note_type(
+  id, name)
+  VALUES (3, 'Footwear size determination');
+  
+  INSERT INTO elab.initial_assessment_note_type(
+  id, name)
+  VALUES (4, 'Other');
+
+  INSERT INTO elab.evidence(
+  id, case_id, evidence_name, evidence_type,_id)
+  VALUES (1, 1, 'Box 1', 1,1);
+  
+  INSERT INTO elab.evidence(
+  id, case_id, evidence_name, evidence_type, parent_id,_id)
+  VALUES (2, 1, 'Paper Bag 1', 2, 1,1);
+
+  INSERT INTO elab.evidence(
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,_id)
+  VALUES (3, 1, 'Piece of Rubber', 3, true, 2,1);
+  
+  INSERT INTO elab.evidence(
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,_id)
+  VALUES (4, 1, 'Shoe Laces', 3, true, 2,2);
+  
+  INSERT INTO elab.evidence(
+  id, case_id, evidence_name, evidence_type,_id)
+  VALUES (5, 1, 'Box 2', 1,2);
+  
+  INSERT INTO elab.evidence(
+  id, case_id, evidence_name, evidence_type, parent_id,_id)
+  VALUES (6, 1, 'Paper Bag 2', 2, 5,1);
+
+  INSERT INTO elab.evidence(
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,_id)
+  VALUES (7, 1, 'Left Nike Sneaker', 3, true, 6,1);
+  
+  INSERT INTO elab.evidence(
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,_id)
+  VALUES (8, 1, 'Shoe Imprint', 3, true, 6,2);
+  
+  INSERT INTO elab.evidence(
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,_id)
+  VALUES (9, 1, 'Tire Impression', 3, true, 6,3);
+  
+  INSERT INTO elab.evidence(
+  id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,_id)
+  VALUES (10, 1, 'Tire Impression 2', 3, true, 6,4);
+  
+  UPDATE elab.evidence set is_foranalysis = false where evidence.evidence_type < 3;
+
+      INSERT INTO elab.exam(
+  id, case_id, evidence_id, exam_name, exam_type, examiner_id)
+  VALUES 
+    (1, 1, 3, 'Shoe/Tire', 1, 1),
+    (2, 1, 4, 'Shoe/Tire', 1, 1),
+    (3, 1, 7, 'Shoe/Tire', 1, 1),
+    (4, 1, 8, 'Shoe/Tire', 1, 1),
+    (5, 1, 9, 'Shoe/Tire', 1, 1),
+    (6, 1, 10, 'Shoe/Tire', 1, 1);
 
 -- Owner assignment for tables
-ALTER TABLE elab.case OWNER to elab;
-ALTER TABLE elab.evidence OWNER to elab;
-ALTER TABLE elab.evidence_type OWNER to elab;
-ALTER TABLE elab.exam OWNER to elab;
-ALTER TABLE elab.exam_type OWNER to elab;
-ALTER TABLE elab.examiner OWNER to elab;
-ALTER TABLE elab.image OWNER to elab;
-ALTER TABLE elab.note OWNER to elab;
-ALTER TABLE elab.note_detail OWNER to elab;
-ALTER TABLE elab.note_detail_evidence OWNER to elab;
-ALTER TABLE elab.note_detail_type OWNER to elab;
-ALTER TABLE elab.note_type OWNER to elab;
+ALTER TABLE  elab.case OWNER to  elab;   
+ALTER TABLE  elab.evidence OWNER to  elab;
+ALTER TABLE  elab.evidence_type OWNER to   elab;
+ALTER TABLE  elab.exam OWNER to   elab;
+ALTER TABLE  elab.exam_type OWNER to   elab;
+ALTER TABLE  elab.examiner OWNER to   elab;
+ALTER TABLE  elab.initial_assessment_note_type OWNER to   elab;
+ALTER TABLE  elab.note OWNER to   elab;
+ALTER TABLE  elab.note_detail OWNER to   elab;
+ALTER TABLE  elab.note_detail_item_style OWNER to   elab;
+ALTER TABLE  elab.note_detail_item_type OWNER to   elab;
+ALTER TABLE  elab.note_detail_tire_type OWNER to   elab;
+ALTER TABLE  elab.note_detail_type OWNER to   elab;
+ALTER TABLE  elab.note_detail_vehicle_position OWNER to   elab;
+ALTER TABLE  elab.note_method OWNER to   elab;
+ALTER TABLE  elab.note_request_type OWNER to   elab;
+ALTER TABLE  elab.note_type OWNER to   elab;
 
--- Insert data into reference tables
-insert into elab.evidence_type(_id,description) values(1,'Container');
-insert into elab.evidence_type(_id,description) values(2,'Package');
-insert into elab.evidence_type(_id,description) values(3,'Item');
-
-insert into elab.exam_type(_id,description) values(1,'Chemistry - Toxicology');
-insert into elab.exam_type(_id,description) values(2,'Firearms');
-insert into elab.exam_type(_id,description) values(3,'Question Documents');
-insert into elab.exam_type(_id,description) values(4,'Shoe Prints/Tire Tread');
-
-insert into elab.examiner(_id,examiner_name) values(1,'Barb McCullen');
-insert into elab.examiner(_id,examiner_name) values(2,'Juliette Fitzsimmons');
-insert into elab.examiner(_id,examiner_name) values(3,'Marcus Stanton');  
-insert into elab.examiner(_id,examiner_name) values(4,'Tim Miller');
-
-insert into elab.note_type(_id,description) values(1,'Comparison');
-insert into elab.note_type(_id,description) values(2,'Imaging Request');
-insert into elab.note_type(_id,description) values(3,'Imaging Work Performed');
-insert into elab.note_type(_id,description) values(4,'Initial Assessment');
-insert into elab.note_type(_id,description) values(5,'Make/Model Determination');
-insert into elab.note_type(_id,description) values(6,'Processing');
-insert into elab.note_type(_id,description) values(7,'Test Impression');
-
-insert into elab.note_detail_type(_id,description) values(1,'K Item Detail');
-insert into elab.note_detail_type(_id,description) values(2,'Q Item Detail');
-insert into elab.note_detail_type(_id,description) values(3,'Non Evidentiary Item Detail');

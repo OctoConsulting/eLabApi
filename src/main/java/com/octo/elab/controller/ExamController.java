@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,7 @@ public class ExamController {
 
 	@Autowired
 	private ExamRepository examRepo;
-	
+
 	@Autowired
 	private EvidenceRepository evidenceRepo;
 
@@ -51,23 +50,21 @@ public class ExamController {
 	 */
 	@RequestMapping(value = "/exams", method = RequestMethod.GET)
 	@ApiOperation(value = "Fetch all Exams")
-	public ResponseEntity<List<Exam>> getExams(
-			@RequestParam(value = "caseID", required = false) Integer caseID) throws Exception {
+	public ResponseEntity<List<Exam>> getExams(@RequestParam(value = "caseID", required = false) Integer caseID)
+			throws Exception {
 		log.info("GET /exams API to fetch all exams");
 		List<Exam> exams = new ArrayList<Exam>();
-		if(caseID == null)
-		{
-				exams = examRepo.getAllExams();
-				return new ResponseEntity<List<Exam>>(exams, HttpStatus.OK);
-		}
-		else{
+		if (caseID == null) {
+			exams = examRepo.getAllExams();
+			return new ResponseEntity<List<Exam>>(exams, HttpStatus.OK);
+		} else {
 			List<Exam> examList = examRepo.getExamsByCaseID(caseID);
 			Exam exam = examList.get(0);
 			Integer[] evidenceIDs = examRepo.getAllEvidencesByCaseID(caseID);
 			List<Evidence> evidences = evidenceRepo.getEvidencesByID(evidenceIDs);
 			exam.setItems(evidences);
 			exams.add(exam);
-			
+
 		}
 		return new ResponseEntity<List<Exam>>(exams, HttpStatus.OK);
 	}

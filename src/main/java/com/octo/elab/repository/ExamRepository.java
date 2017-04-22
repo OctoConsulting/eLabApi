@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.octo.elab.pojo.db.Evidence;
 import com.octo.elab.pojo.db.Exam;
 
 public interface ExamRepository extends JpaRepository<Exam, Integer> {
@@ -25,7 +24,7 @@ public interface ExamRepository extends JpaRepository<Exam, Integer> {
 
 	@Query(value = "select e.*,ex.examiner_name ,et.description from elab.Exam e inner join elab.examiner as ex on e.examiner_id = ex.id inner join elab.exam_type as et on e.exam_type = et.id where (e.case_id = :CaseID)", nativeQuery = true)
 	public List<Exam> getExamsByCaseID(@Param("CaseID") Integer CaseID);
-	
+
 	@Query(value = "select e.evidence_id from elab.Exam e where (e.case_id = :CaseID)", nativeQuery = true)
 	public Integer[] getAllEvidencesByCaseID(@Param("CaseID") Integer CaseID);
 
