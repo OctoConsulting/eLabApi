@@ -50,17 +50,17 @@ public class ExamController {
 	 */
 	@RequestMapping(value = "/exams", method = RequestMethod.GET)
 	@ApiOperation(value = "Fetch all Exams")
-	public ResponseEntity<List<Exam>> getExams(@RequestParam(value = "caseID", required = false) Integer caseID)
+	public ResponseEntity<List<Exam>> getExams(@RequestParam(value = "caseId", required = false) Integer caseId)
 			throws Exception {
 		log.info("GET /exams API to fetch all exams");
 		List<Exam> exams = new ArrayList<Exam>();
-		if (caseID == null) {
+		if (caseId == null) {
 			exams = examRepo.getAllExams();
 			return new ResponseEntity<List<Exam>>(exams, HttpStatus.OK);
 		} else {
-			List<Exam> examList = examRepo.getExamsByCaseID(caseID);
+			List<Exam> examList = examRepo.getExamsByCaseID(caseId);
 			Exam exam = examList.get(0);
-			Integer[] evidenceIDs = examRepo.getAllEvidencesByCaseID(caseID);
+			Integer[] evidenceIDs = examRepo.getAllEvidencesByCaseID(caseId);
 			List<Evidence> evidences = evidenceRepo.getEvidencesByID(evidenceIDs);
 			exam.setItems(evidences);
 			exams.add(exam);
