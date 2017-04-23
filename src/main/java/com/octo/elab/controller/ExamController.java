@@ -20,8 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.octo.elab.pojo.db.Evidence;
 import com.octo.elab.pojo.db.Exam;
+import com.octo.elab.pojo.db.ExamType;
+import com.octo.elab.pojo.db.Examiner;
+import com.octo.elab.pojo.reflection.AccessPair;
+import com.octo.elab.pojo.reflection.ExaminationNew;
 import com.octo.elab.repository.EvidenceRepository;
 import com.octo.elab.repository.ExamRepository;
+import com.octo.elab.repository.ExamTypeRepository;
+import com.octo.elab.repository.ExaminerRepository;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,7 +47,13 @@ public class ExamController {
 	private ExamRepository examRepo;
 
 	@Autowired
+	private ExamTypeRepository examTypeRepo;
+
+	@Autowired
 	private EvidenceRepository evidenceRepo;
+
+	@Autowired
+	private ExaminerRepository examinerRepo;
 
 	/**
 	 * This method is used to fetch all exams from database
@@ -67,6 +79,82 @@ public class ExamController {
 
 		}
 		return new ResponseEntity<List<Exam>>(exams, HttpStatus.OK);
+	}
+
+	/**
+	 * This method is used to populate dropdowns for creating/viewing/editing an
+	 * exam
+	 *
+	 * @return ResponseEntity<ExaminationNew>
+	 */
+
+	@RequestMapping(value = "/examsM", method = RequestMethod.GET)
+	@ApiOperation(value = "Populating info for creating/viewing/editing an exam")
+	public ResponseEntity<ExaminationNew> getExamsInfo(@RequestParam(value = "mode", required = true) String mode,
+			@RequestParam(value = "examID", required = false) Integer examID) throws Exception {
+		log.info("GET /exams API to fetch all exams");
+		ExaminationNew examinationNew = new ExaminationNew();
+		List<ExamType> examTypeList = examTypeRepo.getAllExamTypes();
+		List<Examiner> examinerList = examinerRepo.getAllExaminers();
+		List<Evidence> evidenceList = evidenceRepo.getAllEvidencesForExam();
+		List<AccessPair> examTypeAccessPairList = new ArrayList<AccessPair>();
+		List<AccessPair> examinerAccessPairList = new ArrayList<AccessPair>();
+		List<AccessPair> evidenceAccessPairList = new ArrayList<AccessPair>();
+		Exam examToBeEdited = null;
+
+		if (mode.equalsIgnoreCase("edit")) {
+			if (examID != null) {
+				examToBeEdited = examRepo.getExamByID(examID);
+				if (examToBeEdited == null) {
+					return new ResponseEntity<ExaminationNew>(examinationNew, HttpStatus.BAD_REQUEST);
+				}
+			} else {
+				return new ResponseEntity<ExaminationNew>(examinationNew, HttpStatus.BAD_REQUEST);
+			}
+
+		}
+		// Set ExamType
+		AccessPair examTypeAccessPair;
+		for (ExamType examType : examTypeList) {
+			examTypeAccessPair = new AccessPair();
+			examTypeAccessPair.setId(examType.getId());
+			examTypeAccessPair.setVal(examType.getDescription());
+			if (examToBeEdited != null && (examToBeEdited.getExamType() == examType.getId())) {
+				examTypeAccessPair.setIsSelected(true);
+			}
+			examTypeAccessPairList.add(examTypeAccessPair);
+		}
+
+		// Set Examiners
+		AccessPair examinerAccessPair;
+		for (Examiner examiner : examinerList) {
+			examinerAccessPair = new AccessPair();
+			examinerAccessPair.setId(examiner.getId());
+			examinerAccessPair.setVal(examiner.getExaminerName());
+			if (examToBeEdited != null && (examToBeEdited.getExaminerId() == examiner.getId())) {
+				examinerAccessPair.setIsSelected(true);
+			}
+			examinerAccessPairList.add(examinerAccessPair);
+		}
+
+		// Set Evidences
+		AccessPair evidenceAccessPair;
+		for (Evidence evidence : evidenceList) {
+			evidenceAccessPair = new AccessPair();
+			evidenceAccessPair.setId(evidence.get_id());
+			evidenceAccessPair.setVal(evidence.getEvidenceName());
+			// TBD
+			/*
+			 * if(examToBeEdited != null && (examToBeEdited.g ==
+			 * examiner.getId())){ examinerAccessPair.setIsSelected(true); }
+			 */
+			evidenceAccessPairList.add(evidenceAccessPair);
+		}
+
+		examinationNew.setEvidences(evidenceAccessPairList);
+		examinationNew.setExaminers(examinerAccessPairList);
+		examinationNew.setExamType(examTypeAccessPairList);
+		return new ResponseEntity<ExaminationNew>(examinationNew, HttpStatus.OK);
 	}
 
 	/**

@@ -50,6 +50,9 @@ public class Evidence {
 
 	@Column(name = "created_by")
 	private String createdBy;
+	
+	@Column(name = "description")
+	private String description;
 
 	@Column(name = "created_date")
 	@JsonSerialize(using = CustomDateTimeSerializer.class)
@@ -166,5 +169,13 @@ public class Evidence {
 
 	public void set_id(Integer _id) {
 		this._id = _id;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

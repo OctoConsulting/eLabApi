@@ -13,6 +13,16 @@ public class AccessPair {
 	int id;
 
 	String val;
+	
+	Boolean isSelected;
+
+	public Boolean getIsSelected() {
+		return isSelected;
+	}
+
+	public void setIsSelected(Boolean isSelected) {
+		this.isSelected = isSelected;
+	}
 
 	public int getId() {
 		return id;
@@ -44,6 +54,13 @@ public class AccessPair {
 		super();
 		this.id = id;
 		this.val = val;
+	}
+	
+	public AccessPair(int id, String val, Boolean isSelected) {
+		super();
+		this.id = id;
+		this.val = val;
+		this.isSelected = isSelected;
 	}
 
 }

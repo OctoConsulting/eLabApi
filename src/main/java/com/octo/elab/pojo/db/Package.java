@@ -11,6 +11,7 @@ public class Package {
 	private Integer evidenceType;
 	private List<Evidence> items;
 	private Integer id;
+	private Integer _id;
 
 	public Integer getId() {
 		return id;
@@ -42,6 +43,14 @@ public class Package {
 
 	public void setItems(List<Evidence> items) {
 		this.items = items;
+	}
+
+	public Integer get_id() {
+		return _id;
+	}
+
+	public void set_id(Integer _id) {
+		this._id = _id;
 	}
 
 }

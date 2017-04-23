@@ -52,6 +52,17 @@ CREATE TABLE  elab.note_detail_item_style (
 );
 ALTER SEQUENCE  elab.note_detail_item_style_id_seq OWNED BY  elab.note_detail_item_style.id;
 
+CREATE SEQUENCE  elab.note_detail_items_id_seq;
+CREATE TABLE  elab.note_detail_items (
+  id INTEGER NOT NULL DEFAULT nextval('elab.note_detail_items_id_seq'),
+  item_type character varying(20) ,
+  identifier character varying(20) ,
+  dropdownLabel character varying(20),
+  value VARCHAR(100) NOT NULL, 
+  CONSTRAINT note_detail_items_PK PRIMARY KEY (id)
+);
+ALTER SEQUENCE  elab.note_detail_items_id_seq OWNED BY  elab.note_detail_items.id;
+
 CREATE SEQUENCE  elab.note_detail_vehicle_position_id_seq;
 CREATE TABLE  elab.note_detail_vehicle_position (
   id INTEGER NOT NULL DEFAULT nextval('elab.note_detail_vehicle_position_id_seq'),
@@ -310,76 +321,52 @@ INSERT INTO elab.examiner(
   id, description)
   VALUES (2, 'Q Item Detail');
 
-  INSERT INTO elab.note_detail_item_type(
-  id, name,type)
-  VALUES (1, 'Original Footwear','K');
-      
-    INSERT INTO elab.note_detail_item_type(
-  id, name,type)
-  VALUES (2, 'Footwear test impression','K');
-      
-    INSERT INTO elab.note_detail_item_type(
-  id, name,type)
-  VALUES (3, 'Photo/Printouts','K');
-      
-    INSERT INTO elab.note_detail_item_type(
-  id, name,type)
-  VALUES (4, 'Disc','K');
-    INSERT INTO elab.note_detail_item_type(
-  id, name,type)
-  VALUES (5, 'Digital Image','K');
-    INSERT INTO elab.note_detail_item_type(
-  id, name,type)
-  VALUES (6, 'Other','K');
-    
-    INSERT INTO elab.note_detail_item_style(
-  id, name)
-  VALUES (1, 'Shoe');
-    INSERT INTO elab.note_detail_item_style(
-  id, name)
-  VALUES (2, 'Sandal');
-     INSERT INTO elab.note_detail_item_style(
-  id, name)
-  VALUES (3, 'Boot');
+INSERT INTO elab.note_detail_items(
+   item_type, identifier, dropdownlabel, value)
+VALUES 
+('Shoe','K','K Item Type','Original Footwear'),
+( 'Shoe','K','K Item Type','Footwear test impression'),
+('Shoe','K','K Item Type','Photo/Printouts'),
+( 'Shoe','K','K Item Type','Disc'),
+( 'Shoe','K','K Item Type','Digital Image'),
+( 'Shoe','K','K Item Type','Other'),
+( 'Shoe','K','Style','Shoe'),
+( 'Shoe','K','Style','Sandal'),
+( 'Shoe','K','Style','Boot'),
+( 'Tire','','Vehicle Position','Driver Front'),
+( 'Tire','','Vehicle Position','Passenger Front'),
+( 'Tire','','Vehicle Position','Driver Rear'),
+( 'Tire','','Vehicle Position','Passenger Rear'),
+( 'Tire','','Vehicle Position','Spare'),
+( 'Tire','','Vehicle Position','Unknown'),
+( '','Q','Q Item Type','Gel Lift'),
+( '','Q','Q Item Type','Original'),
+( '','Q','Q Item Type','Static Lift'),
+( '','Q','Q Item Type','Adhesive Lift'),
+( '','Q','Q Item Type','Case'),
+( '','Q','Q Item Type','Photo/printout'),
+( '','Q','Q Item Type','Disc'),
+( '','Q','Q Item Type','Digital Image'),
+( 'Shoe','','Request Type','Footwear Comparison'),
+( 'Shoe','','Request Type','Footwear make/model determination'),
+( 'Shoe','','Request Type','Footwear size determination'),
+( 'Shoe','','Request Type','Other'),
+( 'Shoe','','Method','QDU Procedures for Conducting Shoe and Tire Tread Examinations'),
+( 'Shoe','','Method','QDU Procedures for Conducting a Footwear Database Search'),
+('Tire','','Request Type','Tire Comparison'),
+( 'Tire','','Request Type','Tire make/model determination'),
+( 'Tire','','Request Type','Other'),
+( 'Tire','','Method','QDU Procedures for Conducting Shoe and Tire Tread Examinations'),
+( 'Tire','','Method','QDU Procedures for Conducting a Tire Tread Database'),
+('Tire','K','K Item Type','Original Tire'),
+( 'Tire','K','K Item Type','Tire test impression'),
+( 'Tire','K','K Item Type','Photo/Printouts'),
+( 'Tire','K','K Item Type','Disc'),
+( 'Tire','K','K Item Type','Digital Image'),
+( 'Tire','K','K Item Type','Other'),
 
-    INSERT INTO elab.note_detail_vehicle_position(
-  id, name)
-  VALUES (1, 'Driver Front');
-    INSERT INTO elab.note_detail_vehicle_position(
-  id, name)
-  VALUES (2, 'Passenger Front');
-      INSERT INTO elab.note_detail_vehicle_position(
-  id, name)
-  VALUES (3, 'Driver Rear');
-    INSERT INTO elab.note_detail_vehicle_position(
-  id, name)
-  VALUES (4, 'Passenger Rear');
-     INSERT INTO elab.note_detail_vehicle_position(
-  id, name)
-  VALUES (5, 'Spare');
-     INSERT INTO elab.note_detail_vehicle_position(
-  id, name)
-  VALUES (6, 'Unknown');
 
-  
 
-    INSERT INTO elab.note_detail_item_type(
-  id, name,type)
-  VALUES (7, 'Gel Lift','Q'),(8, 'Original','Q'), (9, 'Static Lift','Q'), (10, 'Adhesive Lift','Q'), (11, 'Case','Q'), (12, 'Photo/printout','Q'), (13, 'Disc','Q'), (14, 'Digital Image','Q');
-
-  INSERT INTO elab.initial_assessment_note_type(
-  id, name)
-  VALUES (1, 'Footwear Comparison');
-    INSERT INTO elab.initial_assessment_note_type(
-  id, name)
-  VALUES (2, 'Footwear make/model determination');
-    INSERT INTO elab.initial_assessment_note_type(
-  id, name)
-  VALUES (3, 'Footwear size determination');
-  
-  INSERT INTO elab.initial_assessment_note_type(
-  id, name)
-  VALUES (4, 'Other');
 
   INSERT INTO elab.evidence(
   id, case_id, evidence_name, evidence_type,_id)
@@ -403,23 +390,23 @@ INSERT INTO elab.examiner(
   
   INSERT INTO elab.evidence(
   id, case_id, evidence_name, evidence_type, parent_id,_id)
-  VALUES (6, 1, 'Paper Bag 2', 2, 5,1);
+  VALUES (6, 1, 'Paper Bag 2', 2, 5,2);
 
   INSERT INTO elab.evidence(
   id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,_id)
-  VALUES (7, 1, 'Left Nike Sneaker', 3, true, 6,1);
+  VALUES (7, 1, 'Left Nike Sneaker', 3, true, 6,3);
   
   INSERT INTO elab.evidence(
   id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,_id)
-  VALUES (8, 1, 'Shoe Imprint', 3, true, 6,2);
+  VALUES (8, 1, 'Shoe Imprint', 3, true, 6,4);
   
   INSERT INTO elab.evidence(
   id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,_id)
-  VALUES (9, 1, 'Tire Impression', 3, true, 6,3);
+  VALUES (9, 1, 'Tire Impression', 3, true, 6,5);
   
   INSERT INTO elab.evidence(
   id, case_id, evidence_name, evidence_type, is_foranalysis, parent_id,_id)
-  VALUES (10, 1, 'Tire Impression 2', 3, true, 6,4);
+  VALUES (10, 1, 'Tire Impression 2', 3, true, 6,6);
   
   UPDATE elab.evidence set is_foranalysis = false where evidence.evidence_type < 3;
 

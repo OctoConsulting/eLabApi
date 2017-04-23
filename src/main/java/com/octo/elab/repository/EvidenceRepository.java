@@ -10,22 +10,25 @@ import com.octo.elab.pojo.db.Evidence;
 
 public interface EvidenceRepository extends JpaRepository<Evidence, Integer> {
 
-	@Query(value = "select e.* from elab.evidence e where (e.id = :evidenceID)", nativeQuery = true)
+	@Query(value = "select e.*,et.description from elab.evidence e inner join elab.evidence_type et on et.id = e.evidence_type where (e.id = :evidenceID)", nativeQuery = true)
 	public Evidence getEvidenceByID(@Param("evidenceID") Integer evidenceID);
 
-	@Query(value = "select e.* from elab.evidence e order by e.id", nativeQuery = true)
+	@Query(value = "select e.*,et.description from elab.evidence e inner join elab.evidence_type et on et.id = e.evidence_type order by e.id", nativeQuery = true)
 	public List<Evidence> getAllEvidences();
 	
-	@Query(value = "select e.* from elab.evidence e where (e.parent_id = :parentID)", nativeQuery = true)
+	@Query(value = "select e.*,et.description from elab.evidence e inner join elab.evidence_type et on et.id = e.evidence_type where (e.parent_id = :parentID)", nativeQuery = true)
 	public List<Evidence> getEvidencesByParentID(@Param("parentID") Integer parentID);
 	
-	@Query(value = "select e.* from elab.evidence e where (e.case_id = :caseID)", nativeQuery = true)
+	@Query(value = "select e.*,et.description from elab.evidence e inner join elab.evidence_type et on et.id = e.evidence_type where (e.case_id = :caseID)", nativeQuery = true)
 	public List<Evidence> getEvidenceByCaseID(@Param("caseID") Integer caseID);
 	
-	@Query(value = "select e.* from elab.evidence e where (e.id in :evidenceIDs)", nativeQuery = true)
+	@Query(value = "select e.*,et.description from elab.evidence e inner join elab.evidence_type et on et.id = e.evidence_type where (e.id in :evidenceIDs)", nativeQuery = true)
 	public List<Evidence> getEvidencesByID(@Param("evidenceIDs") Integer[] evidenceIDs);
 	
-	@Query(value = "select e.* from elab.evidence e where (e.case_id = :caseID) and e.evidence_type = 1", nativeQuery = true)
+	@Query(value = "select e.*,et.description from elab.evidence e inner join elab.evidence_type et on et.id = e.evidence_type where (e.case_id = :caseID) and e.evidence_type = 1", nativeQuery = true)
 	public List<Evidence> getContainersByCaseID(@Param("caseID") Integer caseID);
+	
+	@Query(value = "select e.*,et.description from elab.evidence e inner join elab.evidence_type et on et.id = e.evidence_type where e.evidence_type = 3 and e.is_foranalysis = true", nativeQuery = true)
+	public List<Evidence> getAllEvidencesForExam();
 
 }

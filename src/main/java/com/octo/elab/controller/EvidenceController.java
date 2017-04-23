@@ -22,7 +22,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.octo.elab.pojo.db.Evidence;
+import com.octo.elab.pojo.db.EvidenceType;
+import com.octo.elab.pojo.reflection.AccessPair;
+import com.octo.elab.pojo.reflection.EvidenceNew;
 import com.octo.elab.repository.EvidenceRepository;
+import com.octo.elab.repository.EvidenceTypeRepository;
 import com.octo.elab.utilities.Constants;
 import com.octo.elab.utilities.NumberUtils;
 
@@ -43,6 +47,9 @@ public class EvidenceController {
 	@Autowired
 	private EvidenceRepository evidenceRepo;
 
+	@Autowired
+	private EvidenceTypeRepository evidenceTypeRepo;
+
 	/**
 	 * This method is used to fetch all evidences from database
 	 *
@@ -52,8 +59,84 @@ public class EvidenceController {
 	@ApiOperation(value = "Fetch all Evidences")
 	public ResponseEntity<List<Evidence>> getEvidences() throws Exception {
 		log.info("GET /evidences API to fetch all evidences");
+
 		List<Evidence> evidences = evidenceRepo.getAllEvidences();
 		return new ResponseEntity<List<Evidence>>(evidences, HttpStatus.OK);
+
+	}
+
+	/**
+	 * This method is used to populate dropdowns for creating/viewing/editing an
+	 * evidence
+	 *
+	 * @return ResponseEntity<List<Evidence>>
+	 */
+	@RequestMapping(value = "/evidencesM/", method = RequestMethod.GET)
+	@ApiOperation(value = "Fetch all Evidences")
+	public ResponseEntity<EvidenceNew> getEvidenceNew(@RequestParam(value = "mode", required = true) String mode,
+			@RequestParam(value = "evidenceID", required = false) Integer evidenceID) throws Exception {
+		log.info("GET /evidences API to fetch all evidences");
+		EvidenceNew evidenceNew = new EvidenceNew();
+		Evidence evidenceToBeEdited = null;
+		if (mode.equalsIgnoreCase("edit")) {
+			if (evidenceID != null) {
+				evidenceToBeEdited = evidenceRepo.getEvidenceByID(evidenceID);
+				if (evidenceToBeEdited == null) {
+					return new ResponseEntity<EvidenceNew>(evidenceNew, HttpStatus.BAD_REQUEST);
+				}
+			} else {
+				return new ResponseEntity<EvidenceNew>(evidenceNew, HttpStatus.BAD_REQUEST);
+			}
+
+		}
+
+		List<EvidenceType> evidenceTypeList = evidenceTypeRepo.getAllEvidenceTypes();
+		List<AccessPair> evidenceTypeAccessPairList = new ArrayList<AccessPair>();
+		List<AccessPair> parentTypeAccessPairList = new ArrayList<AccessPair>();
+		AccessPair evidenceTypeAccessPair;
+		AccessPair evidenceTypeAccessPairForParentType;
+
+		for (EvidenceType evidenceType : evidenceTypeList) {
+			// Set EvidenceType
+			evidenceTypeAccessPair = new AccessPair();
+			evidenceTypeAccessPair.setId(evidenceType.getId());
+			evidenceTypeAccessPair.setVal(evidenceType.getDescription());
+			if (evidenceToBeEdited != null && (evidenceToBeEdited.getEvidenceType() == evidenceType.getId())) {
+				evidenceTypeAccessPair.setIsSelected(true);
+			}
+			evidenceTypeAccessPairList.add(evidenceTypeAccessPair);
+
+			// Set Parent Type
+			if (!evidenceType.getDescription().equals("Item")) {
+				evidenceTypeAccessPairForParentType = new AccessPair();
+				evidenceTypeAccessPairForParentType.setId(evidenceType.getId());
+				evidenceTypeAccessPairForParentType.setVal(evidenceType.getDescription());
+				if (evidenceToBeEdited != null && (evidenceToBeEdited.getParentId() == evidenceType.getId())) {
+					evidenceTypeAccessPairForParentType.setIsSelected(true);
+				}
+				parentTypeAccessPairList.add(evidenceTypeAccessPairForParentType);
+			}
+		}
+
+		// Set Parent Evidence Number
+		List<Evidence> evidenceList = evidenceRepo.getAllEvidences();
+		List<AccessPair> evidenceAccessPairList = new ArrayList<AccessPair>();
+		AccessPair evidenceAccessPair;
+		for (Evidence evidence : evidenceList) {
+			evidenceAccessPair = new AccessPair();
+			evidenceAccessPair.setId(evidence.getId());
+			evidenceAccessPair.setVal(evidence.getDescription());
+			if (evidenceToBeEdited != null && (evidenceID == evidence.getId())) {
+				evidenceAccessPair.setIsSelected(true);
+			}
+			evidenceAccessPairList.add(evidenceAccessPair);
+		}
+		evidenceNew.setEvidenceType(evidenceTypeAccessPairList);
+		evidenceNew.setParentEvidenceNumber(evidenceAccessPairList);
+
+		evidenceNew.setParentType(parentTypeAccessPairList);
+		return new ResponseEntity<EvidenceNew>(evidenceNew, HttpStatus.OK);
+
 	}
 
 	/**

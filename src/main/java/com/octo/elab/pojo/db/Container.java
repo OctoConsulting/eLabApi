@@ -9,6 +9,7 @@ public class Container {
 	private String containerName;
 	private Integer evidenceType;
 	private Integer id;
+	private Integer _id;
 	private List<Package> packages;
 
 	public Integer getId() {
@@ -41,6 +42,14 @@ public class Container {
 
 	public void setPackages(List<Package> packages) {
 		this.packages = packages;
+	}
+
+	public Integer get_id() {
+		return _id;
+	}
+
+	public void set_id(Integer _id) {
+		this._id = _id;
 	}
 
 }
