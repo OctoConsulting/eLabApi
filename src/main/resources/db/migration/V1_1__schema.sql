@@ -14,44 +14,6 @@ CREATE TABLE  elab.initial_assessment_note_type (
 );
 ALTER SEQUENCE  elab.initial_assessment_note_type_id_seq OWNED BY  elab.initial_assessment_note_type.id;
 
-CREATE SEQUENCE  elab.note_request_type_id_seq;
-CREATE TABLE  elab.note_request_type (
-  id INTEGER NOT NULL DEFAULT nextval('elab.note_request_type_id_seq'),
-  name VARCHAR(100) NOT NULL,
-  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  CONSTRAINT note_request_type_PK PRIMARY KEY (id)
-);
-ALTER SEQUENCE  elab.note_request_type_id_seq OWNED BY  elab.note_request_type.id;
-
-CREATE SEQUENCE  elab.note_method_id_seq;
-CREATE TABLE  elab.note_method (
-  id INTEGER NOT NULL DEFAULT nextval('elab.note_method_id_seq'),
-  name VARCHAR(100) NOT NULL,
-  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  CONSTRAINT note_method_PK PRIMARY KEY (id)
-);
-ALTER SEQUENCE  elab.note_method_id_seq OWNED BY  elab.note_method.id;
-
-
-
-CREATE SEQUENCE  elab.note_detail_item_style_id_seq;
-CREATE TABLE  elab.note_detail_item_style (
-  id INTEGER NOT NULL DEFAULT nextval('elab.note_detail_item_style_id_seq'),
-  name VARCHAR(100) NOT NULL,
-  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  CONSTRAINT note_detail_item_style_PK PRIMARY KEY (id)
-);
-ALTER SEQUENCE  elab.note_detail_item_style_id_seq OWNED BY  elab.note_detail_item_style.id;
-
 CREATE SEQUENCE  elab.note_detail_items_id_seq;
 CREATE TABLE  elab.note_detail_items (
   id INTEGER NOT NULL DEFAULT nextval('elab.note_detail_items_id_seq'),
@@ -63,44 +25,7 @@ CREATE TABLE  elab.note_detail_items (
 );
 ALTER SEQUENCE  elab.note_detail_items_id_seq OWNED BY  elab.note_detail_items.id;
 
-CREATE SEQUENCE  elab.note_detail_vehicle_position_id_seq;
-CREATE TABLE  elab.note_detail_vehicle_position (
-  id INTEGER NOT NULL DEFAULT nextval('elab.note_detail_vehicle_position_id_seq'),
-  name VARCHAR(100) NOT NULL,
-  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  CONSTRAINT note_detail_vehicle_position_PK PRIMARY KEY (id)
-);
-ALTER SEQUENCE  elab.note_detail_vehicle_position_id_seq OWNED BY  elab.note_detail_vehicle_position.id;
 
-CREATE SEQUENCE  elab.note_detail_tire_type_id_seq;
-CREATE TABLE  elab.note_detail_tire_type (
-  id INTEGER NOT NULL DEFAULT nextval('elab.note_detail_tire_type_id_seq'),
-  name VARCHAR(100) NOT NULL,
-  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  CONSTRAINT note_detail_tire_type_PK PRIMARY KEY (id)
-);
-ALTER SEQUENCE  elab.note_detail_tire_type_id_seq OWNED BY  elab.note_detail_tire_type.id;
-
-
-
-CREATE SEQUENCE  elab.note_detail_item_type_id_seq;
-CREATE TABLE  elab.note_detail_item_type (
-  id INTEGER NOT NULL DEFAULT nextval('elab.note_detail_item_type_id_seq'),
-  name VARCHAR(100) NOT NULL,
-  type VARCHAR(100) NOT NULL,
-  created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
-  updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
-  CONSTRAINT note_detail_item_type_PK PRIMARY KEY (id)
-);
-ALTER SEQUENCE  elab.note_detail_item_type_id_seq OWNED BY  elab.note_detail_item_type.id;
 
 CREATE SEQUENCE  elab.case_id_seq;
 CREATE TABLE  elab.case (
@@ -175,6 +100,7 @@ CREATE SEQUENCE  elab.exam_id_seq;
 CREATE TABLE  elab.exam (
   id INTEGER NOT NULL DEFAULT nextval('elab.exam_id_seq'),
   case_id INTEGER references  elab.case(id) NOT NULL,
+  _id INTEGER NOT NULL,
   evidence_id INTEGER references  elab.evidence(id) NOT NULL,
   exam_name VARCHAR(80) NOT NULL,
   exam_type INTEGER references  elab.exam_type(id) NOT NULL,
@@ -212,8 +138,8 @@ CREATE TABLE elab.note (
   note_category VARCHAR(80) NOT NULL,
   initial_assessment_note_type_id INTEGER references elab.initial_assessment_note_type(id) NOT NULL,
   conducted_by VARCHAR(80) NOT NULL,
-  request_type INTEGER references elab.note_request_type(id) NOT NULL,
-  note_method  INTEGER references elab.note_method(id) NOT NULL,
+  request_type INTEGER references elab.note_detail_items(id) NOT NULL,
+  note_method  INTEGER references elab.note_detail_items(id) NOT NULL,
   note_data VARCHAR(4000) NOT NULL,
   created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
   created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
@@ -240,16 +166,13 @@ CREATE TABLE elab.note_detail (
   id INTEGER NOT NULL DEFAULT nextval('elab.note_detail_id_seq'),
  note_id INTEGER NOT NULL references elab.note(id),
   note_detail_type INTEGER references elab.note_detail_type(id) NOT NULL,
-  note_detail_item_type_id INTEGER references elab.note_detail_item_type(id) NOT NULL,
-  note_detail_item_style_id INTEGER references elab.note_detail_item_style(id) NOT NULL,
+  note_detail_items_id INTEGER references elab.note_detail_items(id) NOT NULL,
   brand_name VARCHAR(100) NOT NULL,
   note_detail_size VARCHAR(100) NOT NULL,
   model VARCHAR(100) NOT NULL,
   dot_number VARCHAR(100) NOT NULL,
-  note_detail_vehicle_position_id INTEGER references elab.note_detail_vehicle_position(id) NOT NULL,
-  note_detail_tire_type_id INTEGER references elab.note_detail_tire_type(id) NOT NULL,
   note_detail_data VARCHAR(4000) NOT NULL,
-  note_detail_lable_info VARCHAR(2000) NOT NULL,
+  note_detail_label_info VARCHAR(2000) NOT NULL,
   created_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
   created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp() NOT NULL,
   updated_by VARCHAR(100) DEFAULT 'elab' NOT NULL,
@@ -363,7 +286,7 @@ VALUES
 ( 'Tire','K','K Item Type','Photo/Printouts'),
 ( 'Tire','K','K Item Type','Disc'),
 ( 'Tire','K','K Item Type','Digital Image'),
-( 'Tire','K','K Item Type','Other'),
+( 'Tire','K','K Item Type','Other');
 
 
 
@@ -411,14 +334,14 @@ VALUES
   UPDATE elab.evidence set is_foranalysis = false where evidence.evidence_type < 3;
 
       INSERT INTO elab.exam(
-  id, case_id, evidence_id, exam_name, exam_type, examiner_id)
+  id, case_id, evidence_id, exam_name, exam_type, examiner_id,_id)
   VALUES 
-    (1, 1, 3, 'Shoe/Tire', 1, 1),
-    (2, 1, 4, 'Shoe/Tire', 1, 1),
-    (3, 1, 7, 'Shoe/Tire', 1, 1),
-    (4, 1, 8, 'Shoe/Tire', 1, 1),
-    (5, 1, 9, 'Shoe/Tire', 1, 1),
-    (6, 1, 10, 'Shoe/Tire', 1, 1);
+    (1, 1, 3, 'Shoe/Tire', 1, 1,1),
+    (2, 1, 4, 'Shoe/Tire', 1, 1,1),
+    (3, 1, 7, 'Shoe/Tire', 1, 1,1),
+    (4, 1, 8, 'Shoe/Tire', 1, 1,1),
+    (5, 1, 9, 'Shoe/Tire', 1, 1,1),
+    (6, 1, 10, 'Shoe/Tire', 1, 1,1);
 
 -- Owner assignment for tables
 ALTER TABLE  elab.case OWNER to  elab;   
@@ -430,12 +353,6 @@ ALTER TABLE  elab.examiner OWNER to   elab;
 ALTER TABLE  elab.initial_assessment_note_type OWNER to   elab;
 ALTER TABLE  elab.note OWNER to   elab;
 ALTER TABLE  elab.note_detail OWNER to   elab;
-ALTER TABLE  elab.note_detail_item_style OWNER to   elab;
-ALTER TABLE  elab.note_detail_item_type OWNER to   elab;
-ALTER TABLE  elab.note_detail_tire_type OWNER to   elab;
-ALTER TABLE  elab.note_detail_type OWNER to   elab;
-ALTER TABLE  elab.note_detail_vehicle_position OWNER to   elab;
-ALTER TABLE  elab.note_method OWNER to   elab;
-ALTER TABLE  elab.note_request_type OWNER to   elab;
+ALTER TABLE  elab.note_detail_items OWNER to   elab;
 ALTER TABLE  elab.note_type OWNER to   elab;
 

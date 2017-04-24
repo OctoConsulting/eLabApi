@@ -31,6 +31,9 @@ public class Exam {
 	@Column(name = "case_id")
 	private Integer caseId;
 
+	@Column(name = "_id")
+	private Integer _id;
+
 	@Column(name = "exam_name")
 	private String examName;
 
@@ -224,6 +227,14 @@ public class Exam {
 
 	public void setUpdatedDate(Timestamp updatedDate) {
 		this.updatedDate = updatedDate;
+	}
+	
+	public Integer get_id() {
+		return _id;
+	}
+
+	public void set_id(Integer _id) {
+		this._id = _id;
 	}
 
 }
