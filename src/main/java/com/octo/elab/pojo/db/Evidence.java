@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -20,8 +19,7 @@ import com.octo.elab.utilities.CustomDateTimeSerializer;
 public class Evidence {
 
 	@Id
-	@Column(name = "id")
-	@JsonIgnore
+	@Column(name = "id")	
 	private Integer id;
 
 	@Column(name = "case_id")
