@@ -234,17 +234,14 @@ public class ExamController {
 			for(Integer existingEvidenceID : existingEvidencesList)
 			{
 				if(removeEvidencesList.contains(existingEvidenceID)){
-					System.out.println("Hello"+existingEvidenceID);
-					
+					//System.out.println("Existing -> "+ existingEvidenceID);
 				}
 				else{
 					Exam examToBeDeleted = examRepo.getExamIDByCaseIDAndEvidenceID(caseID,existingEvidenceID);
 					examRepo.delete(examToBeDeleted);
-					System.out.println("World"+existingEvidenceID);
+					//System.out.println("Remove -> "+existingEvidenceID);
 				}
-				
 			}
-			
 		return new ResponseEntity<String>("Success!!", HttpStatus.CREATED);
 	}
 }
