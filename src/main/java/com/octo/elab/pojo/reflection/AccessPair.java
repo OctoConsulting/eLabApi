@@ -11,6 +11,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class AccessPair {
 
 	int id;
+	
+	int _id;
 
 	String val;
 	
@@ -38,6 +40,14 @@ public class AccessPair {
 
 	public void setVal(String val) {
 		this.val = val;
+	}
+	
+	public int get_id() {
+		return _id;
+	}
+
+	public void set_id(int _id) {
+		this._id = _id;
 	}
 
 	// Constructor
