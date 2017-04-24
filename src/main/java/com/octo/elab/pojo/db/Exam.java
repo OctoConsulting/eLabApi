@@ -15,6 +15,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.octo.elab.utilities.CustomDateTimeDeserializer;
 import com.octo.elab.utilities.CustomDateTimeSerializer;
+import com.octo.elab.utilities.CustomTimestampDeserializer;
+import com.octo.elab.utilities.CustomTimestampSerializer;
 
 @Entity
 @Table(name = "exam")
@@ -37,53 +39,77 @@ public class Exam {
 
 	@Column(name = "examiner_id")
 	private Integer examinerId;
+	
+	@Column(name = "evidence_id")
+	private Integer evidenceId;
+	
+	@Transient
+	private Integer[] evidenceIds;
+
+	public Integer getEvidenceId() {
+		return evidenceId;
+	}
+
+	public void setEvidenceId(Integer evidenceId) {
+		this.evidenceId = evidenceId;
+	}
+
+	public Integer[] getEvidenceIds() {
+		return evidenceIds;
+	}
+
+	public void setEvidenceIds(Integer[] evidenceIds) {
+		this.evidenceIds = evidenceIds;
+	}
 
 	@Column(name = "assigned_date")
-	@JsonSerialize(using = CustomDateTimeSerializer.class)
-	@JsonDeserialize(using = CustomDateTimeDeserializer.class)
+	@JsonSerialize(using = CustomTimestampSerializer.class)
+	@JsonDeserialize(using = CustomTimestampDeserializer.class)
 	private Timestamp assignedDate;
 
 	@Column(name = "start_date")
-	@JsonSerialize(using = CustomDateTimeSerializer.class)
-	@JsonDeserialize(using = CustomDateTimeDeserializer.class)
+	@JsonSerialize(using = CustomTimestampSerializer.class)
+	@JsonDeserialize(using = CustomTimestampDeserializer.class)
 	private Timestamp startDate;
 
 	@Column(name = "end_date")
-	@JsonSerialize(using = CustomDateTimeSerializer.class)
-	@JsonDeserialize(using = CustomDateTimeDeserializer.class)
+	@JsonSerialize(using = CustomTimestampSerializer.class)
+	@JsonDeserialize(using = CustomTimestampDeserializer.class)
 	private Timestamp endDate;
 
 	@Column(name = "created_by")
 	private String createdBy;
 
 	@Column(name = "created_date")
-	@JsonSerialize(using = CustomDateTimeSerializer.class)
-	@JsonDeserialize(using = CustomDateTimeDeserializer.class)
+	@JsonSerialize(using = CustomTimestampSerializer.class)
+	@JsonDeserialize(using = CustomTimestampDeserializer.class)
 	private Timestamp createdDate;
 
 	@Column(name = "updated_by")
 	private String updatedBy;
 
 	@Column(name = "updated_date")
-	@JsonSerialize(using = CustomDateTimeSerializer.class)
-	@JsonDeserialize(using = CustomDateTimeDeserializer.class)
+	@JsonSerialize(using = CustomTimestampSerializer.class)
+	@JsonDeserialize(using = CustomTimestampDeserializer.class)
 	private Timestamp updatedDate;
 
 	@Transient
 	private List<Evidence> items;
 
-	@Column(name = "description")
-	private String examTypeName;
+	@Transient
+	private String description;
 
-	@Column(name = "examiner_name")
+	@Transient
 	private String examinerName;
 
-	public String getExamTypeName() {
-		return examTypeName;
+	
+	public String getDescription() {
+		return description;
 	}
 
-	public void setExamTypeName(String examTypeName) {
-		this.examTypeName = examTypeName;
+	
+	public void setDescription(String description){
+		this.description = description;
 	}
 
 	public Integer getID() {
@@ -126,10 +152,12 @@ public class Exam {
 		this.examName = examName;
 	}
 
+	
 	public Integer getExamType() {
 		return examType;
 	}
 
+	@Transient
 	public void setExamType(Integer examType) {
 		this.examType = examType;
 	}

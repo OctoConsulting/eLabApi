@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -71,24 +72,32 @@ public class EvidenceController {
 	 *
 	 * @return ResponseEntity<List<Evidence>>
 	 */
-	@RequestMapping(value = "/evidencesM/", method = RequestMethod.GET)
+	@RequestMapping(value = "/ui/evidences/", method = RequestMethod.GET)
 	@ApiOperation(value = "Fetch all Evidences")
 	public ResponseEntity<EvidenceNew> getEvidenceNew(@RequestParam(value = "mode", required = true) String mode,
 			@RequestParam(value = "evidenceID", required = false) Integer evidenceID) throws Exception {
 		log.info("GET /evidences API to fetch all evidences");
+		
 		EvidenceNew evidenceNew = new EvidenceNew();
 		Evidence evidenceToBeEdited = null;
-		if (mode.equalsIgnoreCase("edit")) {
+		
+		if (mode.equalsIgnoreCase("view")) {
 			if (evidenceID != null) {
 				evidenceToBeEdited = evidenceRepo.getEvidenceByID(evidenceID);
+				// No record in database for provided ID
 				if (evidenceToBeEdited == null) {
 					return new ResponseEntity<EvidenceNew>(evidenceNew, HttpStatus.BAD_REQUEST);
+				}
+				else{
+					evidenceNew.setName(evidenceToBeEdited.getEvidenceName());
+					evidenceNew.setForAnalysis(evidenceToBeEdited.getIsForAnalysis());
 				}
 			} else {
 				return new ResponseEntity<EvidenceNew>(evidenceNew, HttpStatus.BAD_REQUEST);
 			}
 
 		}
+		
 
 		List<EvidenceType> evidenceTypeList = evidenceTypeRepo.getAllEvidenceTypes();
 		List<AccessPair> evidenceTypeAccessPairList = new ArrayList<AccessPair>();
@@ -123,17 +132,21 @@ public class EvidenceController {
 		List<AccessPair> evidenceAccessPairList = new ArrayList<AccessPair>();
 		AccessPair evidenceAccessPair;
 		for (Evidence evidence : evidenceList) {
-			evidenceAccessPair = new AccessPair();
-			evidenceAccessPair.setId(evidence.getId());
-			evidenceAccessPair.setVal(evidence.getDescription());
-			if (evidenceToBeEdited != null && (evidenceID == evidence.getId())) {
-				evidenceAccessPair.setIsSelected(true);
+			if (!evidence.getDescription().equals("Item")) {
+				evidenceAccessPair = new AccessPair();
+				evidenceAccessPair.setId(evidence.getId());
+				evidenceAccessPair.setVal(evidence.getDescription());
+				evidenceAccessPair.set_id(evidence.get_id());
+				if (evidenceToBeEdited != null && (evidenceID == evidence.getId())) {
+					evidenceAccessPair.setIsSelected(true);
+				}
+				evidenceAccessPairList.add(evidenceAccessPair);
 			}
-			evidenceAccessPairList.add(evidenceAccessPair);
 		}
+		
+		
 		evidenceNew.setEvidenceType(evidenceTypeAccessPairList);
 		evidenceNew.setParentEvidenceNumber(evidenceAccessPairList);
-
 		evidenceNew.setParentType(parentTypeAccessPairList);
 		return new ResponseEntity<EvidenceNew>(evidenceNew, HttpStatus.OK);
 
@@ -230,5 +243,30 @@ public class EvidenceController {
 			}
 		}
 		return new ResponseEntity<Evidence>(evidence, HttpStatus.OK);
+	}
+	
+	/**
+	 * This method is used to add evidence 
+	 * 
+	 * @return ResponseEntity<String>
+	 */
+	@RequestMapping(value = "/evidences/", method = RequestMethod.POST)
+	@ApiOperation(value = "Add new evidence or edit new evidence")
+	public ResponseEntity<String> updateEvidence(
+			@RequestBody Evidence evidence) throws Exception {
+		log.info("POST /evidences/");
+		Date date = new Date();
+		Timestamp timeStamp = new Timestamp(date.getTime());
+		if(evidence.getId() == null)
+		{
+			evidence.setId(evidenceRepo.getMaxEvidenceID()+1);
+			evidence.setCreatedBy("elab");
+			evidence.setUpdatedBy("elab");
+			evidence.setUpdatedDate(timeStamp);
+			evidence.setCreatedDate(timeStamp);
+			evidence.set_id(evidenceRepo.getMaxEvidence_ID(evidence.getEvidenceType()));
+			evidenceRepo.saveAndFlush(evidence);
+		}
+		return new ResponseEntity<String>("Success!!", HttpStatus.CREATED);
 	}
 }

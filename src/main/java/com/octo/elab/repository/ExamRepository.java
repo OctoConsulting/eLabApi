@@ -30,5 +30,10 @@ public interface ExamRepository extends JpaRepository<Exam, Integer> {
 
 	@Query(value = "select e.*,ex.examiner_name ,et.description from elab.Exam e inner join elab.examiner as ex on e.examiner_id = ex.id inner join elab.exam_type as et on e.exam_type = et.id where (e.examiner_id = :ExaminerID)", nativeQuery = true)
 	public Exam getExamByExaminerID(@Param("ExaminerID") Integer ExaminerID);
-
+	
+	@Query(value = "select e.evidence_id from elab.Exam e where (e.case_id = :CaseID)", nativeQuery = true)
+	public Integer[] getExamEvidencesByCaseID(@Param("CaseID") Integer CaseID);
+	
+	@Query(value = "select e.* from elab.Exam e where (e.case_id = :CaseID) and (e.evidence_id = :EvidenceID)", nativeQuery = true)
+	public Exam getExamIDByCaseIDAndEvidenceID(@Param("CaseID") Integer CaseID,@Param("EvidenceID") Integer EvidenceID);
 }
