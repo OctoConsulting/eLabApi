@@ -111,8 +111,7 @@ public class ExamController {
 				examToBeEdited = examRepo.getExamByID(examID);
 				if (examToBeEdited == null) {
 					return new ResponseEntity<ExaminationNew>(examinationNew, HttpStatus.BAD_REQUEST);
-				}
-				else{
+				} else {
 					examinationNew.setAssignedDate(examToBeEdited.getAssignedDate());
 					examinationNew.setStartDate(examToBeEdited.getStartDate());
 					examinationNew.setEndDate(examToBeEdited.getEndDate());
@@ -183,65 +182,39 @@ public class ExamController {
 		Exam exam = examRepo.getExamByID(examID);
 		return new ResponseEntity<Exam>(exam, HttpStatus.OK);
 	}
-	
+
 	/**
-	 * This method is used to add/update exam 
+	 * This method is used to add/update exam
 	 * 
 	 * @return ResponseEntity<String>
 	 */
 	@RequestMapping(value = "/exams/", method = RequestMethod.POST)
 	@ApiOperation(value = "Add new exam or edit new exam")
-	public ResponseEntity<String> updateExam(
-			@RequestBody Exam exam) throws Exception {
+	public ResponseEntity<String> updateExam(@RequestBody Exam exam) throws Exception {
 		log.info("POST /exams/");
 		Date date = new Date();
 		Timestamp timeStamp = new Timestamp(date.getTime());
-		Integer[] existingEvidencesArray = examRepo.getExamEvidencesByCaseID(exam.getCaseId());
-		List<Integer> existingEvidencesList = Arrays.asList(existingEvidencesArray);
-		List<Integer> removeEvidencesList = new ArrayList<Integer>();
 		Integer caseID = exam.getCaseId();
-		Integer maxID = examRepo.getMaxExamID();
+		Integer _id = exam.get_id();
+		Integer[] evidenceIDs = exam.getEvidenceIds();
 		
-			for(Integer existingEvidences : exam.getEvidenceIds())
-			{
-				if(existingEvidencesList != null && existingEvidencesList.contains(existingEvidences)){
-					//Update
-					Exam existingExam = examRepo.getExamIDByCaseIDAndEvidenceID(caseID,existingEvidences);
-					existingExam.setStartDate(exam.getStartDate());
-					existingExam.setEndDate(exam.getEndDate());
-					existingExam.setExaminerId(exam.getExaminerId());
-					existingExam.setExamName(exam.getExamName());
-					existingExam.setExamType(exam.getExamType());
-					existingExam.setEvidenceId(existingEvidences);
-					existingExam.setAssignedDate(exam.getAssignedDate());
-					existingExam.setUpdatedDate(timeStamp);
-					examRepo.saveAndFlush(existingExam);
-					removeEvidencesList.add(existingEvidences);
-					
-				}
-				else{
-				//Insert new
-					exam.setID((maxID != null ? maxID : 0)+1);
-					exam.setCreatedBy("elab");
-					exam.setUpdatedBy("elab");
-					exam.setCreatedDate(timeStamp);
-					exam.setEvidenceId(existingEvidences);
-					exam.setUpdatedDate(timeStamp);
-					examRepo.saveAndFlush(exam);
-				}	
+
+		// delete
+		List<Exam> examToBeDeleted = examRepo.getExamIDByCaseIDAnd_id(caseID, _id);
+		examRepo.delete(examToBeDeleted);
+		
+		for (Integer newEvidences : evidenceIDs) {
+			// Insert new
+			Integer maxID = examRepo.getMaxExamID();
+			exam.setID((maxID != null ? maxID : 0) + 1);
+			exam.setCreatedBy("elab");
+			exam.setUpdatedBy("elab");
+			exam.setCreatedDate(timeStamp);
+			exam.setEvidenceId(newEvidences);
+			exam.setUpdatedDate(timeStamp);
+			examRepo.saveAndFlush(exam);
+
 		}
-			// Delete
-			for(Integer existingEvidenceID : existingEvidencesList)
-			{
-				if(removeEvidencesList.contains(existingEvidenceID)){
-					//System.out.println("Existing -> "+ existingEvidenceID);
-				}
-				else{
-					Exam examToBeDeleted = examRepo.getExamIDByCaseIDAndEvidenceID(caseID,existingEvidenceID);
-					examRepo.delete(examToBeDeleted);
-					//System.out.println("Remove -> "+existingEvidenceID);
-				}
-			}
 		return new ResponseEntity<String>("Success!!", HttpStatus.CREATED);
 	}
 }
