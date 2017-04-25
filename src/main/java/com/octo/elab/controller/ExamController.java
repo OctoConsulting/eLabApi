@@ -90,10 +90,12 @@ public class ExamController {
 			return new ResponseEntity<List<Exam>>(exams, HttpStatus.OK);
 		} else {
 			List<Exam> examList = examRepo.getExamsByCaseID(caseId);
-			Exam exam = examList.get(0);
+			//Exam exam = examList.get(0);
 			List<Integer> examIDPerCaseList = Arrays.asList(examRepo.get_idByCaseID(caseId));
 			for (Integer examIDPerCase : examIDPerCaseList) {
 				Integer[] evidenceIDs = examRepo.getExamEvidenceIDsByCaseIDAnd_id(caseId, examIDPerCase);
+				List<Exam> examsByCaseAnd_ID = examRepo.getExamsEvidenceIDsByCaseIDAnd_id(caseId, examIDPerCase);
+				Exam exam = examsByCaseAnd_ID.get(0);
 				List<Evidence> evidences = evidenceRepo.getEvidencesByID(evidenceIDs);
 				Exam examNew = new Exam();
 				examNew.setCaseId(caseId);
