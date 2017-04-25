@@ -71,11 +71,11 @@ public class ExamController {
 			throws Exception {
 		log.info("GET /exams API to fetch all exams");
 		List<Exam> exams = new ArrayList<Exam>();
-		
+
 		List<ExamType> examTypeNameList = examTypeRepo.getAllExamTypes();
 		List<Examiner> examinerNameList = examinerRepo.getAllExaminers();
-		HashMap<Integer,String> examTypeHashMap = new HashMap<>();
-		HashMap<Integer,String> examinerHashMap = new HashMap<>();
+		HashMap<Integer, String> examTypeHashMap = new HashMap<>();
+		HashMap<Integer, String> examinerHashMap = new HashMap<>();
 
 		for (ExamType examType : examTypeNameList) {
 			examTypeHashMap.put(examType.getId(), examType.getDescription());
@@ -90,12 +90,22 @@ public class ExamController {
 		} else {
 			List<Exam> examList = examRepo.getExamsByCaseID(caseId);
 			Exam exam = examList.get(0);
-			Integer[] evidenceIDs = examRepo.getAllEvidencesByCaseID(caseId);
-			List<Evidence> evidences = evidenceRepo.getEvidencesByID(evidenceIDs);
-			exam.setItems(evidences);
-			exam.setExamTypeName(examTypeHashMap.get(exam.getExamType()));
-			exam.setExaminerName(examinerHashMap.get(exam.getExaminerId()));
-			exams.add(exam);
+			List<Integer> examIDPerCaseList = Arrays.asList(examRepo.get_idByCaseID(caseId));
+			for (Integer examIDPerCase : examIDPerCaseList) {
+				Integer[] evidenceIDs = examRepo.getExamEvidenceIDsByCaseIDAnd_id(caseId, examIDPerCase);
+				List<Evidence> evidences = evidenceRepo.getEvidencesByID(evidenceIDs);
+				Exam examNew = new Exam();
+				examNew.setCaseId(caseId);
+				examNew.setEndDate(exam.getEndDate());
+				examNew.setStartDate(exam.getStartDate());
+				examNew.setExamName(exam.getExamName());
+				examNew.setItems(evidences);
+				examNew.set_id(examIDPerCase);
+				examNew.setEvidenceId(null);
+				examNew.setExamTypeName(examTypeHashMap.get(exam.getExamType()));
+				examNew.setExaminerName(examinerHashMap.get(exam.getExaminerId()));
+				exams.add(examNew);
+			}
 
 		}
 		return new ResponseEntity<List<Exam>>(exams, HttpStatus.OK);
@@ -124,19 +134,17 @@ public class ExamController {
 		Exam examToBeEdited = null;
 		List<Exam> examToBeEditedMultiple = null;
 		List<Integer> evidenceIDs = new ArrayList<>();
-		
-		
-		
+
 		if (mode.equalsIgnoreCase("edit")) {
 			if (examID != null) {
-				//examToBeEdited = examRepo.getExamByID(examID);
+				// examToBeEdited = examRepo.getExamByID(examID);
 				examToBeEditedMultiple = examRepo.getExamIDByCaseIDAnd_id(caseID, examID);
-				
+
 				examToBeEdited = examToBeEditedMultiple.get(0);
 				if (examToBeEdited == null) {
 					return new ResponseEntity<ExaminationNew>(examinationNew, HttpStatus.BAD_REQUEST);
 				} else {
-					for(Exam readEvidenceForExam : examToBeEditedMultiple){
+					for (Exam readEvidenceForExam : examToBeEditedMultiple) {
 						evidenceIDs.add(readEvidenceForExam.getEvidenceId());
 					}
 					examinationNew.setAssignedDate(examToBeEdited.getAssignedDate());
@@ -179,18 +187,20 @@ public class ExamController {
 			evidenceAccessPair = new AccessPair();
 			evidenceAccessPair.setId(evidence.getId());
 			evidenceAccessPair.setVal(evidence.getEvidenceName());
-			 if(evidenceIDs.contains(evidence.getId()))
-			 { 
-				 evidenceAccessPair.setIsSelected(true); 
-			 }
-			 
+			if (evidenceIDs.contains(evidence.getId())) {
+				evidenceAccessPair.setIsSelected(true);
+			}
+
 			evidenceAccessPairList.add(evidenceAccessPair);
 		}
 
 		examinationNew.setEvidences(evidenceAccessPairList);
 		examinationNew.setExaminers(examinerAccessPairList);
 		examinationNew.setExamType(examTypeAccessPairList);
-		//examinationNew.set_id(_id);
+		if (examToBeEdited != null) {
+			examinationNew.set_id(examToBeEdited.get_id());
+		}
+
 		return new ResponseEntity<ExaminationNew>(examinationNew, HttpStatus.OK);
 	}
 
@@ -225,11 +235,11 @@ public class ExamController {
 		Integer caseID = exam.getCaseId();
 		Integer _id = exam.get_id();
 		Integer[] evidenceIDs = exam.getEvidenceIds();
-		
+
 		// delete
 		List<Exam> examToBeDeleted = examRepo.getExamIDByCaseIDAnd_id(caseID, _id);
 		examRepo.delete(examToBeDeleted);
-		
+
 		for (Integer newEvidences : evidenceIDs) {
 			// Insert new
 			Integer maxID = examRepo.getMaxExamID();
