@@ -19,7 +19,7 @@ public class ExaminationNew {
 	private Timestamp assignedDate;
 	private Timestamp startDate;
 	private Timestamp endDate;
-	
+	private Integer _id;
 	
 	public String getName() {
 		return name;
@@ -76,6 +76,14 @@ public class ExaminationNew {
 	}
 	public void setEvidences(List<AccessPair> evidences) {
 		this.evidences = evidences;
+	}
+
+	public Integer get_id() {
+		return _id;
+	}
+
+	public void set_id(Integer _id) {
+		this._id = _id;
 	}
 	
 	

@@ -3,6 +3,7 @@ package com.octo.elab.controller;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -70,6 +71,19 @@ public class ExamController {
 			throws Exception {
 		log.info("GET /exams API to fetch all exams");
 		List<Exam> exams = new ArrayList<Exam>();
+		
+		List<ExamType> examTypeNameList = examTypeRepo.getAllExamTypes();
+		List<Examiner> examinerNameList = examinerRepo.getAllExaminers();
+		HashMap<Integer,String> examTypeHashMap = new HashMap<>();
+		HashMap<Integer,String> examinerHashMap = new HashMap<>();
+
+		for (ExamType examType : examTypeNameList) {
+			examTypeHashMap.put(examType.getId(), examType.getDescription());
+		}
+
+		for (Examiner examiner : examinerNameList) {
+			examinerHashMap.put(examiner.getId(), examiner.getExaminerName());
+		}
 		if (caseId == null) {
 			exams = examRepo.getAllExams();
 			return new ResponseEntity<List<Exam>>(exams, HttpStatus.OK);
@@ -79,6 +93,8 @@ public class ExamController {
 			Integer[] evidenceIDs = examRepo.getAllEvidencesByCaseID(caseId);
 			List<Evidence> evidences = evidenceRepo.getEvidencesByID(evidenceIDs);
 			exam.setItems(evidences);
+			exam.setExamTypeName(examTypeHashMap.get(exam.getExamType()));
+			exam.setExaminerName(examinerHashMap.get(exam.getExaminerId()));
 			exams.add(exam);
 
 		}
@@ -95,7 +111,8 @@ public class ExamController {
 	@RequestMapping(value = "/ui/exams/", method = RequestMethod.GET)
 	@ApiOperation(value = "Populating info for creating/viewing/editing an exam")
 	public ResponseEntity<ExaminationNew> getExamsInfo(@RequestParam(value = "mode", required = true) String mode,
-			@RequestParam(value = "examID", required = false) Integer examID) throws Exception {
+			@RequestParam(value = "examID", required = false) Integer examID,
+			@RequestParam(value = "caseID", required = false) Integer caseID) throws Exception {
 		log.info("GET /exams API to fetch all exams");
 		ExaminationNew examinationNew = new ExaminationNew();
 		List<ExamType> examTypeList = examTypeRepo.getAllExamTypes();
@@ -105,13 +122,23 @@ public class ExamController {
 		List<AccessPair> examinerAccessPairList = new ArrayList<AccessPair>();
 		List<AccessPair> evidenceAccessPairList = new ArrayList<AccessPair>();
 		Exam examToBeEdited = null;
-
+		List<Exam> examToBeEditedMultiple = null;
+		List<Integer> evidenceIDs = new ArrayList<>();
+		
+		
+		
 		if (mode.equalsIgnoreCase("edit")) {
 			if (examID != null) {
-				examToBeEdited = examRepo.getExamByID(examID);
+				//examToBeEdited = examRepo.getExamByID(examID);
+				examToBeEditedMultiple = examRepo.getExamIDByCaseIDAnd_id(caseID, examID);
+				
+				examToBeEdited = examToBeEditedMultiple.get(0);
 				if (examToBeEdited == null) {
 					return new ResponseEntity<ExaminationNew>(examinationNew, HttpStatus.BAD_REQUEST);
 				} else {
+					for(Exam readEvidenceForExam : examToBeEditedMultiple){
+						evidenceIDs.add(readEvidenceForExam.getEvidenceId());
+					}
 					examinationNew.setAssignedDate(examToBeEdited.getAssignedDate());
 					examinationNew.setStartDate(examToBeEdited.getStartDate());
 					examinationNew.setEndDate(examToBeEdited.getEndDate());
@@ -150,19 +177,20 @@ public class ExamController {
 		AccessPair evidenceAccessPair;
 		for (Evidence evidence : evidenceList) {
 			evidenceAccessPair = new AccessPair();
-			evidenceAccessPair.setId(evidence.get_id());
+			evidenceAccessPair.setId(evidence.getId());
 			evidenceAccessPair.setVal(evidence.getEvidenceName());
-			// TBD
-			/*
-			 * if(examToBeEdited != null && (examToBeEdited.g ==
-			 * examiner.getId())){ examinerAccessPair.setIsSelected(true); }
-			 */
+			 if(evidenceIDs.contains(evidence.getId()))
+			 { 
+				 evidenceAccessPair.setIsSelected(true); 
+			 }
+			 
 			evidenceAccessPairList.add(evidenceAccessPair);
 		}
 
 		examinationNew.setEvidences(evidenceAccessPairList);
 		examinationNew.setExaminers(examinerAccessPairList);
 		examinationNew.setExamType(examTypeAccessPairList);
+		//examinationNew.set_id(_id);
 		return new ResponseEntity<ExaminationNew>(examinationNew, HttpStatus.OK);
 	}
 
@@ -198,7 +226,6 @@ public class ExamController {
 		Integer _id = exam.get_id();
 		Integer[] evidenceIDs = exam.getEvidenceIds();
 		
-
 		// delete
 		List<Exam> examToBeDeleted = examRepo.getExamIDByCaseIDAnd_id(caseID, _id);
 		examRepo.delete(examToBeDeleted);

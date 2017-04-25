@@ -48,6 +48,17 @@ public class Exam {
 	
 	@Transient
 	private Integer[] evidenceIds;
+	
+	@Transient
+	private String examTypeName;
+
+	public String getExamTypeName() {
+		return examTypeName;
+	}
+
+	public void setExamTypeName(String examTypeName) {
+		this.examTypeName = examTypeName;
+	}
 
 	public Integer getEvidenceId() {
 		return evidenceId;
