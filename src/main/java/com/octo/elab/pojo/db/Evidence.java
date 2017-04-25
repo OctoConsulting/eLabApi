@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -49,7 +50,7 @@ public class Evidence {
 	@Column(name = "created_by")
 	private String createdBy;
 	
-	@Column(name = "description")
+	@Transient
 	private String description;
 
 	@Column(name = "created_date")
@@ -173,6 +174,7 @@ public class Evidence {
 		return description;
 	}
 
+	
 	public void setDescription(String description) {
 		this.description = description;
 	}

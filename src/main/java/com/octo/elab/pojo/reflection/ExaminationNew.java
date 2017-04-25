@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.octo.elab.utilities.CustomDateTimeDeserializer;
 import com.octo.elab.utilities.CustomDateTimeSerializer;
+import com.octo.elab.utilities.CustomTimestampDeserializer;
+import com.octo.elab.utilities.CustomTimestampSerializer;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ExaminationNew {
@@ -16,8 +18,14 @@ public class ExaminationNew {
 	private List<AccessPair> examiners = null;
 	private List<AccessPair> evidences = null;
 	private String name;
+	@JsonSerialize(using = CustomTimestampSerializer.class)
+	@JsonDeserialize(using = CustomTimestampDeserializer.class)
 	private Timestamp assignedDate;
+	@JsonSerialize(using = CustomTimestampSerializer.class)
+	@JsonDeserialize(using = CustomTimestampDeserializer.class)
 	private Timestamp startDate;
+	@JsonSerialize(using = CustomTimestampSerializer.class)
+	@JsonDeserialize(using = CustomTimestampDeserializer.class)
 	private Timestamp endDate;
 	private Integer _id;
 	
@@ -29,14 +37,10 @@ public class ExaminationNew {
 		this.name = name;
 	}
 
-	@JsonSerialize(using = CustomDateTimeSerializer.class)
-	@JsonDeserialize(using = CustomDateTimeDeserializer.class)
 	public Timestamp getAssignedDate() {
 		return assignedDate;
 	}
 
-	@JsonSerialize(using = CustomDateTimeSerializer.class)
-	@JsonDeserialize(using = CustomDateTimeDeserializer.class)
 	public void setAssignedDate(Timestamp assignedDate) {
 		this.assignedDate = assignedDate;
 	}
@@ -45,6 +49,8 @@ public class ExaminationNew {
 		return startDate;
 	}
 
+	@JsonSerialize(using = CustomTimestampSerializer.class)
+	@JsonDeserialize(using = CustomTimestampDeserializer.class)
 	public void setStartDate(Timestamp startDate) {
 		this.startDate = startDate;
 	}

@@ -74,6 +74,7 @@ public class ExamController {
 
 		List<ExamType> examTypeNameList = examTypeRepo.getAllExamTypes();
 		List<Examiner> examinerNameList = examinerRepo.getAllExaminers();
+		
 		HashMap<Integer, String> examTypeHashMap = new HashMap<>();
 		HashMap<Integer, String> examinerHashMap = new HashMap<>();
 
@@ -237,20 +238,27 @@ public class ExamController {
 		Integer[] evidenceIDs = exam.getEvidenceIds();
 
 		// delete
-		List<Exam> examToBeDeleted = examRepo.getExamIDByCaseIDAnd_id(caseID, _id);
-		examRepo.delete(examToBeDeleted);
+		if(caseID == null){
+			return new ResponseEntity<String>("Please provide caseID", HttpStatus.BAD_REQUEST);
+		}
+		if(_id != null){
+			List<Exam> examToBeDeleted = examRepo.getExamIDByCaseIDAnd_id(caseID, _id);
+			examRepo.delete(examToBeDeleted);
+		}
+		
 
 		for (Integer newEvidences : evidenceIDs) {
 			// Insert new
 			Integer maxID = examRepo.getMaxExamID();
+			Integer max_id = examRepo.getMaxEvidence_ID(caseID);
 			exam.setID((maxID != null ? maxID : 0) + 1);
+			exam.set_id((max_id != null ? maxID : 0) + 1);
 			exam.setCreatedBy("elab");
 			exam.setUpdatedBy("elab");
 			exam.setCreatedDate(timeStamp);
 			exam.setEvidenceId(newEvidences);
 			exam.setUpdatedDate(timeStamp);
 			examRepo.saveAndFlush(exam);
-
 		}
 		return new ResponseEntity<String>("Success!!", HttpStatus.CREATED);
 	}
