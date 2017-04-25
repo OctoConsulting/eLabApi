@@ -199,7 +199,10 @@ INSERT INTO elab.evidence_type(
 INSERT INTO elab.evidence_type(
   id, description)
   VALUES (3, 'Item');
+Insert INTO elab.evidence_type(id, description)VALUES (0, 'Select Option');
 
+
+  INSERT INTO elab.exam_type(id, description) VALUES (0, 'Select Option');	
   INSERT INTO elab.exam_type(
   id, description)
   VALUES (1, 'Shoe Prints/Tire Thread');
@@ -212,7 +215,10 @@ INSERT INTO elab.evidence_type(
   INSERT INTO elab.exam_type(
   id, description)
   VALUES (4, 'Question Documents');
-
+  
+  INSERT INTO elab.examiner(
+  id, examiner_name)
+  VALUES (0, 'Select Option');	
   INSERT INTO elab.examiner(
   id, examiner_name)
   VALUES (1, 'Nithin');
@@ -356,3 +362,6 @@ ALTER TABLE  elab.note_detail OWNER to   elab;
 ALTER TABLE  elab.note_detail_items OWNER to   elab;
 ALTER TABLE  elab.note_type OWNER to   elab;
 
+ALTER TABLE elab.exam ALTER COLUMN assigned_date DROP NOT NULL;
+ALTER TABLE elab.exam ALTER COLUMN start_date DROP NOT NULL;
+ALTER TABLE elab.exam ALTER COLUMN end_date DROP NOT NULL;
