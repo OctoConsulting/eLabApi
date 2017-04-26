@@ -3,7 +3,6 @@ package com.octo.elab.controller;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -25,8 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.octo.elab.pojo.db.Evidence;
 import com.octo.elab.pojo.db.EvidenceType;
-import com.octo.elab.pojo.db.ExamType;
-import com.octo.elab.pojo.db.Examiner;
 import com.octo.elab.pojo.reflection.AccessPair;
 import com.octo.elab.pojo.reflection.EvidenceNew;
 import com.octo.elab.repository.EvidenceRepository;
@@ -65,7 +62,7 @@ public class EvidenceController {
 		log.info("GET /evidences API to fetch all evidences");
 
 		List<Evidence> evidences = evidenceRepo.getAllEvidences();
-		
+
 		return new ResponseEntity<List<Evidence>>(evidences, HttpStatus.OK);
 	}
 
@@ -80,25 +77,17 @@ public class EvidenceController {
 	public ResponseEntity<EvidenceNew> getEvidenceNew(@RequestParam(value = "mode", required = true) String mode,
 			@RequestParam(value = "evidenceID", required = false) Integer evidenceID) throws Exception {
 		log.info("GET /evidences API to fetch all evidences");
-		
-		/*List<Evidence> evidenceNameList = evidenceRepo.getAllEvidences();
-		HashMap<Integer, String> evidenceHashMap = new HashMap<>();
 
-		for (Evidence evidence : evidenceNameList) {
-			evidenceHashMap.put(evidence.getId(), evidence.getDescription());
-		}*/
-		
 		EvidenceNew evidenceNew = new EvidenceNew();
 		Evidence evidenceToBeEdited = null;
-		
+
 		if (mode.equalsIgnoreCase("edit")) {
 			if (evidenceID != null) {
 				evidenceToBeEdited = evidenceRepo.getEvidenceByID(evidenceID);
 				// No record in database for provided ID
 				if (evidenceToBeEdited == null) {
 					return new ResponseEntity<EvidenceNew>(evidenceNew, HttpStatus.BAD_REQUEST);
-				}
-				else{
+				} else {
 					evidenceNew.setName(evidenceToBeEdited.getEvidenceName());
 					evidenceNew.setForAnalysis(evidenceToBeEdited.getIsForAnalysis());
 				}
@@ -106,7 +95,7 @@ public class EvidenceController {
 				return new ResponseEntity<EvidenceNew>(evidenceNew, HttpStatus.BAD_REQUEST);
 			}
 		}
-		
+
 		List<EvidenceType> evidenceTypeList = evidenceTypeRepo.getAllEvidenceTypes();
 		List<AccessPair> evidenceTypeAccessPairList = new ArrayList<AccessPair>();
 		List<AccessPair> parentTypeAccessPairList = new ArrayList<AccessPair>();
@@ -122,17 +111,15 @@ public class EvidenceController {
 				evidenceTypeAccessPair.setIsSelected(true);
 			}
 			evidenceTypeAccessPairList.add(evidenceTypeAccessPair);
-
 			// Set Parent Type
-			if (!evidenceType.getDescription().equals("Item")) {
-				evidenceTypeAccessPairForParentType = new AccessPair();
-				evidenceTypeAccessPairForParentType.setId(evidenceType.getId());
-				evidenceTypeAccessPairForParentType.setVal(evidenceType.getDescription());
-				if (evidenceToBeEdited != null && (evidenceToBeEdited.getParentId() == evidenceType.getId())) {
-					evidenceTypeAccessPairForParentType.setIsSelected(true);
-				}
-				parentTypeAccessPairList.add(evidenceTypeAccessPairForParentType);
+			evidenceTypeAccessPairForParentType = new AccessPair();
+			evidenceTypeAccessPairForParentType.setId(evidenceType.getId());
+			evidenceTypeAccessPairForParentType.setVal(evidenceType.getDescription());
+			if (evidenceToBeEdited != null && (evidenceToBeEdited.getParentId() == evidenceType.getId())) {
+				evidenceTypeAccessPairForParentType.setIsSelected(true);
 			}
+			parentTypeAccessPairList.add(evidenceTypeAccessPairForParentType);
+
 		}
 
 		// Set Parent Evidence Number
@@ -140,16 +127,16 @@ public class EvidenceController {
 		List<AccessPair> evidenceAccessPairList = new ArrayList<AccessPair>();
 		AccessPair evidenceAccessPair;
 		for (Evidence evidence : evidenceList) {
-			if (!evidence.getDescription().equals("Item")) {
-				evidenceAccessPair = new AccessPair();
-				evidenceAccessPair.setId(evidence.getId());
-				evidenceAccessPair.setVal(evidence.getDescription());
-				evidenceAccessPair.set_id(evidence.get_id());
-				if (evidenceToBeEdited != null && (evidenceToBeEdited.getParentId() == evidence.getId())) {
-					evidenceAccessPair.setIsSelected(true);
-				}
-				evidenceAccessPairList.add(evidenceAccessPair);
+
+			evidenceAccessPair = new AccessPair();
+			evidenceAccessPair.setId(evidence.getId());
+			evidenceAccessPair.setVal(evidence.getDescription());
+			evidenceAccessPair.set_id(evidence.get_id());
+			if (evidenceToBeEdited != null && (evidenceToBeEdited.getParentId() == evidence.getId())) {
+				evidenceAccessPair.setIsSelected(true);
 			}
+			evidenceAccessPairList.add(evidenceAccessPair);
+
 		}
 		evidenceNew.setEvidenceType(evidenceTypeAccessPairList);
 		evidenceNew.setParentEvidenceNumber(evidenceAccessPairList);
@@ -250,21 +237,19 @@ public class EvidenceController {
 		}
 		return new ResponseEntity<Evidence>(evidence, HttpStatus.OK);
 	}
-	
+
 	/**
-	 * This method is used to add evidence 
+	 * This method is used to add evidence
 	 * 
 	 * @return ResponseEntity<String>
 	 */
 	@RequestMapping(value = "/evidences/", method = RequestMethod.POST)
 	@ApiOperation(value = "Add new evidence or edit new evidence")
-	public ResponseEntity<String> updateEvidence(
-			@RequestBody Evidence evidence) throws Exception {
+	public ResponseEntity<String> updateEvidence(@RequestBody Evidence evidence) throws Exception {
 		log.info("POST /evidences/");
 		Date date = new Date();
 		Timestamp timeStamp = new Timestamp(date.getTime());
-		if(evidence.getId() == null)
-		{
+		if (evidence.getId() == null) {
 			Integer maxID = evidenceRepo.getMaxEvidenceID();
 			Integer max_id = evidenceRepo.getMaxEvidence_ID(evidence.getEvidenceType());
 			evidence.setId((maxID != null ? maxID : 0) + 1);

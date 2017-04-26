@@ -13,8 +13,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.octo.elab.utilities.CustomDateTimeDeserializer;
-import com.octo.elab.utilities.CustomDateTimeSerializer;
 import com.octo.elab.utilities.CustomTimestampDeserializer;
 import com.octo.elab.utilities.CustomTimestampSerializer;
 
@@ -42,13 +40,13 @@ public class Exam {
 
 	@Column(name = "examiner_id")
 	private Integer examinerId;
-	
+
 	@Column(name = "evidence_id")
 	private Integer evidenceId;
-	
+
 	@Transient
 	private Integer[] evidenceIds;
-	
+
 	@Transient
 	private String examTypeName;
 
@@ -116,13 +114,11 @@ public class Exam {
 	@Transient
 	private String examinerName;
 
-	
 	public String getDescription() {
 		return description;
 	}
 
-	
-	public void setDescription(String description){
+	public void setDescription(String description) {
 		this.description = description;
 	}
 
@@ -166,7 +162,6 @@ public class Exam {
 		this.examName = examName;
 	}
 
-	
 	public Integer getExamType() {
 		return examType;
 	}
@@ -239,7 +234,7 @@ public class Exam {
 	public void setUpdatedDate(Timestamp updatedDate) {
 		this.updatedDate = updatedDate;
 	}
-	
+
 	public Integer get_id() {
 		return _id;
 	}

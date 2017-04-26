@@ -1,4 +1,4 @@
-package com.octo.elab.controller;
+ package com.octo.elab.controller;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -74,7 +74,7 @@ public class ExamController {
 
 		List<ExamType> examTypeNameList = examTypeRepo.getAllExamTypes();
 		List<Examiner> examinerNameList = examinerRepo.getAllExaminers();
-		
+
 		HashMap<Integer, String> examTypeHashMap = new HashMap<>();
 		HashMap<Integer, String> examinerHashMap = new HashMap<>();
 
@@ -89,8 +89,6 @@ public class ExamController {
 			exams = examRepo.getAllExams();
 			return new ResponseEntity<List<Exam>>(exams, HttpStatus.OK);
 		} else {
-			List<Exam> examList = examRepo.getExamsByCaseID(caseId);
-			//Exam exam = examList.get(0);
 			List<Integer> examIDPerCaseList = Arrays.asList(examRepo.get_idByCaseID(caseId));
 			for (Integer examIDPerCase : examIDPerCaseList) {
 				Integer[] evidenceIDs = examRepo.getExamEvidenceIDsByCaseIDAnd_id(caseId, examIDPerCase);
@@ -142,7 +140,6 @@ public class ExamController {
 			if (examID != null) {
 				// examToBeEdited = examRepo.getExamByID(examID);
 				examToBeEditedMultiple = examRepo.getExamIDByCaseIDAnd_id(caseID, examID);
-
 				examToBeEdited = examToBeEditedMultiple.get(0);
 				if (examToBeEdited == null) {
 					return new ResponseEntity<ExaminationNew>(examinationNew, HttpStatus.BAD_REQUEST);
@@ -190,6 +187,7 @@ public class ExamController {
 			evidenceAccessPair = new AccessPair();
 			evidenceAccessPair.setId(evidence.getId());
 			evidenceAccessPair.setVal(evidence.getEvidenceName());
+			evidenceAccessPair.set_id(evidence.get_id());
 			if (evidenceIDs.contains(evidence.getId())) {
 				evidenceAccessPair.setIsSelected(true);
 			}
@@ -238,23 +236,30 @@ public class ExamController {
 		Integer caseID = exam.getCaseId();
 		Integer _id = exam.get_id();
 		Integer[] evidenceIDs = exam.getEvidenceIds();
+		if(evidenceIDs == null)
+			{
+			 	evidenceIDs = new Integer[1];
+			 	evidenceIDs[0] = 0;
+			}
 
 		// delete
-		if(caseID == null){
+		if (caseID == null) {
 			return new ResponseEntity<String>("Please provide caseID", HttpStatus.BAD_REQUEST);
 		}
-		if(_id != null){
+		if (_id != null) {
 			List<Exam> examToBeDeleted = examRepo.getExamIDByCaseIDAnd_id(caseID, _id);
 			examRepo.delete(examToBeDeleted);
 		}
-		
 
+		Integer max_id = examRepo.getMaxEvidence_ID(caseID);
+		if(_id == null){
+			exam.set_id((max_id != null ? max_id : 0) + 1);
+		}
+		
 		for (Integer newEvidences : evidenceIDs) {
 			// Insert new
 			Integer maxID = examRepo.getMaxExamID();
-			Integer max_id = examRepo.getMaxEvidence_ID(caseID);
 			exam.setID((maxID != null ? maxID : 0) + 1);
-			exam.set_id((max_id != null ? maxID : 0) + 1);
 			exam.setCreatedBy("elab");
 			exam.setUpdatedBy("elab");
 			exam.setCreatedDate(timeStamp);

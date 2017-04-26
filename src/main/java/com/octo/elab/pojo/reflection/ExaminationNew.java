@@ -6,8 +6,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.octo.elab.utilities.CustomDateTimeDeserializer;
-import com.octo.elab.utilities.CustomDateTimeSerializer;
 import com.octo.elab.utilities.CustomTimestampDeserializer;
 import com.octo.elab.utilities.CustomTimestampSerializer;
 
@@ -28,7 +26,7 @@ public class ExaminationNew {
 	@JsonDeserialize(using = CustomTimestampDeserializer.class)
 	private Timestamp endDate;
 	private Integer _id;
-	
+
 	public String getName() {
 		return name;
 	}
@@ -66,20 +64,23 @@ public class ExaminationNew {
 	public List<AccessPair> getExamType() {
 		return examType;
 	}
-	
+
 	public void setExamType(List<AccessPair> examType) {
 		this.examType = examType;
 	}
+
 	public List<AccessPair> getExaminers() {
 		return examiners;
 	}
+
 	public void setExaminers(List<AccessPair> examiners) {
 		this.examiners = examiners;
 	}
-	
+
 	public List<AccessPair> getEvidences() {
 		return evidences;
 	}
+
 	public void setEvidences(List<AccessPair> evidences) {
 		this.evidences = evidences;
 	}
@@ -91,8 +92,5 @@ public class ExaminationNew {
 	public void set_id(Integer _id) {
 		this._id = _id;
 	}
-	
-	
-	
-	
+
 }
