@@ -15,4 +15,7 @@ public interface NoteRepository extends JpaRepository<Note, Integer> {
 	
 	@Query(value = "select * from elab.note n where (n.id = :noteID)", nativeQuery = true)
 	public Note getNoteByID(@Param("noteID") Integer noteID);
+	
+	@Query(value = "select max(id) from elab.note", nativeQuery = true)
+	public Integer getMaxNoteID();
 }

@@ -41,10 +41,10 @@ public class NoteTypeController {
 	 *
 	 * @return ResponseEntity<List<NoteType>>
 	 */
-	@RequestMapping(value = "/noteTypes", method = RequestMethod.GET)
+	@RequestMapping(value = "/notetypes", method = RequestMethod.GET)
 	@ApiOperation(value = "Fetch all NoteTypes")
 	public ResponseEntity<List<NoteType>> getNoteTypes() throws Exception {
-		log.info("GET /noteTypes API to fetch all noteTypes");
+		log.info("GET /notetypes API to fetch all noteTypes");
 		List<NoteType> noteTypes = noteTypeRepo.getAllNoteTypes();
 		return new ResponseEntity<List<NoteType>>(noteTypes, HttpStatus.OK);
 	}
@@ -57,11 +57,11 @@ public class NoteTypeController {
 	 *            The id of the noteType to be retrieved
 	 * @return ResponseEntity<NoteType>
 	 */
-	@RequestMapping(value = "/noteTypes/{noteTypeID}/", method = RequestMethod.GET)
+	@RequestMapping(value = "/notetypes/{noteTypeID}/", method = RequestMethod.GET)
 	@ApiOperation(value = "Fetch a noteType by ID")
 	public ResponseEntity<NoteType> getNoteTypeByID(
 			@ApiParam(value = "noteTypeID value", required = true) @PathVariable Integer noteTypeID) throws Exception {
-		log.info("GET /noteTypes/" + noteTypeID);
+		log.info("GET /notetypes/" + noteTypeID);
 		NoteType noteType = noteTypeRepo.getNoteTypeByID(noteTypeID);
 		return new ResponseEntity<NoteType>(noteType, HttpStatus.OK);
 	}

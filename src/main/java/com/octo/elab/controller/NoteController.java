@@ -1,5 +1,7 @@
 package com.octo.elab.controller;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -12,10 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.octo.elab.pojo.db.Note;
 import com.octo.elab.pojo.db.Note;
 import com.octo.elab.repository.NoteRepository;
 
@@ -64,5 +68,28 @@ public class NoteController {
 		log.info("GET /notes/" + noteID);
 		Note note = noteRepo.getNoteByID(noteID);
 		return new ResponseEntity<Note>(note, HttpStatus.OK);
+	}
+	
+	/**
+	 * This method is used to add note
+	 * 
+	 * @return ResponseEntity<String>
+	 */
+	@RequestMapping(value = "/notes/", method = RequestMethod.POST)
+	@ApiOperation(value = "Add-Update a note")
+	public ResponseEntity<String> updateNote(@RequestBody Note note) throws Exception {
+		log.info("POST /notes/");
+		Date date = new Date();
+		Timestamp timeStamp = new Timestamp(date.getTime());
+		if (note.getId() == null) {
+			Integer maxID = noteRepo.getMaxNoteID();
+			note.setId((maxID != null ? maxID : 0) + 1);
+			note.setCreatedBy("elab");
+			note.setUpdatedBy("elab");
+			note.setUpdatedDate(timeStamp);
+			note.setCreatedDate(timeStamp);
+			noteRepo.saveAndFlush(note);
+		}
+		return new ResponseEntity<String>("Success!!", HttpStatus.CREATED);
 	}
 }

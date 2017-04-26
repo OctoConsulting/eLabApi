@@ -6,7 +6,7 @@ CREATE TABLE  elab.note_dropdown (
   id INTEGER DEFAULT nextval('elab.note_dropdown_id_seq'),
   item_type character varying(20) ,
   identifier character varying(20) ,
-  dropdownLabel character varying(20),
+  label character varying(20),
   value VARCHAR(100), 
   CONSTRAINT note_dropdown_PK PRIMARY KEY (id)
 );
@@ -306,7 +306,3 @@ ALTER TABLE  elab.examiner OWNER to elab;
 ALTER TABLE  elab.note OWNER to elab;
 ALTER TABLE  elab.note_dropdown OWNER to elab;
 ALTER TABLE  elab.note_type OWNER to elab;
-
-ALTER TABLE elab.exam ALTER COLUMN assigned_date DROP;
-ALTER TABLE elab.exam ALTER COLUMN start_date DROP;
-ALTER TABLE elab.exam ALTER COLUMN end_date DROP;
