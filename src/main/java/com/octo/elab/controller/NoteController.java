@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.octo.elab.pojo.db.Note;
-import com.octo.elab.pojo.db.Note;
 import com.octo.elab.repository.NoteRepository;
 
 import io.swagger.annotations.Api;
