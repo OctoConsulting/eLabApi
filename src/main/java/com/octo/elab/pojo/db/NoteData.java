@@ -2,13 +2,45 @@ package com.octo.elab.pojo.db;
 
 public class NoteData {
 
+	// Initial Assessment attributes
+	private String requestType;
+	private Integer method;
+	private Integer conductedBy;
+	
+	// K Shoe Note attributes
 	private Integer type;
 	private Integer style;
 	private String brandName;
 	private String size;
 	private String model;
+	
+	// K Tire Note attributes
 	private Integer pov;
 	private String dot;
+
+	public String getRequestType() {
+		return requestType;
+	}
+
+	public void setRequestType(String requestType) {
+		this.requestType = requestType;
+	}
+
+	public Integer getMethod() {
+		return method;
+	}
+
+	public void setMethod(Integer method) {
+		this.method = method;
+	}
+
+	public Integer getConductedBy() {
+		return conductedBy;
+	}
+
+	public void setConductedBy(Integer conductedBy) {
+		this.conductedBy = conductedBy;
+	}
 
 	public Integer getType() {
 		return type;

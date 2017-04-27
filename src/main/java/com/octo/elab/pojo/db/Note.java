@@ -42,21 +42,18 @@ public class Note {
 	@Column(name = "evidences")
 	private String evidences;
 
-	@Column(name = "request_type")
-	private Integer requestType;
-
-	@Column(name = "note_method")
-	private Integer noteMethod;
+	@Column(name = "parent_id")
+	private Integer parentId;
 
 	@Column(name = "note_message")
 	private String noteMessage;
 
+	@Column(name = "label_info")
+	private String labelInfo;
+
 	@Convert(converter = NoteDataConverter.class)
 	@Column(name = "note_data")
 	private Integer noteData;
-
-	@Column(name = "conducted_by")
-	private Integer conductedBy;
 
 	@Column(name = "created_by")
 	private String createdBy;
@@ -121,6 +118,14 @@ public class Note {
 	public void setItemType(String itemType) {
 		this.itemType = itemType;
 	}
+	
+	public Integer getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
 
 	public String getEvidences() {
 		return evidences;
@@ -130,28 +135,20 @@ public class Note {
 		this.evidences = evidences;
 	}
 
-	public Integer getRequestType() {
-		return requestType;
-	}
-
-	public void setRequestType(Integer requestType) {
-		this.requestType = requestType;
-	}
-
-	public Integer getNoteMethod() {
-		return noteMethod;
-	}
-
-	public void setNoteMethod(Integer noteMethod) {
-		this.noteMethod = noteMethod;
-	}
-
 	public String getNoteMessage() {
 		return noteMessage;
 	}
 
 	public void setNoteMessage(String noteMessage) {
 		this.noteMessage = noteMessage;
+	}
+	
+	public String getLabelInfo() {
+		return labelInfo;
+	}
+
+	public void setLabelInfo(String labelInfo) {
+		this.labelInfo = labelInfo;
 	}
 
 	public Integer getNoteData() {
@@ -160,14 +157,6 @@ public class Note {
 
 	public void setNoteData(Integer noteData) {
 		this.noteData = noteData;
-	}
-
-	public Integer getConductedBy() {
-		return conductedBy;
-	}
-
-	public void setConductedBy(Integer conductedBy) {
-		this.conductedBy = conductedBy;
 	}
 
 	public String getCreatedBy() {

@@ -58,11 +58,13 @@ public class EvidenceController {
 	 */
 	@RequestMapping(value = "/evidences", method = RequestMethod.GET)
 	@ApiOperation(value = "Fetch all Evidences")
-	public ResponseEntity<List<Evidence>> getEvidences() throws Exception {
+	public ResponseEntity<List<Evidence>> getEvidences(@RequestParam(value = "caseID", required = false) Integer caseID) throws Exception {
+		if (caseID == null) {
+			log.info("GET /evidences Error - CaseID missing");
+			return new ResponseEntity<List<Evidence>>(HttpStatus.BAD_REQUEST);
+		}
 		log.info("GET /evidences API to fetch all evidences");
-
-		List<Evidence> evidences = evidenceRepo.getAllEvidences();
-
+		List<Evidence> evidences = evidenceRepo.getEvidenceByCaseID(caseID);
 		return new ResponseEntity<List<Evidence>>(evidences, HttpStatus.OK);
 	}
 
