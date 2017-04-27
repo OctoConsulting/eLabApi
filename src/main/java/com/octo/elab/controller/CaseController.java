@@ -21,8 +21,11 @@ import com.octo.elab.pojo.db.Case;
 import com.octo.elab.pojo.db.Container;
 import com.octo.elab.pojo.db.Evidence;
 import com.octo.elab.pojo.db.Package;
+import com.octo.elab.pojo.reflection.AccessPair;
+import com.octo.elab.pojo.reflection.CaseEvidence;
 import com.octo.elab.repository.CaseRepository;
 import com.octo.elab.repository.EvidenceRepository;
+import com.octo.elab.utilities.Constants;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -55,6 +58,48 @@ public class CaseController {
 		log.info("GET /cases API to fetch all cases");
 		List<Case> cases = caseRepo.getAllCases();
 		return new ResponseEntity<List<Case>>(cases, HttpStatus.OK);
+	}
+
+	/**
+	 * This method is used to fetch all case-evidence mappings from database
+	 *
+	 * @return ResponseEntity<CaseEvidence>
+	 */
+	@RequestMapping(value = "/caseevidences/{caseID}/", method = RequestMethod.GET)
+	@ApiOperation(value = "Fetch all Cases")
+	public ResponseEntity<CaseEvidence> getCaseEvidences(
+			@ApiParam(value = "caseID value", required = true) @PathVariable Integer caseID) throws Exception {
+		log.info("GET /caseevidences API to fetch all evidences for a case");
+		List<AccessPair> containerAccessPairs = new ArrayList<AccessPair>();
+		List<AccessPair> packageAccessPairs = new ArrayList<AccessPair>();
+		List<AccessPair> itemAccessPairs = new ArrayList<AccessPair>();
+		CaseEvidence caseEvidence = new CaseEvidence();
+		List<Evidence> containers = evidenceRepo.getEvidencesByEvidenceTypeForCaseID(caseID, Constants.CONTAINER_ID);
+		for (Evidence evidence : containers) {
+			AccessPair container = new AccessPair();
+			container.set_id(evidence.get_id());
+			container.setId(evidence.getId());
+			containerAccessPairs.add(container);
+		}
+		List<Evidence> packages = evidenceRepo.getEvidencesByEvidenceTypeForCaseID(caseID, Constants.PACKAGE_ID);
+		for (Evidence evidence : packages) {
+			AccessPair pkg = new AccessPair();
+			pkg.set_id(evidence.get_id());
+			pkg.setId(evidence.getId());
+			packageAccessPairs.add(pkg);
+		}
+		List<Evidence> items = evidenceRepo.getEvidencesByEvidenceTypeForCaseID(caseID, Constants.ITEM_ID);
+		for (Evidence evidence : items) {
+			AccessPair item = new AccessPair();
+			item.set_id(evidence.get_id());
+			item.setId(evidence.getId());
+			itemAccessPairs.add(item);
+		}
+		
+		caseEvidence.setContainers(containerAccessPairs);
+		caseEvidence.setPackages(packageAccessPairs);
+		caseEvidence.setItems(itemAccessPairs);
+		return new ResponseEntity<CaseEvidence>(caseEvidence, HttpStatus.OK);
 	}
 
 	/**
@@ -96,7 +141,7 @@ public class CaseController {
 				packag.setItems(items);
 				packag.set_id(db_package.get_id());
 				packages.add(packag);
-				
+
 			}
 			container.setPackages(packages);
 			containers.add(container);

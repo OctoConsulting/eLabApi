@@ -159,6 +159,13 @@ public class EvidenceController {
 			@ApiParam(value = "evidenceID value", required = true) @PathVariable Integer evidenceID) throws Exception {
 		log.info("GET /evidences/" + evidenceID);
 		Evidence evidence = evidenceRepo.getEvidenceByID(evidenceID);
+
+		if (evidence.getParentId() != null) {
+			Evidence parentEvidence = evidenceRepo.getEvidenceByID(evidence.getParentId());
+			evidence.setParent_id(parentEvidence.get_id());
+			evidence.setParentType(parentEvidence.getEvidenceType());
+		}
+
 		return new ResponseEntity<Evidence>(evidence, HttpStatus.OK);
 	}
 
@@ -171,20 +178,16 @@ public class EvidenceController {
 	@RequestMapping(value = "/evidences/", method = RequestMethod.PUT)
 	@ApiOperation(value = "Update a Evidences by IDs")
 	public ResponseEntity<List<Evidence>> updateEvidencesByIDs(@RequestParam(value = "id", required = false) String id,
-			@RequestParam(value = "isForAnalysis", required = false) String isForAnalysis,
-			@RequestParam(value = "itemType", required = false) String itemType,
-			@RequestParam(value = "identifier", required = false) String identifier) throws Exception {
-		log.info("PUT /evidences/?id=" + id + "&isForAnalysis=" + isForAnalysis + "&itemType=" + itemType
-				+ "&identifier=" + identifier);
+			@RequestBody Evidence updatedEvidence) throws Exception {
+		log.info("PUT /evidences/");
 		if (StringUtils.isBlank(id)) {
 			return new ResponseEntity<List<Evidence>>(HttpStatus.BAD_REQUEST);
 		}
 		List<Evidence> evidences = new ArrayList<Evidence>();
 		for (Integer evidenceID : NumberUtils.convertToIntegerArray(id, Constants.DEFAULT_DELIMITER)) {
-			ResponseEntity<Evidence> updatedEvidence = updateEvidenceByID(evidenceID, isForAnalysis, itemType,
-					identifier);
-			if (updatedEvidence.getStatusCode().is2xxSuccessful() && updatedEvidence.hasBody()) {
-				evidences.add(updatedEvidence.getBody());
+			ResponseEntity<Evidence> updatedEvidenceResponse = updateEvidenceByID(evidenceID, updatedEvidence);
+			if (updatedEvidenceResponse.getStatusCode().is2xxSuccessful() && updatedEvidenceResponse.hasBody()) {
+				evidences.add(updatedEvidenceResponse.getBody());
 			}
 		}
 		return new ResponseEntity<List<Evidence>>(evidences, HttpStatus.OK);
@@ -200,40 +203,24 @@ public class EvidenceController {
 	@ApiOperation(value = "Update a Evidence by ID")
 	public ResponseEntity<Evidence> updateEvidenceByID(
 			@ApiParam(value = "evidenceID value", required = true) @PathVariable Integer evidenceID,
-			@RequestParam(value = "isForAnalysis", required = false) String isForAnalysis,
-			@RequestParam(value = "itemType", required = false) String itemType,
-			@RequestParam(value = "identifier", required = false) String identifier) throws Exception {
-		log.info("PUT /evidences/" + evidenceID + "?isForAnalysis=" + isForAnalysis + "&itemType=" + itemType
-				+ "&identifier=" + identifier);
+			@RequestBody Evidence updatedEvidence) throws Exception {
+
+		Boolean updatedIsForAnalysis = updatedEvidence.getIsForAnalysis();
+		log.info("PUT /evidences/" + evidenceID + "?isForAnalysis=" + updatedIsForAnalysis);
 		Boolean update = false;
 		Evidence evidence = evidenceRepo.getEvidenceByID(evidenceID);
 		if (evidence.getEvidenceType() != Constants.ITEM_ID) {
 			return new ResponseEntity<Evidence>(evidence, HttpStatus.BAD_REQUEST);
-		} else {
-			if (StringUtils.isNotBlank(isForAnalysis)) {
-				if ("true".equalsIgnoreCase(isForAnalysis)) {
-					evidence.setIsForAnalysis(true);
-				} else if ("false".equalsIgnoreCase(isForAnalysis)) {
-					evidence.setIsForAnalysis(false);
-				}
-				update = true;
-			}
-			if (StringUtils.isNotBlank(itemType)
-					&& ("shoe".equalsIgnoreCase(itemType) || ("tire".equalsIgnoreCase(itemType)))) {
-				evidence.setItemType(StringUtils.upperCase(itemType));
-				update = true;
-			}
-			if (StringUtils.isNotBlank(identifier)
-					&& ("K".equalsIgnoreCase(identifier) || ("Q".equalsIgnoreCase(identifier)))) {
-				evidence.setIdentifier(StringUtils.upperCase(identifier));
-				update = true;
-			}
-			if (update) {
-				Date date = new Date();
-				Timestamp timeStamp = new Timestamp(date.getTime());
-				evidence.setUpdatedDate(timeStamp);
-				evidenceRepo.saveAndFlush(evidence);
-			}
+		} else if (updatedIsForAnalysis != evidence.getIsForAnalysis()) {
+			evidence.setIsForAnalysis(updatedIsForAnalysis);
+			update = true;
+		}
+
+		if (update) {
+			Date date = new Date();
+			Timestamp timeStamp = new Timestamp(date.getTime());
+			evidence.setUpdatedDate(timeStamp);
+			evidenceRepo.saveAndFlush(evidence);
 		}
 		return new ResponseEntity<Evidence>(evidence, HttpStatus.OK);
 	}
@@ -245,7 +232,7 @@ public class EvidenceController {
 	 */
 	@RequestMapping(value = "/evidences/", method = RequestMethod.POST)
 	@ApiOperation(value = "Add new evidence or edit new evidence")
-	public ResponseEntity<String> updateEvidence(@RequestBody Evidence evidence) throws Exception {
+	public ResponseEntity<String> addEvidence(@RequestBody Evidence evidence) throws Exception {
 		log.info("POST /evidences/");
 		Date date = new Date();
 		Timestamp timeStamp = new Timestamp(date.getTime());

@@ -48,8 +48,6 @@ CREATE TABLE  elab.evidence (
   evidence_type INTEGER references  elab.evidence_type(id),
   is_forAnalysis BOOLEAN DEFAULT true,
   parent_id INTEGER,
-  item_type character varying(20) ,
-  identifier character varying(20) ,
   _id INTEGER ,
   created_by VARCHAR(100) DEFAULT 'elab',
   created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp(),

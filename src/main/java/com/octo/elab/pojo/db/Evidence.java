@@ -20,7 +20,7 @@ import com.octo.elab.utilities.CustomDateTimeSerializer;
 public class Evidence {
 
 	@Id
-	@Column(name = "id")	
+	@Column(name = "id")
 	private Integer id;
 
 	@Column(name = "case_id")
@@ -38,20 +38,20 @@ public class Evidence {
 	@Column(name = "parent_id")
 	private Integer parentId;
 
-	@Column(name = "item_type")
-	private String itemType;
-
-	@Column(name = "identifier")
-	private String identifier;
-
 	@Column(name = "_id")
 	private Integer _id;
 
 	@Column(name = "created_by")
 	private String createdBy;
-	
+
 	@Transient
 	private String description;
+
+	@Transient
+	private Integer parent_id;
+
+	@Transient
+	private Integer parentType;
 
 	@Column(name = "created_date")
 	@JsonSerialize(using = CustomDateTimeSerializer.class)
@@ -114,22 +114,6 @@ public class Evidence {
 		this.parentId = parentId;
 	}
 
-	public String getItemType() {
-		return itemType;
-	}
-
-	public void setItemType(String itemType) {
-		this.itemType = itemType;
-	}
-
-	public String getIdentifier() {
-		return identifier;
-	}
-
-	public void setIdentifier(String identifier) {
-		this.identifier = identifier;
-	}
-
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -169,13 +153,29 @@ public class Evidence {
 	public void set_id(Integer _id) {
 		this._id = _id;
 	}
-	
+
 	public String getDescription() {
 		return description;
 	}
 
-	
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	public Integer getParent_id() {
+		return parent_id;
+	}
+
+	public void setParent_id(Integer parent_id) {
+		this.parent_id = parent_id;
+	}
+
+	public Integer getParentType() {
+		return parentType;
+	}
+
+	public void setParentType(Integer parentType) {
+		this.parentType = parentType;
+	}
+
 }
