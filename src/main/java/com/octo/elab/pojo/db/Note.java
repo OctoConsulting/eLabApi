@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.octo.elab.pojo.ui.NoteDataConverter;
+import com.octo.elab.pojo.jsonconverter.NoteDataConverter;
 import com.octo.elab.utilities.CustomDateTimeDeserializer;
 import com.octo.elab.utilities.CustomDateTimeSerializer;
 

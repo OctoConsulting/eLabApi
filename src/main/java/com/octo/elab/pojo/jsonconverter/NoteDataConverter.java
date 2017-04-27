@@ -1,4 +1,4 @@
-package com.octo.elab.pojo.ui;
+package com.octo.elab.pojo.jsonconverter;
 
 import javax.persistence.AttributeConverter;
 import javax.validation.constraints.NotNull;
