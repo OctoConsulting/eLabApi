@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.octo.elab.pojo.db.Case;
-import com.octo.elab.pojo.db.Container;
 import com.octo.elab.pojo.db.Evidence;
-import com.octo.elab.pojo.db.Package;
 import com.octo.elab.pojo.reflection.AccessPair;
 import com.octo.elab.pojo.reflection.CaseEvidence;
+import com.octo.elab.pojo.reflection.Container;
+import com.octo.elab.pojo.reflection.Package;
 import com.octo.elab.repository.CaseRepository;
 import com.octo.elab.repository.EvidenceRepository;
 import com.octo.elab.utilities.Constants;

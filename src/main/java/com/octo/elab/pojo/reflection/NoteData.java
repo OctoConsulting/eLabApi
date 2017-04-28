@@ -1,4 +1,4 @@
-package com.octo.elab.pojo.db;
+package com.octo.elab.pojo.reflection;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

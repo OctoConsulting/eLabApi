@@ -4,7 +4,7 @@ import javax.persistence.AttributeConverter;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.octo.elab.pojo.db.NoteData;
+import com.octo.elab.pojo.reflection.NoteData;
 
 public class NoteDataConverter implements AttributeConverter<NoteData, String> {
 	private final static ObjectMapper objectMapper = new ObjectMapper();

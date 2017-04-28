@@ -1,16 +1,18 @@
-package com.octo.elab.pojo.db;
+package com.octo.elab.pojo.reflection;
 
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.octo.elab.pojo.db.Evidence;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Container {
-	private String containerName;
+public class Package {
+
+	private String packageName;
 	private Integer evidenceType;
+	private List<Evidence> items;
 	private Integer id;
 	private Integer _id;
-	private List<Package> packages;
 
 	public Integer getId() {
 		return id;
@@ -20,12 +22,12 @@ public class Container {
 		this.id = id;
 	}
 
-	public String getContainerName() {
-		return containerName;
+	public String getPackageName() {
+		return packageName;
 	}
 
-	public void setContainerName(String containerName) {
-		this.containerName = containerName;
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
 	}
 
 	public Integer getEvidenceType() {
@@ -36,12 +38,12 @@ public class Container {
 		this.evidenceType = evidenceType;
 	}
 
-	public List<Package> getPackages() {
-		return packages;
+	public List<Evidence> getItems() {
+		return items;
 	}
 
-	public void setPackages(List<Package> packages) {
-		this.packages = packages;
+	public void setItems(List<Evidence> items) {
+		this.items = items;
 	}
 
 	public Integer get_id() {
