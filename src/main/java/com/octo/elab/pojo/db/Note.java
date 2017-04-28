@@ -53,7 +53,7 @@ public class Note {
 
 	@Convert(converter = NoteDataConverter.class)
 	@Column(name = "note_data")
-	private Integer noteData;
+	private NoteData noteData;
 
 	@Column(name = "created_by")
 	private String createdBy;
@@ -151,11 +151,11 @@ public class Note {
 		this.labelInfo = labelInfo;
 	}
 
-	public Integer getNoteData() {
+	public NoteData getNoteData() {
 		return noteData;
 	}
 
-	public void setNoteData(Integer noteData) {
+	public void setNoteData(NoteData noteData) {
 		this.noteData = noteData;
 	}
 

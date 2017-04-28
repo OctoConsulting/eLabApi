@@ -1,5 +1,8 @@
 package com.octo.elab.pojo.db;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class NoteData {
 
 	// Initial Assessment attributes
