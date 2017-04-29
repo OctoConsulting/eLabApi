@@ -1,5 +1,7 @@
 package com.octo.elab.pojo.reflection;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.octo.elab.pojo.db.Note;
 
@@ -7,7 +9,8 @@ import com.octo.elab.pojo.db.Note;
 public class IKQNotes {
 
 	Note initialAssessmentNote;
-	KQNotes kqNote;
+	List<Note> knowns;
+	List<Note> questions;
 
 	public Note getInitialAssessmentNote() {
 		return initialAssessmentNote;
@@ -17,12 +20,20 @@ public class IKQNotes {
 		this.initialAssessmentNote = initialAssessmentNote;
 	}
 
-	public KQNotes getKqNote() {
-		return kqNote;
+	public List<Note> getKnowns() {
+		return knowns;
 	}
 
-	public void setKqNote(KQNotes kqNote) {
-		this.kqNote = kqNote;
+	public void setKnowns(List<Note> knowns) {
+		this.knowns = knowns;
+	}
+
+	public List<Note> getQuestions() {
+		return questions;
+	}
+
+	public void setQuestions(List<Note> questions) {
+		this.questions = questions;
 	}
 
 }

@@ -31,7 +31,6 @@ import com.octo.elab.pojo.reflection.AccessPair;
 import com.octo.elab.pojo.reflection.ExamNotes;
 import com.octo.elab.pojo.reflection.ExaminationNew;
 import com.octo.elab.pojo.reflection.IKQNotes;
-import com.octo.elab.pojo.reflection.KQNotes;
 import com.octo.elab.repository.EvidenceRepository;
 import com.octo.elab.repository.ExamRepository;
 import com.octo.elab.repository.ExamTypeRepository;
@@ -309,11 +308,9 @@ public class ExamController {
 				}
 			}
 
-			KQNotes shoeKQNotes = new KQNotes();
 			shoeNotes.setInitialAssessmentNote(initialAssessmentShoe);
-			shoeKQNotes.setKnowns(shoeKNotes);
-			shoeKQNotes.setQuestions(shoeQNotes);
-			shoeNotes.setKqNote(shoeKQNotes);
+			shoeNotes.setKnowns(shoeKNotes);
+			shoeNotes.setQuestions(shoeQNotes);
 
 			Note initialAssessmentTire = noteRepo.getTireIANoteForExamID(examId);
 
@@ -334,11 +331,9 @@ public class ExamController {
 				}
 			}
 
-			KQNotes tireKQNotes = new KQNotes();
 			tireNotes.setInitialAssessmentNote(initialAssessmentTire);
-			tireKQNotes.setKnowns(tireKNotes);
-			tireKQNotes.setQuestions(tireQNotes);
-			tireNotes.setKqNote(tireKQNotes);
+			tireNotes.setKnowns(tireKNotes);
+			tireNotes.setQuestions(tireQNotes);
 
 			// Get Exam Details for exam ID
 			Exam exam = examRepo.getExamByID(examId);
