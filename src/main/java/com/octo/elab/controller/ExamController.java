@@ -281,14 +281,19 @@ public class ExamController {
 	 *
 	 * @return ResponseEntityList<ExamNotes>
 	 */
-	@RequestMapping(value = "/examnotes", method = RequestMethod.GET)
+	@RequestMapping(value = "/examnotes/{examId}", method = RequestMethod.GET)
 	@ApiOperation(value = "Fetch all Exam notes")
 	public ResponseEntity<List<ExamNotes>> getExamNotes(
+			@PathVariable Integer examId,
 			@RequestParam(value = "caseId", required = false) Integer caseId) throws Exception {
 		List<ExamNotes> examNotesList = new ArrayList<ExamNotes>();
 		
 		List<Integer> examIDs = noteRepo.getAllExamIDsByCaseID(caseId);
-		for (Integer examId : examIDs) {
+		
+		if(!examIDs.contains(examId)){
+			return new ResponseEntity<List<ExamNotes>>(examNotesList, HttpStatus.BAD_REQUEST);
+		}
+		else{
 			System.out.println("Entered  exam Id " + examId );
 			
 			Note initialAssessmentShoe = noteRepo.getShoeIANoteForExamID(examId);
@@ -367,6 +372,7 @@ public class ExamController {
 			// Add exam notes to List
 			examNotesList.add(examnotes);
 		}
+		
 		return new ResponseEntity<List<ExamNotes>>(examNotesList, HttpStatus.OK);
 	}
 }
