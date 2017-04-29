@@ -370,7 +370,8 @@ public class ExamController {
 			
 			if(type == null || ("shoe").equalsIgnoreCase(type))
 				examnotes.setShoeNotes(shoeNotes);
-			else if(type == null || ("tire").equalsIgnoreCase(type))
+			
+			if(type == null || ("tire").equalsIgnoreCase(type))
 				examnotes.setTireNotes(tireNotes);
 
 			// Add exam notes to List
