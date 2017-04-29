@@ -1,4 +1,4 @@
- package com.octo.elab.controller;
+package com.octo.elab.controller;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -26,12 +26,17 @@ import com.octo.elab.pojo.db.Evidence;
 import com.octo.elab.pojo.db.Exam;
 import com.octo.elab.pojo.db.ExamType;
 import com.octo.elab.pojo.db.Examiner;
+import com.octo.elab.pojo.db.Note;
 import com.octo.elab.pojo.reflection.AccessPair;
+import com.octo.elab.pojo.reflection.ExamNotes;
 import com.octo.elab.pojo.reflection.ExaminationNew;
+import com.octo.elab.pojo.reflection.IANotes;
+import com.octo.elab.pojo.reflection.KQNotes;
 import com.octo.elab.repository.EvidenceRepository;
 import com.octo.elab.repository.ExamRepository;
 import com.octo.elab.repository.ExamTypeRepository;
 import com.octo.elab.repository.ExaminerRepository;
+import com.octo.elab.repository.NoteRepository;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
 import io.swagger.annotations.Api;
@@ -50,6 +55,9 @@ public class ExamController {
 
 	@Autowired
 	private ExamRepository examRepo;
+
+	@Autowired
+	private NoteRepository noteRepo;
 
 	@Autowired
 	private ExamTypeRepository examTypeRepo;
@@ -236,11 +244,10 @@ public class ExamController {
 		Integer caseID = exam.getCaseId();
 		Integer _id = exam.get_id();
 		Integer[] evidenceIDs = exam.getEvidenceIds();
-		if(evidenceIDs == null)
-			{
-			 	evidenceIDs = new Integer[1];
-			 	evidenceIDs[0] = 0;
-			}
+		if (evidenceIDs == null) {
+			evidenceIDs = new Integer[1];
+			evidenceIDs[0] = 0;
+		}
 
 		// delete
 		if (caseID == null) {
@@ -252,10 +259,10 @@ public class ExamController {
 		}
 
 		Integer max_id = examRepo.getMaxEvidence_ID(caseID);
-		if(_id == null){
+		if (_id == null) {
 			exam.set_id((max_id != null ? max_id : 0) + 1);
 		}
-		
+
 		for (Integer newEvidences : evidenceIDs) {
 			// Insert new
 			Integer maxID = examRepo.getMaxExamID();
@@ -268,5 +275,78 @@ public class ExamController {
 			examRepo.saveAndFlush(exam);
 		}
 		return new ResponseEntity<String>("Success!!", HttpStatus.CREATED);
+	}
+
+	/**
+	 * This method is used to fetch all exams notes from database using caseId
+	 *
+	 * @return ResponseEntityList<ExamNotes>
+	 */
+	@RequestMapping(value = "/examnotes", method = RequestMethod.GET)
+	@ApiOperation(value = "Fetch all Exam notes")
+	public ResponseEntity<List<ExamNotes>> getExamNotes(
+			@RequestParam(value = "caseId", required = false) Integer caseId) throws Exception {
+		List<ExamNotes> examNotesList = new ArrayList<ExamNotes>();
+
+		List<Integer> examIDs = noteRepo.getAllExamIDsByCaseID(caseId);
+		for (Integer examId : examIDs) {
+			List<Note> initialAssessments = noteRepo.getAllIANotesByExamID(examId);
+			List<IANotes> initialAssessmentList = new ArrayList<IANotes>();
+			for (Note initialAssessment : initialAssessments) {
+				IANotes ianote = new IANotes();
+				List<Note> shoeKNotes = new ArrayList<Note>();
+				List<Note> tireKNotes = new ArrayList<Note>();
+				List<Note> shoeQNotes = new ArrayList<Note>();
+				List<Note> tireQNotes = new ArrayList<Note>();
+				List<Note> notes = noteRepo.getNoteDetailsByParentID(initialAssessment.getId());
+				for (Note note : notes) {
+					String itemType = note.getItemType();
+					Integer noteType = note.getNoteType();
+
+					// Knowns
+					if (noteType == 2) {
+						if ("shoe".equalsIgnoreCase(itemType)) {
+							shoeKNotes.add(note);
+						} else if ("tire".equalsIgnoreCase(itemType)) {
+							tireKNotes.add(note);
+						}
+					}
+					// Questions
+					else if (noteType == 3) {
+						if ("shoe".equalsIgnoreCase(itemType)) {
+							shoeQNotes.add(note);
+						} else if ("tire".equalsIgnoreCase(itemType)) {
+							tireQNotes.add(note);
+						}
+					}
+					KQNotes shoeNotes = new KQNotes();
+					shoeNotes.setKnowns(shoeKNotes);
+					shoeNotes.setQuestions(shoeQNotes);
+					KQNotes tireNotes = new KQNotes();
+					tireNotes.setKnowns(tireKNotes);
+					tireNotes.setQuestions(tireQNotes);
+
+					// Add to Initial Assessment Note
+					ianote.setInitialAssessmentNote(initialAssessment);
+					ianote.setShoeNote(shoeNotes);
+					ianote.setTireNote(tireNotes);
+				}
+
+				// Add to Initial Assessment List
+				initialAssessmentList.add(ianote);
+			}
+
+			// Get Exam Details for exam ID
+			Exam exam = examRepo.getExamByID(examId);
+
+			// Set Data for Exam Notes object
+			ExamNotes examnotes = new ExamNotes();
+			examnotes.setExam(exam);
+			examnotes.setInitialAssessments(initialAssessmentList);
+
+			// Add exam notes to List
+			examNotesList.add(examnotes);
+		}
+		return new ResponseEntity<List<ExamNotes>>(examNotesList, HttpStatus.OK);
 	}
 }
