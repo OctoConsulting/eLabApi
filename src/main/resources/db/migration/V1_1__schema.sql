@@ -286,13 +286,8 @@ VALUES
  INSERT INTO elab.exam(
   id, case_id, evidence_id, exam_name, exam_type, examiner_id,_id)
   VALUES 
-  (1, 1, 3, 'Shoe/Tire', 1, 1, 1),
-  (2, 1, 4, 'Shoe/Tire', 1, 1, 1),
-  (3, 1, 7, 'Shoe/Tire', 1, 1, 1),
-  (4, 1, 8, 'Shoe/Tire', 1, 1, 1),
-  (5, 1, 9, 'Shoe/Tire', 1, 1, 1),
-  (6, 1, 10, 'Shoe/Tire', 1, 1, 1);
-
+  (1, 1, 0, 'Shoe/Tire', 1, 1, 1),
+  
 -- Owner assignment for tables
 ALTER TABLE  elab.case OWNER to  elab; 
 ALTER TABLE  elab.evidence OWNER to  elab;
