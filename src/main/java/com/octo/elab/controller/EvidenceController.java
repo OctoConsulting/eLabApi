@@ -246,7 +246,8 @@ public class EvidenceController {
 			evidence.setUpdatedBy("elab");
 			evidence.setUpdatedDate(timeStamp);
 			evidence.setCreatedDate(timeStamp);
-			evidence.set_id((max_id != null ? maxID : 0) + 1);
+			System.out.println(max_id);
+			evidence.set_id((max_id != null ? max_id : 0) + 1);
 			evidenceRepo.saveAndFlush(evidence);
 		}
 		return new ResponseEntity<String>("Success!!", HttpStatus.CREATED);
