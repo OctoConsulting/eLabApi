@@ -84,7 +84,7 @@ CREATE TABLE  elab.exam (
   id INTEGER DEFAULT nextval('elab.exam_id_seq'),
   case_id INTEGER references  elab.case(id),
   _id INTEGER,
-  evidence_id INTEGER references  elab.evidence(id),
+  evidence_id INTEGER,
   exam_name VARCHAR(80),
   exam_type INTEGER references  elab.exam_type(id),
   examiner_id INTEGER references  elab.examiner(id),
