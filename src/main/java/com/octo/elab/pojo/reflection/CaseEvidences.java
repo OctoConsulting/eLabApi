@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * @author Sumit Dang
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CaseEvidence {
+public class CaseEvidences {
 
 	List<AccessPair> containers;
 

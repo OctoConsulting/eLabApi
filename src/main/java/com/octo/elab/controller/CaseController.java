@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.octo.elab.pojo.db.Case;
 import com.octo.elab.pojo.db.Evidence;
 import com.octo.elab.pojo.reflection.AccessPair;
-import com.octo.elab.pojo.reflection.CaseEvidence;
+import com.octo.elab.pojo.reflection.CaseEvidences;
 import com.octo.elab.pojo.reflection.Container;
 import com.octo.elab.pojo.reflection.Package;
 import com.octo.elab.repository.CaseRepository;
@@ -67,13 +67,13 @@ public class CaseController {
 	 */
 	@RequestMapping(value = "/caseevidences/{caseID}/", method = RequestMethod.GET)
 	@ApiOperation(value = "Fetch all Cases")
-	public ResponseEntity<CaseEvidence> getCaseEvidences(
+	public ResponseEntity<CaseEvidences> getCaseEvidences(
 			@ApiParam(value = "caseID value", required = true) @PathVariable Integer caseID) throws Exception {
 		log.info("GET /caseevidences API to fetch all evidences for a case");
 		List<AccessPair> containerAccessPairs = new ArrayList<AccessPair>();
 		List<AccessPair> packageAccessPairs = new ArrayList<AccessPair>();
 		List<AccessPair> itemAccessPairs = new ArrayList<AccessPair>();
-		CaseEvidence caseEvidence = new CaseEvidence();
+		CaseEvidences caseEvidence = new CaseEvidences();
 		List<Evidence> containers = evidenceRepo.getEvidencesByEvidenceTypeForCaseID(caseID, Constants.CONTAINER_ID);
 		for (Evidence evidence : containers) {
 			AccessPair container = new AccessPair();
@@ -99,7 +99,7 @@ public class CaseController {
 		caseEvidence.setContainers(containerAccessPairs);
 		caseEvidence.setPackages(packageAccessPairs);
 		caseEvidence.setItems(itemAccessPairs);
-		return new ResponseEntity<CaseEvidence>(caseEvidence, HttpStatus.OK);
+		return new ResponseEntity<CaseEvidences>(caseEvidence, HttpStatus.OK);
 	}
 
 	/**
