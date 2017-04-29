@@ -285,7 +285,8 @@ public class ExamController {
 	@ApiOperation(value = "Fetch all Exam notes")
 	public ResponseEntity<List<ExamNotes>> getExamNotes(
 			@PathVariable Integer examId,
-			@RequestParam(value = "caseId", required = false) Integer caseId) throws Exception {
+			@RequestParam(value = "caseId", required = false) Integer caseId,
+			@RequestParam(value = "type", required = false) String type) throws Exception {
 		List<ExamNotes> examNotesList = new ArrayList<ExamNotes>();
 		
 		List<Integer> examIDs = noteRepo.getAllExamIDsByCaseID(caseId);
@@ -294,8 +295,7 @@ public class ExamController {
 			return new ResponseEntity<List<ExamNotes>>(examNotesList, HttpStatus.BAD_REQUEST);
 		}
 		else{
-			System.out.println("Entered  exam Id " + examId );
-			
+						
 			Note initialAssessmentShoe = noteRepo.getShoeIANoteForExamID(examId);
 			
 			IKQNotes shoeNotes = new IKQNotes();
@@ -306,27 +306,28 @@ public class ExamController {
 				shoeNoteDetails = noteRepo.getNoteDetailsByParentID(initialAssessmentShoe.getId());
 			}
 				
-			
-			if(shoeNoteDetails != null){
-				for (Note note : shoeNoteDetails) {
-					Integer noteType = note.getNoteType();
-
-					// Knowns
-					if (noteType == 2) {
-						shoeKNotes.add(note);
+			if(type == null || ("shoe").equalsIgnoreCase(type)){
+				if(shoeNoteDetails != null){
+					
+					for (Note note : shoeNoteDetails) {
+						Integer noteType = note.getNoteType();
+	
+						// Knowns
+						if (noteType == 2) {
+							shoeKNotes.add(note);
+						}
+						// Questions
+						else if (noteType == 3) {
+							shoeQNotes.add(note);
+						}
 					}
-					// Questions
-					else if (noteType == 3) {
-						shoeQNotes.add(note);
-					}
+	
 				}
-
+				
+				shoeNotes.setInitialAssessmentNote(initialAssessmentShoe);
+				shoeNotes.setKnowns(shoeKNotes);
+				shoeNotes.setQuestions(shoeQNotes);
 			}
-			
-			shoeNotes.setInitialAssessmentNote(initialAssessmentShoe);
-			shoeNotes.setKnowns(shoeKNotes);
-			shoeNotes.setQuestions(shoeQNotes);
-
 			Note initialAssessmentTire = noteRepo.getTireIANoteForExamID(examId);
 
 			IKQNotes tireNotes = new IKQNotes();
@@ -338,36 +339,39 @@ public class ExamController {
 				tireNoteDetails = noteRepo.getNoteDetailsByParentID(initialAssessmentTire.getId());
 			}
 				
-			
-			if(tireNoteDetails != null){
-				for (Note note : tireNoteDetails) {
-					Integer noteType = note.getNoteType();
-
-					// Knowns
-					if (noteType == 2) {
-						tireKNotes.add(note);
+			if(type == null || ("tire").equalsIgnoreCase(type)){
+				if(tireNoteDetails != null){
+					for (Note note : tireNoteDetails) {
+						Integer noteType = note.getNoteType();
+	
+						// Knowns
+						if (noteType == 2) {
+							tireKNotes.add(note);
+						}
+						// Questions
+						else if (noteType == 3) {
+							tireQNotes.add(note);
+						}
 					}
-					// Questions
-					else if (noteType == 3) {
-						tireQNotes.add(note);
-					}
+	
+	
 				}
-
-
+				
+				tireNotes.setInitialAssessmentNote(initialAssessmentTire);
+				tireNotes.setKnowns(tireKNotes);
+				tireNotes.setQuestions(tireQNotes);
 			}
-			
-			tireNotes.setInitialAssessmentNote(initialAssessmentTire);
-			tireNotes.setKnowns(tireKNotes);
-			tireNotes.setQuestions(tireQNotes);
-
 			// Get Exam Details for exam ID
 			Exam exam = examRepo.getExamByID(examId);
 
 			// Set Data for Exam Notes object
 			ExamNotes examnotes = new ExamNotes();
 			examnotes.setExam(exam);
-			examnotes.setShoeNotes(shoeNotes);
-			examnotes.setTireNotes(tireNotes);
+			
+			if(type == null || ("shoe").equalsIgnoreCase(type))
+				examnotes.setShoeNotes(shoeNotes);
+			else if(type == null || ("tire").equalsIgnoreCase(type))
+				examnotes.setTireNotes(tireNotes);
 
 			// Add exam notes to List
 			examNotesList.add(examnotes);
