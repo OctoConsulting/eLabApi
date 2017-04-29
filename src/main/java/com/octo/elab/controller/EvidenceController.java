@@ -28,9 +28,11 @@ import com.octo.elab.pojo.reflection.AccessPair;
 import com.octo.elab.pojo.reflection.EvidenceNew;
 import com.octo.elab.repository.EvidenceRepository;
 import com.octo.elab.repository.EvidenceTypeRepository;
+import com.octo.elab.repository.NoteRepository;
 import com.octo.elab.utilities.Constants;
 import com.octo.elab.utilities.NumberUtils;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -47,6 +49,9 @@ public class EvidenceController {
 
 	@Autowired
 	private EvidenceRepository evidenceRepo;
+	
+	@Autowired
+	private NoteRepository noteRepo;
 
 	@Autowired
 	private EvidenceTypeRepository evidenceTypeRepo;
@@ -58,13 +63,58 @@ public class EvidenceController {
 	 */
 	@RequestMapping(value = "/evidences", method = RequestMethod.GET)
 	@ApiOperation(value = "Fetch all Evidences")
-	public ResponseEntity<List<Evidence>> getEvidences(@RequestParam(value = "caseID", required = false) Integer caseID) throws Exception {
+	public ResponseEntity<List<Evidence>> getEvidences(
+			@RequestParam(value = "caseID", required = false) Integer caseID,
+			@RequestParam(value = "examID", required = false) Integer examID,
+			@RequestParam(value = "noteType", required = false) Integer noteType,
+			@RequestParam(value = "itemType", required = false) String itemType)throws Exception {
+		
+		List<Evidence> evidences = new ArrayList<Evidence>();
+		List<String> evidencesList = new ArrayList<String>();
 		if (caseID == null) {
 			log.info("GET /evidences Error - CaseID missing");
 			return new ResponseEntity<List<Evidence>>(HttpStatus.BAD_REQUEST);
 		}
+		else if(caseID != null && examID == null){
+			evidences = evidenceRepo.getEvidenceByCaseID(caseID);
+		}
+		else if(caseID != null && examID != null)
+		{
+			if(noteType == null &&  itemType == null){
+				evidencesList = noteRepo.getEvidenceIDsByCaseIDAndExamID(caseID, examID);
+			}
+			else if(noteType != null &&  itemType != null){
+				evidencesList = noteRepo.getEvidenceIDsByCaseIDExamIDNoteTypeItemType(caseID, examID,noteType,itemType);
+			}
+			else if(noteType != null){
+				evidencesList = noteRepo.getEvidenceIDsByCaseIDExamIDNoteType(caseID, examID,noteType);
+			}
+			else if(itemType != null){
+				evidencesList = noteRepo.getEvidenceIDsByCaseIDExamIDItemType(caseID, examID,itemType);
+			}
+			
+			List<String> evidenceList = new ArrayList<String>();
+			if(evidencesList != null){
+				for(String evidenceArray : evidencesList){
+					evidenceList.addAll(Arrays.asList(evidenceArray.split(",")));
+				}
+				Integer[] evidenceIDs = new Integer[evidenceList.size()];
+				Integer count =0;
+				for(String s : evidenceList)
+				{
+					evidenceIDs[count] = Integer.parseInt(s);
+					count++;
+				}
+				evidences = evidenceRepo.getEvidencesByID(evidenceIDs);
+			}
+			else
+			{
+				return new ResponseEntity<List<Evidence>>(HttpStatus.BAD_REQUEST);
+			}
+			
+		}
 		log.info("GET /evidences API to fetch all evidences");
-		List<Evidence> evidences = evidenceRepo.getEvidenceByCaseID(caseID);
+		//List<Evidence> evidences = evidenceRepo.getEvidenceByCaseID(caseID);
 		return new ResponseEntity<List<Evidence>>(evidences, HttpStatus.OK);
 	}
 
