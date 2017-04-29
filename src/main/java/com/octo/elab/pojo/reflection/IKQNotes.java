@@ -4,11 +4,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.octo.elab.pojo.db.Note;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class IANotes {
+public class IKQNotes {
 
 	Note initialAssessmentNote;
-	KQNotes shoeNote;
-	KQNotes tireNote;
+	KQNotes kqNote;
 
 	public Note getInitialAssessmentNote() {
 		return initialAssessmentNote;
@@ -18,20 +17,12 @@ public class IANotes {
 		this.initialAssessmentNote = initialAssessmentNote;
 	}
 
-	public KQNotes getShoeNote() {
-		return shoeNote;
+	public KQNotes getKqNote() {
+		return kqNote;
 	}
 
-	public void setShoeNote(KQNotes shoeNote) {
-		this.shoeNote = shoeNote;
-	}
-
-	public KQNotes getTireNote() {
-		return tireNote;
-	}
-
-	public void setTireNote(KQNotes tireNote) {
-		this.tireNote = tireNote;
+	public void setKqNote(KQNotes kqNote) {
+		this.kqNote = kqNote;
 	}
 
 }

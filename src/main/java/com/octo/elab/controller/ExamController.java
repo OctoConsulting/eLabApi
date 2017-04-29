@@ -30,7 +30,7 @@ import com.octo.elab.pojo.db.Note;
 import com.octo.elab.pojo.reflection.AccessPair;
 import com.octo.elab.pojo.reflection.ExamNotes;
 import com.octo.elab.pojo.reflection.ExaminationNew;
-import com.octo.elab.pojo.reflection.IANotes;
+import com.octo.elab.pojo.reflection.IKQNotes;
 import com.octo.elab.pojo.reflection.KQNotes;
 import com.octo.elab.repository.EvidenceRepository;
 import com.octo.elab.repository.ExamRepository;
@@ -290,51 +290,55 @@ public class ExamController {
 
 		List<Integer> examIDs = noteRepo.getAllExamIDsByCaseID(caseId);
 		for (Integer examId : examIDs) {
-			List<Note> initialAssessments = noteRepo.getAllIANotesByExamID(examId);
-			List<IANotes> initialAssessmentList = new ArrayList<IANotes>();
-			for (Note initialAssessment : initialAssessments) {
-				IANotes ianote = new IANotes();
-				List<Note> shoeKNotes = new ArrayList<Note>();
-				List<Note> tireKNotes = new ArrayList<Note>();
-				List<Note> shoeQNotes = new ArrayList<Note>();
-				List<Note> tireQNotes = new ArrayList<Note>();
-				List<Note> notes = noteRepo.getNoteDetailsByParentID(initialAssessment.getId());
-				for (Note note : notes) {
-					String itemType = note.getItemType();
-					Integer noteType = note.getNoteType();
+			Note initialAssessmentShoe = noteRepo.getShoeIANoteForExamID(examId);
 
-					// Knowns
-					if (noteType == 2) {
-						if ("shoe".equalsIgnoreCase(itemType)) {
-							shoeKNotes.add(note);
-						} else if ("tire".equalsIgnoreCase(itemType)) {
-							tireKNotes.add(note);
-						}
-					}
-					// Questions
-					else if (noteType == 3) {
-						if ("shoe".equalsIgnoreCase(itemType)) {
-							shoeQNotes.add(note);
-						} else if ("tire".equalsIgnoreCase(itemType)) {
-							tireQNotes.add(note);
-						}
-					}
-					KQNotes shoeNotes = new KQNotes();
-					shoeNotes.setKnowns(shoeKNotes);
-					shoeNotes.setQuestions(shoeQNotes);
-					KQNotes tireNotes = new KQNotes();
-					tireNotes.setKnowns(tireKNotes);
-					tireNotes.setQuestions(tireQNotes);
+			IKQNotes shoeNotes = new IKQNotes();
+			List<Note> shoeKNotes = new ArrayList<Note>();
+			List<Note> shoeQNotes = new ArrayList<Note>();
+			List<Note> shoeNoteDetails = noteRepo.getNoteDetailsByParentID(initialAssessmentShoe.getId());
+			for (Note note : shoeNoteDetails) {
+				Integer noteType = note.getNoteType();
 
-					// Add to Initial Assessment Note
-					ianote.setInitialAssessmentNote(initialAssessment);
-					ianote.setShoeNote(shoeNotes);
-					ianote.setTireNote(tireNotes);
+				// Knowns
+				if (noteType == 2) {
+					shoeKNotes.add(note);
 				}
-
-				// Add to Initial Assessment List
-				initialAssessmentList.add(ianote);
+				// Questions
+				else if (noteType == 3) {
+					shoeQNotes.add(note);
+				}
 			}
+
+			KQNotes shoeKQNotes = new KQNotes();
+			shoeNotes.setInitialAssessmentNote(initialAssessmentShoe);
+			shoeKQNotes.setKnowns(shoeKNotes);
+			shoeKQNotes.setQuestions(shoeQNotes);
+			shoeNotes.setKqNote(shoeKQNotes);
+
+			Note initialAssessmentTire = noteRepo.getTireIANoteForExamID(examId);
+
+			IKQNotes tireNotes = new IKQNotes();
+			List<Note> tireKNotes = new ArrayList<Note>();
+			List<Note> tireQNotes = new ArrayList<Note>();
+			List<Note> tireNoteDetails = noteRepo.getNoteDetailsByParentID(initialAssessmentTire.getId());
+			for (Note note : tireNoteDetails) {
+				Integer noteType = note.getNoteType();
+
+				// Knowns
+				if (noteType == 2) {
+					tireKNotes.add(note);
+				}
+				// Questions
+				else if (noteType == 3) {
+					tireQNotes.add(note);
+				}
+			}
+
+			KQNotes tireKQNotes = new KQNotes();
+			tireNotes.setInitialAssessmentNote(initialAssessmentTire);
+			tireKQNotes.setKnowns(tireKNotes);
+			tireKQNotes.setQuestions(tireQNotes);
+			tireNotes.setKqNote(tireKQNotes);
 
 			// Get Exam Details for exam ID
 			Exam exam = examRepo.getExamByID(examId);
@@ -342,7 +346,8 @@ public class ExamController {
 			// Set Data for Exam Notes object
 			ExamNotes examnotes = new ExamNotes();
 			examnotes.setExam(exam);
-			examnotes.setInitialAssessments(initialAssessmentList);
+			examnotes.setShoeNotes(shoeNotes);
+			examnotes.setTireNotes(tireNotes);
 
 			// Add exam notes to List
 			examNotesList.add(examnotes);
