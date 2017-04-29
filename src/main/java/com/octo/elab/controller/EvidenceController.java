@@ -180,14 +180,14 @@ public class EvidenceController {
 	@RequestMapping(value = "/evidences/", method = RequestMethod.PUT)
 	@ApiOperation(value = "Update a Evidences by IDs")
 	public ResponseEntity<List<Evidence>> updateEvidencesByIDs(@RequestParam(value = "id", required = false) String id,
-			@RequestBody Evidence updatedEvidence) throws Exception {
+			@RequestParam(value = "isForAnalysis", required = false) Boolean isForAnalysis) throws Exception {
 		log.info("PUT /evidences/");
 		if (StringUtils.isBlank(id)) {
 			return new ResponseEntity<List<Evidence>>(HttpStatus.BAD_REQUEST);
 		}
 		List<Evidence> evidences = new ArrayList<Evidence>();
 		for (Integer evidenceID : NumberUtils.convertToIntegerArray(id, Constants.DEFAULT_DELIMITER)) {
-			ResponseEntity<Evidence> updatedEvidenceResponse = updateEvidenceByID(evidenceID, updatedEvidence);
+			ResponseEntity<Evidence> updatedEvidenceResponse = updateEvidenceByID(evidenceID, isForAnalysis);
 			if (updatedEvidenceResponse.getStatusCode().is2xxSuccessful() && updatedEvidenceResponse.hasBody()) {
 				evidences.add(updatedEvidenceResponse.getBody());
 			}
@@ -205,9 +205,9 @@ public class EvidenceController {
 	@ApiOperation(value = "Update a Evidence by ID")
 	public ResponseEntity<Evidence> updateEvidenceByID(
 			@ApiParam(value = "evidenceID value", required = true) @PathVariable Integer evidenceID,
-			@RequestBody Evidence updatedEvidence) throws Exception {
+			@RequestParam(value = "isForAnalysis", required = true) Boolean isForAnalysis) throws Exception {
 
-		Boolean updatedIsForAnalysis = updatedEvidence.getIsForAnalysis();
+		Boolean updatedIsForAnalysis = isForAnalysis;
 		log.info("PUT /evidences/" + evidenceID + "?isForAnalysis=" + updatedIsForAnalysis);
 		Boolean update = false;
 		Evidence evidence = evidenceRepo.getEvidenceByID(evidenceID);
@@ -225,6 +225,39 @@ public class EvidenceController {
 			evidenceRepo.saveAndFlush(evidence);
 		}
 		return new ResponseEntity<Evidence>(evidence, HttpStatus.OK);
+	}
+	
+	/**
+	 * This method is used to update evidence isForAnalysis, item type and
+	 * identifier values
+	 * 
+	 * @return ResponseEntity<Evidence>
+	 */
+	@RequestMapping(value = "/evidences", method = RequestMethod.PUT)
+	@ApiOperation(value = "Update a Evidence by ID")
+	public ResponseEntity<Evidence> updateEvidence(@RequestBody Evidence updatedEvidence)throws Exception{
+		Date date = new Date();
+		Timestamp timeStamp = new Timestamp(date.getTime());
+		Integer evidenceId = updatedEvidence.getId();
+		Evidence dbEvidence = evidenceRepo.findOne(evidenceId);
+		Evidence savedEvidence;
+		if(dbEvidence == null){
+			return new ResponseEntity<Evidence>(dbEvidence, HttpStatus.BAD_REQUEST);
+		}
+		else{
+			dbEvidence.setCaseId(updatedEvidence.getCaseId());
+			dbEvidence.setEvidenceName(updatedEvidence.getEvidenceName());
+			dbEvidence.setEvidenceType(updatedEvidence.getEvidenceType());
+			dbEvidence.setParentId(updatedEvidence.getParentId());
+			dbEvidence.setIsForAnalysis(updatedEvidence.getIsForAnalysis());
+			Integer max_id = evidenceRepo.getMaxEvidence_ID(updatedEvidence.getEvidenceType());
+			dbEvidence.set_id((max_id != null ? max_id : 0) + 1);
+			dbEvidence.setUpdatedDate(timeStamp);
+			
+			savedEvidence = evidenceRepo.saveAndFlush(dbEvidence); 
+		}
+		
+		return new ResponseEntity<Evidence>(savedEvidence,HttpStatus.OK);
 	}
 
 	/**
@@ -246,7 +279,6 @@ public class EvidenceController {
 			evidence.setUpdatedBy("elab");
 			evidence.setUpdatedDate(timeStamp);
 			evidence.setCreatedDate(timeStamp);
-			System.out.println(max_id);
 			evidence.set_id((max_id != null ? max_id : 0) + 1);
 			evidenceRepo.saveAndFlush(evidence);
 		}
