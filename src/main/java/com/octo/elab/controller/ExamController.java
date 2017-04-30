@@ -236,7 +236,7 @@ public class ExamController {
 	 */
 	@RequestMapping(value = "/exams/", method = RequestMethod.POST)
 	@ApiOperation(value = "Add new exam or edit new exam")
-	public ResponseEntity<String> updateExam(@RequestBody Exam exam) throws Exception {
+	public ResponseEntity<Exam> updateExam(@RequestBody Exam exam) throws Exception {
 		log.info("POST /exams/");
 		Date date = new Date();
 		Timestamp timeStamp = new Timestamp(date.getTime());
@@ -250,7 +250,8 @@ public class ExamController {
 
 		// delete
 		if (caseID == null) {
-			return new ResponseEntity<String>("Please provide caseID", HttpStatus.BAD_REQUEST);
+			Exam exams = new Exam();
+			return new ResponseEntity<Exam>(exams, HttpStatus.BAD_REQUEST);
 		}
 		if (_id != null) {
 			List<Exam> examToBeDeleted = examRepo.getExamIDByCaseIDAnd_id(caseID, _id);
@@ -262,18 +263,18 @@ public class ExamController {
 			exam.set_id((max_id != null ? max_id : 0) + 1);
 		}
 
-		for (Integer newEvidences : evidenceIDs) {
+		
 			// Insert new
 			Integer maxID = examRepo.getMaxExamID();
 			exam.setID((maxID != null ? maxID : 0) + 1);
 			exam.setCreatedBy("elab");
 			exam.setUpdatedBy("elab");
 			exam.setCreatedDate(timeStamp);
-			exam.setEvidenceId(newEvidences);
+			exam.setEvidenceId(evidenceIDs[0]);
 			exam.setUpdatedDate(timeStamp);
-			examRepo.saveAndFlush(exam);
-		}
-		return new ResponseEntity<String>("Success!!", HttpStatus.CREATED);
+			Exam savedExam = examRepo.saveAndFlush(exam);
+		
+		return new ResponseEntity<Exam>(savedExam, HttpStatus.CREATED);
 	}
 
 	/**
