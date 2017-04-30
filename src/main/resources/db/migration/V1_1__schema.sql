@@ -239,7 +239,11 @@ VALUES
 ( 'Tire','K','K Item Type','Photo/Printouts'),
 ( 'Tire','K','K Item Type','Disc'),
 ( 'Tire','K','K Item Type','Digital Image'),
-( 'Tire','K','K Item Type','Other');
+( 'Tire','K','K Item Type','Other'),
+('','','Conducted by','Juliette Fitzsimmons'),
+('','','Conducted by','Marcus Stanton'),
+('','','Conducted by','Tim Miller'),
+('','','Conducted by','Barb McCullen');
 
  INSERT INTO elab.evidence(
   id, case_id, evidence_name, evidence_type,_id)
