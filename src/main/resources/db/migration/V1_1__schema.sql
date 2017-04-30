@@ -124,7 +124,7 @@ CREATE TABLE elab.note (
   label_info VARCHAR(5000),
   note_data json,
   created_by VARCHAR(100) DEFAULT 'elab',
-  created_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp(),
+  created_date TIMESTAMP WITH TIME ZONE,
   updated_by VARCHAR(100) DEFAULT 'elab',
   updated_date TIMESTAMP WITH TIME ZONE DEFAULT clock_timestamp(),
   CONSTRAINT note_PK PRIMARY KEY (id)

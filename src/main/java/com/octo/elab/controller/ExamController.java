@@ -296,7 +296,7 @@ public class ExamController {
 		List<Integer> examIDs = noteRepo.getAllExamIDsByCaseID(caseId);
 		
 		if(!examIDs.contains(examId)){
-			return new ResponseEntity<List<ExamNotes>>(examNotesList, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<List<ExamNotes>>(examNotesList, HttpStatus.OK);
 		}
 		else{
 						

@@ -15,6 +15,8 @@ import com.octo.elab.pojo.jsonconverter.NoteDataConverter;
 import com.octo.elab.pojo.reflection.NoteData;
 import com.octo.elab.utilities.CustomDateTimeDeserializer;
 import com.octo.elab.utilities.CustomDateTimeSerializer;
+import com.octo.elab.utilities.CustomTimestampDeserializer;
+import com.octo.elab.utilities.CustomTimestampSerializer;
 
 @Entity
 @Table(name = "note")
@@ -60,8 +62,8 @@ public class Note {
 	private String createdBy;
 
 	@Column(name = "created_date")
-	@JsonSerialize(using = CustomDateTimeSerializer.class)
-	@JsonDeserialize(using = CustomDateTimeDeserializer.class)
+	@JsonSerialize(using = CustomTimestampSerializer.class)
+	@JsonDeserialize(using = CustomTimestampDeserializer.class)
 	private Timestamp createdDate;
 
 	@Column(name = "updated_by")

@@ -76,19 +76,22 @@ public class NoteController {
 	 */
 	@RequestMapping(value = "/notes/", method = RequestMethod.POST)
 	@ApiOperation(value = "Add-Update a note")
-	public ResponseEntity<String> updateNote(@RequestBody Note note) throws Exception {
+	public ResponseEntity<Note> updateNote(@RequestBody Note note) throws Exception {
 		log.info("POST /notes/");
 		Date date = new Date();
 		Timestamp timeStamp = new Timestamp(date.getTime());
 		if (note.getId() == null) {
 			Integer maxID = noteRepo.getMaxNoteID();
 			note.setId((maxID != null ? maxID : 0) + 1);
-			note.setCreatedBy("elab");
-			note.setUpdatedBy("elab");
-			note.setUpdatedDate(timeStamp);
-			note.setCreatedDate(timeStamp);
-			noteRepo.saveAndFlush(note);
 		}
-		return new ResponseEntity<String>("Success!!", HttpStatus.CREATED);
+		
+		note.setCreatedBy("elab");
+		note.setUpdatedBy("elab");
+		note.setUpdatedDate(timeStamp);
+		Note savedNote = noteRepo.saveAndFlush(note);
+		
+		return new ResponseEntity<Note>(savedNote, HttpStatus.CREATED);
 	}
+	
+	
 }
