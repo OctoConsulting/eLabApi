@@ -23,10 +23,10 @@ public interface NoteRepository extends JpaRepository<Note, Integer> {
 	public List<Integer> getAllExamIDsByCaseID(@Param("caseID") Integer caseID);
 	
 	@Query(value = "select * from elab.note n where (n.exam_id = :examID) and note_type = 1 and item_type='shoe'", nativeQuery = true)
-	public Note getShoeIANoteForExamID(@Param("examID") Integer examID);
+	public List<Note> getShoeIANoteForExamID(@Param("examID") Integer examID);
 	
 	@Query(value = "select * from elab.note n where (n.exam_id = :examID) and note_type = 1 and item_type='tire'", nativeQuery = true)
-	public Note getTireIANoteForExamID(@Param("examID") Integer examID);
+	public List<Note> getTireIANoteForExamID(@Param("examID") Integer examID);
 	
 	@Query(value = "select * from elab.note n where (n.parent_id = :parentID)", nativeQuery = true)
 	public List<Note> getNoteDetailsByParentID(@Param("parentID") Integer parentID);
