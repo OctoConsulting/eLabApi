@@ -88,6 +88,7 @@ public class NoteController {
 		note.setCreatedBy("elab");
 		note.setUpdatedBy("elab");
 		note.setUpdatedDate(timeStamp);
+		//note.setCreatedDate(timeStamp);
 		Note savedNote = noteRepo.saveAndFlush(note);
 		
 		return new ResponseEntity<Note>(savedNote, HttpStatus.CREATED);
