@@ -3,7 +3,9 @@ package com.octo.elab.controller;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.octo.elab.pojo.db.Evidence;
 import com.octo.elab.pojo.db.EvidenceType;
+import com.octo.elab.pojo.db.Note;
 import com.octo.elab.pojo.reflection.AccessPair;
 import com.octo.elab.pojo.reflection.EvidenceNew;
 import com.octo.elab.repository.EvidenceRepository;
@@ -317,5 +320,83 @@ public class EvidenceController {
 			evidenceRepo.saveAndFlush(evidence);
 		}
 		return new ResponseEntity<String>("Success!!", HttpStatus.CREATED);
+	}
+	
+	@RequestMapping(value = "/caseevidences/", method = RequestMethod.GET)
+	public ResponseEntity<List<Evidence>> getEvidencesbyIds(@RequestParam(value="caseId",required = false)Integer caseId,
+											@RequestParam(value="examId",required = false)Integer examId,
+											@RequestParam(value= "itemType", required= false) String itemType){
+		
+		List<Evidence> evidenceList = new ArrayList<Evidence>();
+		List<Evidence> allEvidences;
+		
+		if (caseId == null || examId == null || itemType == null) {
+			return new ResponseEntity<List<Evidence>>(HttpStatus.BAD_REQUEST);
+		} else {
+			allEvidences = evidenceRepo.getEvidenceByCaseIDAndForAnalysis(caseId);
+
+			List<String> evidences;
+			if (("Shoe").equalsIgnoreCase(itemType)) {
+				evidences = noteRepo.getEvidenceIDsByCaseIDExamIDItemType(caseId, examId, "tire");
+			} else {
+				evidences = noteRepo.getEvidenceIDsByCaseIDExamIDItemType(caseId, examId, "shoe");
+			}
+			List<String> evidenceLists = new ArrayList<String>();
+			if (evidences != null) {
+								
+				for (String evidenceArray : evidences) {
+					evidenceLists.addAll(Arrays.asList(evidenceArray.split(",")));
+				}
+				Integer[] evidenceIDs = new Integer[evidenceLists.size()];
+				Integer count = 0;
+				for (String s : evidenceLists) {
+					evidenceIDs[count] = Integer.parseInt(s);
+					count++;
+				}				
+				if (evidenceIDs.length > 0)
+					evidenceList = evidenceRepo.getEvidencesByID(evidenceIDs);
+			} else {
+				return new ResponseEntity<List<Evidence>>(HttpStatus.BAD_REQUEST);
+			}
+			allEvidences.removeAll(evidenceList);
+		}
+
+		return new ResponseEntity<List<Evidence>>(allEvidences,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/noteType/caseevidences/", method = RequestMethod.GET)
+	public ResponseEntity<List<Evidence>> getEvidencesByParent(@RequestParam(value="noteId",required = false)Integer noteId){
+		if(noteId == null){
+			return new ResponseEntity<List<Evidence>>(HttpStatus.BAD_REQUEST);
+		}
+		else{
+			Note parentNote = noteRepo.getNoteByID(noteId);
+			String[] evidences = (parentNote.getEvidences()).split(",");
+			List<Integer> parEvidence = new ArrayList<Integer>();
+			for(String ev : evidences){
+				parEvidence.add(Integer.parseInt(ev));
+			}
+			
+			List<String> evidenceIds = noteRepo.getEvidenceIDsByParentId(noteId);
+			List<String> usedEvidences = new ArrayList<String>();
+			Set<Integer> eIds = new HashSet();
+			
+			if(evidenceIds != null){
+				for(String evs : evidenceIds){
+					usedEvidences.addAll(Arrays.asList(evs.split(",")));
+				}
+				for(String es : usedEvidences){
+					eIds.add(Integer.parseInt(es));
+				}
+				
+			}
+			List<Integer> usedEIds = new ArrayList<>(eIds);
+			parEvidence.removeAll(usedEIds);
+			List<Evidence> allEvidences = new ArrayList<>();
+			if(parEvidence.size() > 0)
+				allEvidences = evidenceRepo.getEvidenceByIds(parEvidence);
+			return new ResponseEntity<List<Evidence>>(allEvidences,HttpStatus.OK);
+		}
+		
 	}
 }

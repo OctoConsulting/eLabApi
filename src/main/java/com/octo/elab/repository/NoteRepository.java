@@ -42,4 +42,7 @@ public interface NoteRepository extends JpaRepository<Note, Integer> {
 	
 	@Query(value = "select evidences from elab.note n where (n.case_id = :caseID) and (n.exam_id = :examID) and (n.item_type = :itemType) and (n.evidences is not null or n.evidences != '') ", nativeQuery = true)
 	public List<String> getEvidenceIDsByCaseIDExamIDItemType(@Param("caseID") Integer caseID,@Param("examID") Integer examID,@Param("itemType") String itemType);
+	
+	@Query(value = "select evidences from elab.note n where (n.parent_id = :parId)", nativeQuery = true)
+	public List<String> getEvidenceIDsByParentId(@Param("parId")Integer parId);
 }
