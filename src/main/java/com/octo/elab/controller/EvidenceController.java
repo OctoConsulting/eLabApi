@@ -49,7 +49,7 @@ public class EvidenceController {
 
 	@Autowired
 	private EvidenceRepository evidenceRepo;
-	
+
 	@Autowired
 	private NoteRepository noteRepo;
 
@@ -63,59 +63,40 @@ public class EvidenceController {
 	 */
 	@RequestMapping(value = "/evidences", method = RequestMethod.GET)
 	@ApiOperation(value = "Fetch all Evidences")
-	public ResponseEntity<List<Evidence>> getEvidences(
-			@RequestParam(value = "caseID", required = false) Integer caseID,
-			@RequestParam(value = "examID", required = false) Integer examID,
-			@RequestParam(value = "noteType", required = false) Integer noteType,
-			@RequestParam(value = "itemType", required = false) String itemType)throws Exception {
-		
+	public ResponseEntity<List<Evidence>> getEvidences(@RequestParam(value = "caseID", required = false) Integer caseID,
+			@RequestParam(value = "examID", required = false) Integer examID) throws Exception {
+
 		List<Evidence> evidences = new ArrayList<Evidence>();
 		List<String> evidencesList = new ArrayList<String>();
+		List<Evidence> allEvidences = new ArrayList<Evidence>();
+
 		if (caseID == null) {
 			log.info("GET /evidences Error - CaseID missing");
 			return new ResponseEntity<List<Evidence>>(HttpStatus.BAD_REQUEST);
-		}
-		else if(caseID != null && examID == null){
-			evidences = evidenceRepo.getEvidenceByCaseID(caseID);
-		}
-		else if(caseID != null && examID != null)
-		{
-			if(noteType == null &&  itemType == null){
-				evidencesList = noteRepo.getEvidenceIDsByCaseIDAndExamID(caseID, examID);
-			}
-			else if(noteType != null &&  itemType != null){
-				evidencesList = noteRepo.getEvidenceIDsByCaseIDExamIDNoteTypeItemType(caseID, examID,noteType,itemType);
-			}
-			else if(noteType != null){
-				evidencesList = noteRepo.getEvidenceIDsByCaseIDExamIDNoteType(caseID, examID,noteType);
-			}
-			else if(itemType != null){
-				evidencesList = noteRepo.getEvidenceIDsByCaseIDExamIDItemType(caseID, examID,itemType);
-			}
-			
+		} else if (caseID != null && examID == null) {
+			allEvidences = evidenceRepo.getEvidenceByCaseID(caseID);
+		} else if (caseID != null && examID != null) {
+			evidencesList = noteRepo.getEvidenceIDsByCaseIDAndExamID(caseID, examID);
 			List<String> evidenceList = new ArrayList<String>();
-			if(evidencesList != null){
-				for(String evidenceArray : evidencesList){
+			if (evidencesList != null) {
+				for (String evidenceArray : evidencesList) {
 					evidenceList.addAll(Arrays.asList(evidenceArray.split(",")));
 				}
 				Integer[] evidenceIDs = new Integer[evidenceList.size()];
-				Integer count =0;
-				for(String s : evidenceList)
-				{
+				Integer count = 0;
+				for (String s : evidenceList) {
 					evidenceIDs[count] = Integer.parseInt(s);
 					count++;
 				}
 				evidences = evidenceRepo.getEvidencesByID(evidenceIDs);
-			}
-			else
-			{
+			} else {
 				return new ResponseEntity<List<Evidence>>(HttpStatus.BAD_REQUEST);
 			}
-			
+			allEvidences = evidenceRepo.getEvidenceByCaseID(caseID);
+			allEvidences.removeAll(evidences);
 		}
 		log.info("GET /evidences API to fetch all evidences");
-		//List<Evidence> evidences = evidenceRepo.getEvidenceByCaseID(caseID);
-		return new ResponseEntity<List<Evidence>>(evidences, HttpStatus.OK);
+		return new ResponseEntity<List<Evidence>>(allEvidences, HttpStatus.OK);
 	}
 
 	/**
@@ -276,7 +257,7 @@ public class EvidenceController {
 		}
 		return new ResponseEntity<Evidence>(evidence, HttpStatus.OK);
 	}
-	
+
 	/**
 	 * This method is used to update evidence isForAnalysis, item type and
 	 * identifier values
@@ -285,16 +266,15 @@ public class EvidenceController {
 	 */
 	@RequestMapping(value = "/evidences", method = RequestMethod.PUT)
 	@ApiOperation(value = "Update a Evidence by ID")
-	public ResponseEntity<Evidence> updateEvidence(@RequestBody Evidence updatedEvidence)throws Exception{
+	public ResponseEntity<Evidence> updateEvidence(@RequestBody Evidence updatedEvidence) throws Exception {
 		Date date = new Date();
 		Timestamp timeStamp = new Timestamp(date.getTime());
 		Integer evidenceId = updatedEvidence.getId();
 		Evidence dbEvidence = evidenceRepo.findOne(evidenceId);
 		Evidence savedEvidence;
-		if(dbEvidence == null){
+		if (dbEvidence == null) {
 			return new ResponseEntity<Evidence>(dbEvidence, HttpStatus.BAD_REQUEST);
-		}
-		else{
+		} else {
 			dbEvidence.setCaseId(updatedEvidence.getCaseId());
 			dbEvidence.setEvidenceName(updatedEvidence.getEvidenceName());
 			dbEvidence.setEvidenceType(updatedEvidence.getEvidenceType());
@@ -303,11 +283,11 @@ public class EvidenceController {
 			Integer max_id = evidenceRepo.getMaxEvidence_ID(updatedEvidence.getEvidenceType());
 			dbEvidence.set_id((max_id != null ? max_id : 0) + 1);
 			dbEvidence.setUpdatedDate(timeStamp);
-			
-			savedEvidence = evidenceRepo.saveAndFlush(dbEvidence); 
+
+			savedEvidence = evidenceRepo.saveAndFlush(dbEvidence);
 		}
-		
-		return new ResponseEntity<Evidence>(savedEvidence,HttpStatus.OK);
+
+		return new ResponseEntity<Evidence>(savedEvidence, HttpStatus.OK);
 	}
 
 	/**
