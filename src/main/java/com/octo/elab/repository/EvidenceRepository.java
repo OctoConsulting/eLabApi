@@ -39,5 +39,8 @@ public interface EvidenceRepository extends JpaRepository<Evidence, Integer> {
 	
 	@Query(value = "select max(_id) from elab.evidence where evidence_type = :evidenceType", nativeQuery = true)
 	public Integer getMaxEvidence_ID(@Param("evidenceType") Integer evidenceType);
+	
+	@Query(value = "select e.*, et.description from elab.evidence e inner join elab.evidence_type et on et.id = e.evidence_type where (e.case_id = :caseID) and e.is_foranalysis = true", nativeQuery = true)
+	public List<Evidence> getEvidenceByCaseIDAndForAnalysis(@Param("caseID") Integer caseID);
 
 }

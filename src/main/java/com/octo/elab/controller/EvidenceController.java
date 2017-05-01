@@ -88,12 +88,16 @@ public class EvidenceController {
 					evidenceIDs[count] = Integer.parseInt(s);
 					count++;
 				}
-				evidences = evidenceRepo.getEvidencesByID(evidenceIDs);
+				if(evidenceIDs.length > 0)
+					evidences = evidenceRepo.getEvidencesByID(evidenceIDs);
 			} else {
 				return new ResponseEntity<List<Evidence>>(HttpStatus.BAD_REQUEST);
 			}
-			allEvidences = evidenceRepo.getEvidenceByCaseID(caseID);
+			allEvidences = evidenceRepo.getEvidenceByCaseIDAndForAnalysis(caseID);
 			allEvidences.removeAll(evidences);
+			for(Evidence ev : allEvidences){
+				ev.setSelected(false);
+			}
 		}
 		log.info("GET /evidences API to fetch all evidences");
 		return new ResponseEntity<List<Evidence>>(allEvidences, HttpStatus.OK);

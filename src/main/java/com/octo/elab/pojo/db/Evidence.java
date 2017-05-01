@@ -52,7 +52,9 @@ public class Evidence {
 
 	@Transient
 	private Integer parentType;
-
+	
+	@Transient
+	private Boolean selected;
 	@Column(name = "created_date")
 	@JsonSerialize(using = CustomDateTimeSerializer.class)
 	@JsonDeserialize(using = CustomDateTimeDeserializer.class)
@@ -178,4 +180,12 @@ public class Evidence {
 		this.parentType = parentType;
 	}
 
+	public Boolean getSelected() {
+		return selected;
+	}
+
+	public void setSelected(Boolean selected) {
+		this.selected = selected;
+	}
+	
 }
