@@ -83,12 +83,13 @@ public class NoteController {
 		if (note.getId() == null) {
 			Integer maxID = noteRepo.getMaxNoteID();
 			note.setId((maxID != null ? maxID : 0) + 1);
+			note.setCreatedDate(timeStamp);
 		}
 		
 		note.setCreatedBy("elab");
 		note.setUpdatedBy("elab");
 		note.setUpdatedDate(timeStamp);
-		//note.setCreatedDate(timeStamp);
+		
 		Note savedNote = noteRepo.saveAndFlush(note);
 		
 		return new ResponseEntity<Note>(savedNote, HttpStatus.CREATED);
