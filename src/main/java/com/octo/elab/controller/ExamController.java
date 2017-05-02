@@ -146,7 +146,7 @@ public class ExamController {
 		if (mode.equalsIgnoreCase("edit")) {
 			if (examID != null) {
 				// examToBeEdited = examRepo.getExamByID(examID);
-				examToBeEditedMultiple = examRepo.getExamIDByCaseIDAnd_id(caseID, examID);
+				examToBeEditedMultiple = examRepo.getExamByCaseIDAnd_id(caseID, examID);
 				examToBeEdited = examToBeEditedMultiple.get(0);
 				if (examToBeEdited == null) {
 					return new ResponseEntity<ExaminationNew>(examinationNew, HttpStatus.BAD_REQUEST);
@@ -242,38 +242,37 @@ public class ExamController {
 		Timestamp timeStamp = new Timestamp(date.getTime());
 		Integer caseID = exam.getCaseId();
 		Integer _id = exam.get_id();
-		Integer[] evidenceIDs = exam.getEvidenceIds();
+		
+		Exam savedExam = null;
+		/*Integer[] evidenceIDs = exam.getEvidenceIds();
 		if (evidenceIDs == null) {
 			evidenceIDs = new Integer[1];
 			evidenceIDs[0] = 0;
-		}
-
-		// delete
+		}*/
+		
 		if (caseID == null) {
 			Exam exams = new Exam();
 			return new ResponseEntity<Exam>(exams, HttpStatus.BAD_REQUEST);
 		}
 		if (_id != null) {
-			List<Exam> examToBeDeleted = examRepo.getExamIDByCaseIDAnd_id(caseID, _id);
-			examRepo.delete(examToBeDeleted);
+			//edit existing
+			exam.setID(examRepo.getExamIDByCaseIDAnd_id(caseID, _id));
+			exam.setUpdatedBy("elab");
+			exam.setUpdatedDate(timeStamp);
+			savedExam = examRepo.saveAndFlush(exam);
 		}
-
-		Integer max_id = examRepo.getMaxEvidence_ID(caseID);
-		if (_id == null) {
-			exam.set_id((max_id != null ? max_id : 0) + 1);
-		}
-
-		
+		else {
 			// Insert new
 			Integer maxID = examRepo.getMaxExamID();
 			exam.setID((maxID != null ? maxID : 0) + 1);
 			exam.setCreatedBy("elab");
 			exam.setUpdatedBy("elab");
 			exam.setCreatedDate(timeStamp);
-			exam.setEvidenceId(evidenceIDs[0]);
+			//exam.setEvidenceId(evidenceIDs[0]);
 			exam.setUpdatedDate(timeStamp);
-			Exam savedExam = examRepo.saveAndFlush(exam);
-		
+			savedExam = examRepo.saveAndFlush(exam);
+		}
+	
 		return new ResponseEntity<Exam>(savedExam, HttpStatus.CREATED);
 	}
 
