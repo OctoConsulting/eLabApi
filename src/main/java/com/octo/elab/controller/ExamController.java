@@ -78,7 +78,7 @@ public class ExamController {
 			throws Exception {
 		log.info("GET /exams API to fetch all exams");
 		List<Exam> exams = new ArrayList<Exam>();
-
+		List<Exam> examsWithNames = new ArrayList<Exam>();
 		List<ExamType> examTypeNameList = examTypeRepo.getAllExamTypes();
 		List<Examiner> examinerNameList = examinerRepo.getAllExaminers();
 
@@ -94,12 +94,15 @@ public class ExamController {
 		}
 		if (caseId == null) {
 			exams = examRepo.getAllExams();
-			return new ResponseEntity<List<Exam>>(exams, HttpStatus.OK);
 		} else {
 			exams = examRepo.getExamsByCaseID(caseId);
-
 		}
-		return new ResponseEntity<List<Exam>>(exams, HttpStatus.OK);
+		for(Exam exam : exams){
+			exam.setExamTypeName(examTypeHashMap.get(exam.getExamType()));
+			exam.setExaminerName(examinerHashMap.get(exam.getExaminerId()));
+			examsWithNames.add(exam);
+		}
+		return new ResponseEntity<List<Exam>>(examsWithNames, HttpStatus.OK);
 	}
 
 	/**

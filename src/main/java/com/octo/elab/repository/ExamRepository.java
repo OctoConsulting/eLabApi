@@ -13,7 +13,7 @@ public interface ExamRepository extends JpaRepository<Exam, Integer> {
 	@Query(value = "select e.*,ex.examiner_name ,et.description from elab.Exam e inner join elab.examiner as ex on e.examiner_id = ex.id inner join elab.exam_type as et on e.exam_type = et.id where (e.id = :ExamID)", nativeQuery = true)
 	public Exam getExamByID(@Param("ExamID") Integer ExamID);
 
-	@Query(value = "select e.*,ex.examiner_name as examinerName ,et.description from elab.Exam e inner join elab.examiner as ex on e.examiner_id = ex.id inner join elab.exam_type as et on e.exam_type = et.id order by e.id", nativeQuery = true)
+	@Query(value = "select e.* from elab.Exam e order by e.id", nativeQuery = true)
 	public List<Exam> getAllExams();
 
 	@Query(value = "select e.id from elab.Exam e order by e.id", nativeQuery = true)
@@ -22,7 +22,7 @@ public interface ExamRepository extends JpaRepository<Exam, Integer> {
 	@Query(value = "select max(id) from elab.Exam", nativeQuery = true)
 	public Integer getMaxExamID();
 
-	@Query(value = "select e.*,ex.examiner_name as examinerName ,et.description from elab.Exam e inner join elab.examiner as ex on e.examiner_id = ex.id inner join elab.exam_type as et on e.exam_type = et.id where (e.case_id = :CaseID)", nativeQuery = true)
+	@Query(value = "select e.* from elab.Exam e where (e.case_id = :CaseID)", nativeQuery = true)
 	public List<Exam> getExamsByCaseID(@Param("CaseID") Integer CaseID);
 
 	@Query(value = "select e.evidence_id from elab.Exam e where (e.case_id = :CaseID)", nativeQuery = true)
