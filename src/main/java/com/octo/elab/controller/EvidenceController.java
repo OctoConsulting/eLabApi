@@ -67,7 +67,8 @@ public class EvidenceController {
 	@RequestMapping(value = "/evidences", method = RequestMethod.GET)
 	@ApiOperation(value = "Fetch all Evidences")
 	public ResponseEntity<List<Evidence>> getEvidences(@RequestParam(value = "caseID", required = false) Integer caseID,
-			@RequestParam(value = "examID", required = false) Integer examID) throws Exception {
+			@RequestParam(value = "examID", required = false) Integer examID,
+			@RequestParam(value = "noteID", required = false) Integer noteID) throws Exception {
 
 		List<Evidence> evidences = new ArrayList<Evidence>();
 		List<String> evidencesList = new ArrayList<String>();
@@ -79,7 +80,11 @@ public class EvidenceController {
 		} else if (caseID != null && examID == null) {
 			allEvidences = evidenceRepo.getEvidenceByCaseID(caseID);
 		} else if (caseID != null && examID != null) {
-			evidencesList = noteRepo.getEvidenceIDsByCaseIDAndExamID(caseID, examID);
+			if(noteID == null)
+				evidencesList = noteRepo.getEvidenceIDsByCaseIDAndExamID(caseID, examID);
+			else
+				evidencesList = noteRepo.getEvidenceIDsByCaseIDAndExamIDButNoteID(caseID, examID, noteID);
+			
 			List<String> evidenceList = new ArrayList<String>();
 			if (evidencesList != null) {
 				for (String evidenceArray : evidencesList) {
