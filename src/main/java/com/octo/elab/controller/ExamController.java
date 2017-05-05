@@ -132,7 +132,7 @@ public class ExamController {
 		if (mode.equalsIgnoreCase("edit")) {
 			if (examID != null) {
 				// examToBeEdited = examRepo.getExamByID(examID);
-				examToBeEditedMultiple = examRepo.getExamByCaseIDAnd_id(caseID, examID);
+				examToBeEditedMultiple = examRepo.getExamsByCaseID(caseID);
 				examToBeEdited = examToBeEditedMultiple.get(0);
 				if (examToBeEdited == null) {
 					return new ResponseEntity<ExaminationNew>(examinationNew, HttpStatus.BAD_REQUEST);
