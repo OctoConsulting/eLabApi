@@ -37,8 +37,8 @@ public interface ExamRepository extends JpaRepository<Exam, Integer> {
 	@Query(value = "select e.* from elab.Exam e where (e.case_id = :CaseID) and (e.evidence_id = :EvidenceID)", nativeQuery = true)
 	public Exam getExamIDByCaseIDAndEvidenceID(@Param("CaseID") Integer CaseID,@Param("EvidenceID") Integer EvidenceID);
 	
-	@Query(value = "select e.* from elab.Exam e where (e.case_id = :CaseID) and (e._id = :_id)", nativeQuery = true)
-	public List<Exam> getExamByCaseIDAnd_id(@Param("CaseID") Integer CaseID,@Param("_id")Integer _id);
+	@Query(value = "select e.* from elab.Exam e where (e.case_id = :CaseID) and (e.id = :id)", nativeQuery = true)
+	public List<Exam> getExamByCaseIDAndID(@Param("CaseID") Integer CaseID,@Param("id")Integer id);
 	
 	@Query(value = "select distinct e._id from elab.Exam e where (e.case_id = :CaseID)", nativeQuery = true)
 	public Integer[] get_idByCaseID(@Param("CaseID") Integer CaseID);

@@ -114,7 +114,8 @@ public class ExamController {
 
 	@RequestMapping(value = "/ui/exams/", method = RequestMethod.GET)
 	@ApiOperation(value = "Populating info for creating/viewing/editing an exam")
-	public ResponseEntity<ExaminationNew> getExamsInfo(@RequestParam(value = "mode", required = true) String mode,
+	public ResponseEntity<ExaminationNew> getExamsInfo(
+			@RequestParam(value = "mode", required = true) String mode,
 			@RequestParam(value = "examID", required = false) Integer examID,
 			@RequestParam(value = "caseID", required = false) Integer caseID) throws Exception {
 		log.info("GET /exams API to fetch all exams");
@@ -131,9 +132,10 @@ public class ExamController {
 
 		if (mode.equalsIgnoreCase("edit")) {
 			if (examID != null) {
-				// examToBeEdited = examRepo.getExamByID(examID);
-				examToBeEditedMultiple = examRepo.getExamsByCaseID(caseID);
-				examToBeEdited = examToBeEditedMultiple.get(0);
+				
+				examToBeEditedMultiple = examRepo.getExamByCaseIDAndID(caseID,examID);
+				examToBeEdited =  examToBeEditedMultiple.get(0);
+				
 				if (examToBeEdited == null) {
 					return new ResponseEntity<ExaminationNew>(examinationNew, HttpStatus.BAD_REQUEST);
 				} else {
