@@ -227,22 +227,16 @@ public class ExamController {
 		Date date = new Date();
 		Timestamp timeStamp = new Timestamp(date.getTime());
 		Integer caseID = exam.getCaseId();
-		Integer _id = exam.get_id();
+		Integer id = exam.getID();
 		
 		Exam savedExam = null;
-		/*Integer[] evidenceIDs = exam.getEvidenceIds();
-		if (evidenceIDs == null) {
-			evidenceIDs = new Integer[1];
-			evidenceIDs[0] = 0;
-		}*/
 		
 		if (caseID == null) {
 			Exam exams = new Exam();
 			return new ResponseEntity<Exam>(exams, HttpStatus.BAD_REQUEST);
 		}
-		if (_id != null) {
+		if (id != null) {
 			//edit existing
-			exam.setID(examRepo.getExamIDByCaseIDAnd_id(caseID, _id));
 			exam.setUpdatedBy("elab");
 			exam.setUpdatedDate(timeStamp);
 			savedExam = examRepo.saveAndFlush(exam);
