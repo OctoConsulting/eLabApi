@@ -152,7 +152,7 @@ INSERT INTO elab.evidence_type(
  INSERT INTO elab.exam_type(id, description) VALUES (0, 'Select Option');	
  INSERT INTO elab.exam_type(
   id, description)
-  VALUES (1, 'Shoe Prints/Tire Thread');
+  VALUES (1, 'Shoe Prints/Tire Tread');
  INSERT INTO elab.exam_type(
   id, description)
   VALUES (2, 'Chemistry - Toxicology');
